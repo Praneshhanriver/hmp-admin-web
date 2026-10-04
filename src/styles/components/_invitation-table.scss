@@ -1,3 +1,4 @@
+@use "sass:list";
 @use "../tokens" as *;
 
 .invitation-table-card {
@@ -68,4 +69,41 @@
   flex-wrap: wrap;
   align-items: center;
   gap: $space-sm;
+}
+
+// Full-width cell that holds the empty or error message
+.invitation-table .invitation-table-message {
+  padding: $space-2xl $space-lg;
+}
+
+// Loading placeholders: one grey bar per cell, widths differ per column
+$skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
+
+.skeleton-bar {
+  display: block;
+  height: $space-md;
+  border-radius: $radius-sm;
+  background: $color-skeleton;
+}
+
+.invitation-table-skeleton {
+  @for $column from 1 through list.length($skeleton-widths) {
+    td:nth-child(#{$column}) .skeleton-bar {
+      width: list.nth($skeleton-widths, $column);
+    }
+  }
+
+  td:nth-child(4) .skeleton-bar {
+    margin-left: auto; // Re-issues column is right-aligned
+  }
+
+  td:nth-child(6) .skeleton-bar {
+    height: $chip-h;
+    border-radius: $radius-pill;
+  }
+
+  td:nth-child(7) .skeleton-bar {
+    height: $control-h-sm;
+    border-radius: $radius-md;
+  }
 }

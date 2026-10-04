@@ -4,18 +4,39 @@ import StatusChip from "@/components/common/StatusChip";
 import type { Invitation } from "@/types/invitation";
 import { formatShortDate, maskMobile } from "@/utils/format";
 import { canEdit, canOpenDetail, canReissue, canRevoke } from "@/utils/invitationRules";
+import type { ReactNode } from "react";
+
+const COLUMN_COUNT = 7;
+const SKELETON_ROW_COUNT = 6;
 
 interface InvitationTableProps {
   rows: Invitation[];
   total: number;
+  isLoading: boolean;
+  message?: ReactNode; // empty or error state, shown inside the table
 }
 
 // p.113c table: 7 columns, actions depend on status
-export default function InvitationTable({ rows, total }: InvitationTableProps) {
+export default function InvitationTable({ rows, total, isLoading, message }: InvitationTableProps) {
+  // Exactly one of: skeleton, message, or the real rows
+  function renderBody() {
+    if (isLoading) return <SkeletonRows />;
+    if (message) {
+      return (
+        <tr>
+          <td colSpan={COLUMN_COUNT} className="invitation-table-message">
+            {message}
+          </td>
+        </tr>
+      );
+    }
+    return rows.map((row) => <InvitationRow key={row.id} invitation={row} />);
+  }
+
   return (
     <div className="invitation-table-card">
       <div className="invitation-table-scroll">
-        <table className="invitation-table">
+        <table className="invitation-table" aria-busy={isLoading}>
           <caption className="visually-hidden">Doctor invitations, {total} results</caption>
           <thead>
             <tr>
@@ -28,11 +49,7 @@ export default function InvitationTable({ rows, total }: InvitationTableProps) {
               <th scope="col">Manage</th>
             </tr>
           </thead>
-          <tbody>
-            {rows.map((row) => (
-              <InvitationRow key={row.id} invitation={row} />
-            ))}
-          </tbody>
+          <tbody>{renderBody()}</tbody>
         </table>
       </div>
     </div>
@@ -85,4 +102,16 @@ function InvitationRow({ invitation }: { invitation: Invitation }) {
       </td>
     </tr>
   );
+}
+// Grey placeholder rows shown while the list is loading
+function SkeletonRows() {
+  return Array.from({ length: SKELETON_ROW_COUNT }, (_, rowIndex) => (
+    <tr key={rowIndex} className="invitation-table-skeleton" aria-hidden>
+      {Array.from({ length: COLUMN_COUNT }, (_, cellIndex) => (
+        <td key={cellIndex}>
+          <span className="skeleton-bar" />
+        </td>
+      ))}
+    </tr>
+  ));
 }
