@@ -1,0 +1,18 @@
+@use "../tokens" as *;
+
+.admin-layout-body {
+  display: flex;
+  min-height: calc(100vh - #{$layout-header-h});
+}
+
+.admin-layout-main {
+  flex: 1;
+  min-width: 0; // lets wide content scroll inside its own box (Lesson 7)
+  padding: $page-pad;
+}
+
+// Content column is capped and centred (shows on 1920 screens)
+.admin-layout-content {
+  max-width: $layout-content-max;
+  margin: 0 auto;
+}

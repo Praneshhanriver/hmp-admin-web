@@ -1,0 +1,23 @@
+@use "../tokens" as *;
+
+.invitation-list-page {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+}
+
+.invitation-list-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.invitation-list-count {
+  font-size: $font-size-body-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.invitation-list-range {
+  color: $color-muted;
+}

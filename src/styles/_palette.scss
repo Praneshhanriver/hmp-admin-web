@@ -1,0 +1,32 @@
+// Raw colours from "Design System v1.11 (test)" (Surfing Bear).
+// WM rule: colour + code. Components never use these directly;
+// they use the semantic names in _tokens.scss.
+$white: #ffffff;
+
+$blue-100: #d6e8ff;
+$blue-300: #85b8ff;
+$blue-600: #0064ff; // main brand
+$blue-700: #0050cc;
+$blue-800: #003c99;
+
+$slate-100: #f1f5f9;
+$slate-200: #e2e8f0;
+$slate-300: #cbd5e1;
+$slate-400: #94a3b8;
+$slate-500: #64748b;
+$slate-600: #475569;
+$slate-700: #334155;
+$slate-900: #0f172a;
+$slate-canvas: #f8fafc;
+
+$teal-100: #d1fbf4;
+$teal-300: #6eeadb;
+$teal-500: #1fc7ba;
+$teal-900: #13514f;
+
+$red-500: #ef4444; // DS --error
+// The Hi-Fi mixes these with color-mix(); fixed values are used here.
+$red-700: #942626;
+$red-300: #ffa098;
+$red-50: #fff0ee;
+$blue-50: #e8f2ff;

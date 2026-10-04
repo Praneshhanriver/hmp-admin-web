@@ -1,0 +1,44 @@
+@use "../tokens" as *;
+
+.admin-header {
+  height: $layout-header-h;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+  padding: 0 $space-lg;
+  background: $color-surface;
+  border-bottom: $border-w solid $color-border;
+}
+
+.admin-header-brand {
+  display: flex;
+  align-items: baseline;
+  gap: $space-ms;
+  color: $color-text;
+  text-decoration: none;
+}
+
+.admin-header-title {
+  font-size: $font-size-h4;
+  font-weight: $font-weight-bold;
+}
+
+.admin-header-subtitle {
+  color: $color-muted;
+}
+
+.admin-header-account {
+  height: $control-h-md;
+  display: inline-flex;
+  align-items: center;
+  gap: $space-sm;
+  padding: 0 $space-ms;
+  border: $border-w solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+}

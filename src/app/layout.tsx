@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.scss";
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 
 export const metadata: Metadata = {
   title: "HMP Administration",

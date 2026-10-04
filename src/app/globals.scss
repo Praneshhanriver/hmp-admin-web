@@ -1,5 +1,12 @@
-@use "../styles/variables" as *;
-@use "../styles/shell";
+@use "../styles/tokens" as *;
+@use "../styles/components/admin-layout";
+@use "../styles/components/admin-header";
+@use "../styles/components/admin-sidebar";
+@use "../styles/components/buttons";
+@use "../styles/components/page-header";
+@use "../styles/components/status-chip";
+@use "../styles/components/invitation-table";
+@use "../styles/components/invitation-list-page";
 
 *,
 *::before,
@@ -9,8 +16,33 @@
 
 body {
   margin: 0;
-  font-family: $font-family;
-  font-size: $font-14;
-  color: $gray-g5;
-  background: $gray-g1;
+  font-family: $font-sans;
+  font-size: $font-size-body;
+  line-height: $line-height-body;
+  color: $color-text;
+  background: $color-canvas;
+}
+
+:focus-visible {
+  outline: $focus-w solid $color-focus;
+  outline-offset: $focus-w;
+}
+
+// Icons are 1em wide, so font-size sets their size
+.icon-sm {
+  font-size: $icon-sm;
+}
+
+.icon-md {
+  font-size: $icon-md;
+}
+
+// Hidden on screen, still read by screen readers
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }

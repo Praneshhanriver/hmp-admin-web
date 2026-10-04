@@ -1,0 +1,33 @@
+@use "../tokens" as *;
+
+.page-header {
+  display: flex;
+  flex-direction: column;
+  gap: $space-ms;
+}
+
+.page-header-crumbs {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  color: $color-muted;
+
+  [aria-current="page"] {
+    color: $color-text-secondary;
+  }
+}
+
+.page-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-md;
+}
+
+.page-header-title {
+  margin: 0;
+  font-size: $font-size-h2;
+  line-height: $line-height-tight;
+  font-weight: $font-weight-bold;
+}

@@ -1,0 +1,55 @@
+@use "../tokens" as *;
+
+.admin-sidebar {
+  width: $layout-sidebar-w;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+  padding: $space-md $space-ms;
+  background: $color-surface;
+  border-right: $border-w solid $color-border;
+}
+
+.admin-sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+%sidebar-link {
+  min-height: $control-h-md;
+  display: flex;
+  align-items: center;
+  border-radius: $radius-md;
+  color: $color-text-secondary;
+  text-decoration: none;
+  font-weight: $font-weight-medium;
+
+  &:hover {
+    background: $color-surface-alt;
+    color: $color-text;
+  }
+}
+
+.admin-sidebar-link {
+  @extend %sidebar-link;
+  gap: $space-ms;
+  padding: 0 $space-ms;
+
+  &.is-group-active {
+    color: $color-text;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.admin-sidebar-sublink {
+  @extend %sidebar-link;
+  padding: 0 $space-ms 0 $space-2xl;
+
+  &.is-active {
+    background: $color-nav-active-bg;
+    color: $color-nav-active-fg;
+    font-weight: $font-weight-bold;
+  }
+}

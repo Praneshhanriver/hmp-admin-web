@@ -1,0 +1,71 @@
+@use "../tokens" as *;
+
+.invitation-table-card {
+  background: $color-surface;
+  border: $border-w solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+// The table scrolls sideways inside its card, never the page
+.invitation-table-scroll {
+  overflow-x: auto;
+}
+
+.invitation-table {
+  width: 100%;
+  min-width: $table-min-w;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: $table-cell-py $table-cell-px;
+    text-align: left;
+    border-bottom: $border-w solid $color-border;
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead th {
+    height: $table-head-h;
+    padding-block: 0;
+    background: $color-table-head-bg;
+    color: $color-text-secondary;
+    font-weight: $font-weight-semibold;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: none;
+  }
+
+  .is-numeric {
+    text-align: right;
+  }
+
+  .is-secondary {
+    color: $color-text-secondary;
+    white-space: nowrap;
+  }
+}
+
+.invitation-name {
+  color: $color-text;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &.is-missing {
+    color: $color-muted;
+  }
+}
+
+.invitation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-sm;
+}

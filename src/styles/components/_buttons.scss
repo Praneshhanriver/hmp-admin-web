@@ -1,0 +1,64 @@
+@use "../tokens" as *;
+
+// Shared button styles. Width always comes from padding, never fixed.
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-xs;
+  border: $border-w solid transparent;
+  border-radius: $radius-md;
+  font: inherit;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-sm {
+  height: $control-h-sm;
+  padding: 0 $space-ms;
+}
+
+.btn-md {
+  height: $control-h-md;
+  padding: 0 $space-md;
+  gap: $space-sm;
+}
+
+.btn-primary {
+  background: $color-primary;
+  border-color: $color-primary;
+  color: $color-on-primary;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+}
+
+.btn-secondary {
+  background: $color-surface;
+  border-color: $color-border-strong;
+  color: $color-text;
+
+  &:hover {
+    background: $color-surface-alt;
+  }
+}
+
+.btn-danger-outline {
+  background: $color-surface;
+  border-color: $color-danger-border;
+  color: $color-danger;
+
+  &:hover {
+    background: $color-danger-soft;
+  }
+}
+
+.btn-link {
+  padding: 0 $space-xs;
+  color: $color-primary;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
