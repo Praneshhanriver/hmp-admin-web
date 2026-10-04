@@ -13,3 +13,12 @@ export interface Invitation {
   expiresAt: string; // ISO 8601 · validity period still TBC
   reissueCount: number;
 }
+
+// The Status dropdown adds "all" to the four real statuses
+export type StatusFilter = InvitationStatus | "all";
+
+// What the admin searched for
+export interface InvitationFilters {
+  query: string;
+  status: StatusFilter;
+}

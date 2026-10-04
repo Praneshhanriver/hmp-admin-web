@@ -7,8 +7,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     <>
       <AdminHeader accountEmail="admin@hmp.co.kr" />
       <div className="admin-layout-body">
-        {/* Invitations is the only page so far; derive from the route once more pages exist */}
-        <AdminSidebar activeItem="invitations" />
+        <AdminSidebar />
         <main className="admin-layout-main">
           <div className="admin-layout-content">{children}</div>
         </main>

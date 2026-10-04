@@ -1,0 +1,83 @@
+@use "../tokens" as *;
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: $space-md;
+  padding: $space-lg;
+  background: $color-surface;
+  border: $border-w solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.search-bar-field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  min-width: 0;
+
+  label {
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.search-bar-field-query {
+  flex: 1 1 280px;
+}
+
+.search-bar-field-status {
+  flex: 0 1 200px;
+  min-width: 160px;
+}
+
+// Wraps an input/select so an icon can sit on top of it
+.search-bar-control {
+  position: relative;
+
+  input,
+  select {
+    width: 100%;
+    height: $input-h;
+    border: $border-w solid $color-border-strong;
+    border-radius: $radius-md;
+    background: $color-surface;
+    color: $color-text;
+    font: inherit;
+    font-size: $font-size-body-lg;
+  }
+
+  input {
+    padding: 0 $space-ms 0 $space-2xl;
+  }
+
+  select {
+    padding: 0 $space-2xl 0 $space-ms;
+    appearance: none;
+  }
+}
+
+%search-bar-control-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $color-muted;
+  pointer-events: none; // clicks go through to the field
+}
+
+.search-bar-icon {
+  @extend %search-bar-control-icon;
+  left: $space-ms;
+}
+
+.search-bar-caret {
+  @extend %search-bar-control-icon;
+  right: $space-ms;
+}
+
+.search-bar-submit {
+  height: $input-h;
+  padding: 0 $space-lg;
+  font-size: $font-size-body-lg;
+}
