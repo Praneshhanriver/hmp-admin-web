@@ -1,0 +1,88 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.pagination-full {
+  justify-content: center;
+}
+
+// Shown below 768px instead of the page numbers
+.pagination-compact {
+  display: none;
+  justify-content: space-between;
+}
+
+.pagination-compact-label {
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+%pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: $control-h-sm;
+  border: $border-w solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: $color-surface-alt;
+  }
+}
+
+.pagination-step {
+  @extend %pagination-button;
+  gap: $space-xs;
+  padding: 0 $space-ms;
+
+  &:disabled {
+    color: $color-placeholder;
+    cursor: not-allowed;
+  }
+}
+
+.pagination-page {
+  @extend %pagination-button;
+  min-width: $control-h-sm;
+
+  &.is-current {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-on-primary;
+    font-weight: $font-weight-bold;
+
+    &:hover {
+      background: $color-primary;
+    }
+  }
+}
+
+@include below($bp-sm) {
+  .pagination-full {
+    display: none;
+  }
+
+  .pagination-compact {
+    display: flex;
+
+    .pagination-step {
+      height: $control-h-touch;
+      padding: 0 $space-md;
+      font-weight: $font-weight-semibold;
+
+      &:not(:disabled) {
+        border-color: $color-border-strong;
+      }
+    }
+  }
+}

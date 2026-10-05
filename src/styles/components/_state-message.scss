@@ -1,0 +1,58 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+// Shared by EmptyState and ErrorState
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-ms;
+  text-align: center;
+}
+
+.state-message-icon {
+  width: $state-icon-badge-size;
+  height: $state-icon-badge-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-pill;
+  background: $color-surface-alt;
+  color: $color-muted;
+  font-size: $icon-lg;
+
+  &.is-danger {
+    background: $color-danger-soft;
+    color: $color-danger;
+  }
+}
+
+.state-message-title {
+  font-size: $font-size-h4;
+  font-weight: $font-weight-semibold;
+}
+
+.state-message-description {
+  font-size: $font-size-body-lg;
+  color: $color-muted;
+  text-wrap: pretty;
+
+  strong {
+    color: $color-text;
+  }
+}
+
+// Phones (Hi-Fi 3e): plain icon, full-width touch-sized button
+@include below($bp-sm) {
+  .state-message-icon,
+  .state-message-icon.is-danger {
+    width: auto;
+    height: auto;
+    background: none;
+  }
+
+  .state-message .btn {
+    width: 100%;
+    height: $control-h-touch;
+  }
+}

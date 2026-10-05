@@ -1,0 +1,54 @@
+@use "../styles/tokens" as *;
+@use "../styles/components/admin-layout";
+@use "../styles/components/admin-header";
+@use "../styles/components/admin-sidebar";
+@use "../styles/components/buttons";
+@use "../styles/components/page-header";
+@use "../styles/components/status-chip";
+@use "../styles/components/state-message";
+@use "../styles/components/invitation-table";
+@use "../styles/components/invitation-card";
+@use "../styles/components/invitation-list-page";
+@use "../styles/components/pagination";
+@use "../styles/components/confirmation-dialog";
+@use "../styles/components/toast";
+@use "../styles/components/search-bar";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: $font-sans;
+  font-size: $font-size-body;
+  line-height: $line-height-body;
+  color: $color-text;
+  background: $color-canvas;
+}
+
+:focus-visible {
+  outline: $focus-w solid $color-focus;
+  outline-offset: $focus-w;
+}
+
+// Icons are 1em wide, so font-size sets their size
+.icon-sm {
+  font-size: $icon-sm;
+}
+
+.icon-md {
+  font-size: $icon-md;
+}
+
+// Hidden on screen, still read by screen readers
+.visually-hidden {
+  position: absolute;
+  width: $visually-hidden-size;
+  height: $visually-hidden-size;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

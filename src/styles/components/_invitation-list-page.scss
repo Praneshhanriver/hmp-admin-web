@@ -1,0 +1,60 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+.invitation-list-page {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+}
+
+.invitation-list-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $space-sm;
+}
+
+.invitation-list-count {
+  font-size: $font-size-body-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.invitation-list-range {
+  color: $color-muted;
+}
+
+// Shown only on the widths below (" of 18" on phones, the hint on tablets)
+.invitation-list-range-total,
+.invitation-list-scroll-hint {
+  display: none;
+}
+
+.invitation-list-scroll-hint {
+  color: $color-muted;
+}
+
+// 768–1023: the table scrolls inside its card, so tell the admin
+@include between($bp-sm, $bp-md) {
+  .invitation-list-range {
+    display: none;
+  }
+
+  .invitation-list-scroll-hint {
+    display: inline;
+  }
+}
+
+// Phones: "1–8 of 18" instead of "Showing 1–8", tighter page rhythm
+@include below($bp-sm) {
+  .invitation-list-page {
+    gap: $space-md;
+  }
+
+  .invitation-list-range-label {
+    display: none;
+  }
+
+  .invitation-list-range-total {
+    display: inline;
+  }
+}

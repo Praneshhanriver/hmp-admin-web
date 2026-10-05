@@ -1,0 +1,202 @@
+import Link from "next/link";
+import { ArrowClockwise, FileText, PencilSimple, Prohibit } from "@phosphor-icons/react/dist/ssr";
+import StatusChip from "@/components/common/StatusChip";
+import InvitationCard from "@/components/invitations/InvitationCard";
+import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL } from "@/constants/invitation";
+import type { Invitation } from "@/types/invitation";
+import { formatShortDate, maskMobile } from "@/utils/format";
+import { canEdit, canOpenDetail, canReissue, canRevoke } from "@/utils/invitationRules";
+import type { ReactNode } from "react";
+
+const COLUMN_COUNT = 7;
+const SKELETON_ROW_COUNT = 6;
+const SKELETON_CARD_COUNT = 3;
+
+interface InvitationTableProps {
+  rows: Invitation[];
+  total: number;
+  isLoading: boolean;
+  message?: ReactNode; // empty or error state, shown inside the table
+  highlightedId: string | null; // row just changed by an action
+  onReissue: (invitation: Invitation) => void;
+  onRevoke: (invitation: Invitation) => void;
+}
+
+// p.113c table: 7 columns, actions depend on status.
+// Also renders the same rows as cards; CSS shows the table or the cards, never both
+export default function InvitationTable({
+  rows,
+  total,
+  isLoading,
+  message,
+  highlightedId,
+  onReissue,
+  onRevoke,
+}: InvitationTableProps) {
+  // Exactly one of: skeleton, message, or the real rows
+  function renderBody() {
+    if (isLoading) return <SkeletonRows />;
+    if (message) {
+      return (
+        <tr>
+          <td colSpan={COLUMN_COUNT} className="invitation-table-message">
+            {message}
+          </td>
+        </tr>
+      );
+    }
+    return rows.map((row) => (
+      <InvitationRow
+        key={row.id}
+        invitation={row}
+        isHighlighted={row.id === highlightedId}
+        onReissue={onReissue}
+        onRevoke={onRevoke}
+      />
+    ));
+  }
+
+  // Same choice for the card list (below 768px)
+  function renderCards() {
+    if (isLoading) return <SkeletonCards />;
+    if (message) return <li className="invitation-cards-message">{message}</li>;
+    return rows.map((row) => (
+      <li key={row.id}>
+        <InvitationCard
+          invitation={row}
+          isHighlighted={row.id === highlightedId}
+          onReissue={onReissue}
+          onRevoke={onRevoke}
+        />
+      </li>
+    ));
+  }
+
+  return (
+    <>
+      <div className="invitation-table-card">
+        <div className="invitation-table-scroll">
+          <table className="invitation-table" aria-busy={isLoading}>
+            <caption className="visually-hidden">Doctor invitations, {total} results</caption>
+            <thead>
+              <tr>
+                <th scope="col">Doctor</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Issued</th>
+                <th scope="col" className="is-numeric">Re-issues</th>
+                <th scope="col">Expiry (TBC)</th>
+                <th scope="col">Status</th>
+                <th scope="col">Manage</th>
+              </tr>
+            </thead>
+            <tbody>{renderBody()}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <ul className="invitation-cards" aria-busy={isLoading} aria-label={`Doctor invitations, ${total} results`}>
+        {renderCards()}
+      </ul>
+    </>
+  );
+}
+
+interface InvitationRowProps {
+  invitation: Invitation;
+  isHighlighted: boolean;
+  onReissue: (invitation: Invitation) => void;
+  onRevoke: (invitation: Invitation) => void;
+}
+
+// One table row. Kept in the same file because only the table uses it
+function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: InvitationRowProps) {
+  const { id, doctorName, mobile, status, issuedAt, expiresAt, reissueCount } = invitation;
+  const name = doctorName ?? MISSING_NAME_LABEL;
+  const detailHref = `/doctors/invitations/details/${id}`;
+
+  return (
+    <tr className={isHighlighted ? "is-highlighted" : undefined}>
+      <th scope="row">
+        <Link
+          href={detailHref}
+          className={doctorName ? "invitation-name" : "invitation-name is-missing"}
+          aria-label={`View invitation detail for ${name}`}
+        >
+          {name}
+        </Link>
+      </th>
+      <td className="is-secondary" aria-label={mobile ? undefined : MISSING_CONTACT_SPOKEN}>
+        {maskMobile(mobile)}
+      </td>
+      <td>{formatShortDate(issuedAt)}</td>
+      <td className="is-numeric">{reissueCount}</td>
+      <td>{formatShortDate(expiresAt)}</td>
+      <td>
+        <StatusChip status={status} />
+      </td>
+      <td>
+        <div className="invitation-actions">
+          {canReissue(status) && (
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              aria-label={`Re-issue invitation for ${name}`}
+              aria-haspopup="dialog"
+              onClick={() => onReissue(invitation)}
+            >
+              <ArrowClockwise aria-hidden /> Re-issue
+            </button>
+          )}
+          {canRevoke(status) && (
+            <button
+              type="button"
+              className="btn btn-danger-outline btn-sm"
+              aria-label={`Revoke invitation for ${name}`}
+              aria-haspopup="dialog"
+              onClick={() => onRevoke(invitation)}
+            >
+              <Prohibit aria-hidden /> Revoke
+            </button>
+          )}
+          {canOpenDetail(status) && (
+            <Link href={detailHref} className="btn btn-secondary btn-sm" aria-label={`View invitation detail for ${name}`}>
+              <FileText aria-hidden /> Detail
+            </Link>
+          )}
+          {canEdit(status) && (
+            <Link href={`/doctors/invitations/edit/${id}`} className="btn btn-link btn-sm" aria-label={`Edit invitation for ${name}`}>
+              <PencilSimple aria-hidden /> Edit
+            </Link>
+          )}
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+// Grey placeholder rows shown while the list is loading
+function SkeletonRows() {
+  return Array.from({ length: SKELETON_ROW_COUNT }, (_, rowIndex) => (
+    <tr key={rowIndex} className="invitation-table-skeleton" aria-hidden>
+      {Array.from({ length: COLUMN_COUNT }, (_, cellIndex) => (
+        <td key={cellIndex}>
+          <span className="skeleton-bar" />
+        </td>
+      ))}
+    </tr>
+  ));
+}
+
+// Grey placeholder cards shown while the list is loading (below 768px)
+function SkeletonCards() {
+  return Array.from({ length: SKELETON_CARD_COUNT }, (_, cardIndex) => (
+    <li key={cardIndex} className="invitation-card is-skeleton" aria-hidden>
+      <span className="invitation-card-skeleton-head">
+        <span className="skeleton-bar" />
+        <span className="skeleton-bar" />
+      </span>
+      <span className="skeleton-bar" />
+      <span className="skeleton-bar" />
+    </li>
+  ));
+}

@@ -1,0 +1,148 @@
+@use "sass:list";
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+.invitation-table-card {
+  @extend %card-surface;
+  overflow: hidden;
+}
+
+// The table scrolls sideways inside its card, never the page
+.invitation-table-scroll {
+  overflow-x: auto;
+}
+
+.invitation-table {
+  width: 100%;
+  min-width: $table-min-w;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: $table-cell-py $table-cell-px;
+    text-align: left;
+    border-bottom: $border-w solid $color-border;
+    font-variant-numeric: tabular-nums;
+  }
+
+  thead th {
+    height: $table-head-h;
+    padding-block: 0;
+    background: $color-table-head-bg;
+    color: $color-text-secondary;
+    font-weight: $font-weight-semibold;
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: none;
+  }
+
+  .is-numeric {
+    text-align: right;
+  }
+
+  .is-secondary {
+    color: $color-text-secondary;
+    white-space: nowrap;
+  }
+}
+
+.invitation-name {
+  color: $color-text;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-primary;
+    text-decoration: underline;
+    text-underline-offset: $link-underline-offset;
+  }
+
+  &.is-missing {
+    color: $color-muted;
+  }
+}
+
+.invitation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-sm;
+}
+
+// Row just re-issued or revoked: brief tint so the admin sees what changed
+.invitation-table tbody tr.is-highlighted > * {
+  background: $color-row-highlight;
+}
+
+// Full-width cell that holds the empty or error message
+.invitation-table .invitation-table-message {
+  padding: $space-2xl $space-lg;
+}
+
+// Loading placeholders: one grey bar per cell, widths differ per column
+$skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
+
+.skeleton-bar {
+  display: block;
+  height: $space-md;
+  border-radius: $radius-sm;
+  background: $color-skeleton;
+}
+
+.invitation-table-skeleton {
+  @for $column from 1 through list.length($skeleton-widths) {
+    td:nth-child(#{$column}) .skeleton-bar {
+      width: list.nth($skeleton-widths, $column);
+    }
+  }
+
+  td:nth-child(4) .skeleton-bar { // Re-issues
+    margin-left: auto; // Re-issues column is right-aligned
+  }
+
+  td:nth-child(6) .skeleton-bar { // Status chip
+    height: $chip-h;
+    border-radius: $radius-pill;
+  }
+
+  td:nth-child(7) .skeleton-bar { // Manage buttons
+    height: $control-h-sm;
+    border-radius: $radius-md;
+  }
+}
+
+// 1439 and narrower: compact density 12/12 (Hi-Fi 1024 and 768 frames)
+@include below($bp-lg) {
+  .invitation-table {
+    th,
+    td {
+      padding: $space-ms;
+    }
+
+    thead th {
+      padding-block: 0;
+    }
+  }
+}
+
+// Card list: same data as the table, shown instead of it on phones
+.invitation-cards {
+  display: none;
+  flex-direction: column;
+  gap: $space-ms;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@include below($bp-sm) {
+  .invitation-table-card {
+    display: none;
+  }
+
+  .invitation-cards {
+    display: flex;
+  }
+}

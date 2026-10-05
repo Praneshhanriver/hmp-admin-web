@@ -1,0 +1,146 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+// Native <dialog>: the browser puts it in the top layer, so no z-index is needed
+.confirmation-dialog {
+  width: calc(100% - #{$dialog-gutter});
+  max-width: $dialog-w;
+  padding: $space-lg;
+  border: none;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  color: $color-text;
+  box-shadow: $shadow-dialog;
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+    gap: $space-lg;
+  }
+
+  &::backdrop {
+    background: $color-scrim;
+  }
+}
+
+.confirmation-dialog-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $space-ms;
+}
+
+.confirmation-dialog-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  height: $chip-h;
+  padding: 0 $space-sm;
+  border: $border-w solid $color-danger-border;
+  border-radius: $radius-sm; // a tag, not a status chip
+  background: $color-danger-soft;
+  color: $color-danger;
+  font-weight: $font-weight-semibold;
+}
+
+.confirmation-dialog-title {
+  margin: 0;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+}
+
+.confirmation-dialog-body {
+  margin: 0;
+  font-size: $font-size-body-lg;
+  color: $color-text-secondary;
+}
+
+.confirmation-dialog-summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: $space-sm $space-md;
+  margin: 0;
+  padding: $space-md;
+  border-radius: $radius-md;
+  background: $color-surface-alt;
+
+  dt {
+    color: $color-muted;
+  }
+
+  dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  dd:first-of-type {
+    font-weight: $font-weight-semibold; // the invited person
+  }
+}
+
+.confirmation-dialog-next {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-sm;
+    color: $color-text-secondary;
+
+    svg {
+      flex-shrink: 0;
+      margin-top: $space-xs;
+      font-size: $icon-sm;
+      color: $color-text;
+    }
+  }
+}
+
+.confirmation-dialog-next-title {
+  font-weight: $font-weight-semibold;
+}
+
+.confirmation-dialog-error {
+  margin: 0;
+  padding: $space-ms $space-md;
+  border: $border-w solid $color-danger-border;
+  border-radius: $radius-md;
+  background: $color-danger-soft;
+  color: $color-danger;
+}
+
+// wrap-reverse: on narrow screens the confirm button sits on top, Cancel below
+.confirmation-dialog-actions {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+  gap: $space-sm;
+  padding-top: $space-md;
+  border-top: $border-w solid $color-border;
+}
+
+// Phones (Hi-Fi 3i): bottom sheet with a small gutter, full-width stacked buttons
+@include below($bp-sm) {
+  .confirmation-dialog {
+    width: calc(100% - #{$dialog-gutter-sm});
+    max-width: none;
+    margin-bottom: $space-sm;
+    padding: $space-md;
+  }
+
+  .confirmation-dialog-actions .btn {
+    flex: 1 1 100%;
+  }
+}

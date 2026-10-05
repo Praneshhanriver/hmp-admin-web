@@ -1,0 +1,90 @@
+@use "../tokens" as *;
+
+// Shared button styles. Width always comes from padding, never fixed.
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-xs;
+  border: $border-w solid transparent;
+  border-radius: $radius-md;
+  font: inherit;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: $opacity-disabled;
+    cursor: not-allowed;
+  }
+}
+
+.btn-sm {
+  height: $control-h-sm;
+  padding: 0 $space-ms;
+}
+
+.btn-md {
+  height: $control-h-md;
+  padding: 0 $space-md;
+  gap: $space-sm;
+}
+
+.btn-lg {
+  height: $control-h-lg;
+  padding: 0 $space-lg;
+  gap: $space-sm;
+  font-size: $font-size-body-lg;
+}
+
+.btn-primary {
+  background: $color-primary;
+  border-color: $color-primary;
+  color: $color-on-primary;
+
+  &:hover {
+    background: $color-primary-hover;
+  }
+}
+
+.btn-secondary {
+  background: $color-surface;
+  border-color: $color-border-strong;
+  color: $color-text;
+
+  &:hover {
+    background: $color-surface-alt;
+  }
+}
+
+.btn-danger {
+  background: $color-danger;
+  border-color: $color-danger;
+  color: $color-on-danger;
+}
+
+.btn-danger-outline {
+  background: $color-surface;
+  border-color: $color-danger-border;
+  color: $color-danger;
+
+  &:hover {
+    background: $color-danger-soft;
+  }
+}
+
+.btn-link {
+  padding: 0 $space-xs;
+  color: $color-primary;
+  text-decoration: underline;
+  text-underline-offset: $link-underline-offset;
+}
+
+// Phone-sized button: 44px tall, shares the row with its neighbours
+.btn-touch {
+  flex: 1;
+  min-height: $control-h-touch;
+  padding: 0 $space-md;
+  gap: $space-sm;
+}

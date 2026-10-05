@@ -1,0 +1,124 @@
+@use "sass:list";
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+// One invitation as a card (below 768px, Hi-Fi mobile)
+.invitation-card {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+  padding: $space-md;
+  @extend %card-surface;
+
+  &.is-highlighted {
+    background: $color-row-highlight;
+  }
+}
+
+.invitation-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $space-sm;
+}
+
+.invitation-card-title {
+  margin: 0;
+  font-size: $font-size-body-lg;
+  line-height: $line-height-tight;
+  font-weight: $font-weight-bold;
+
+  &.is-missing {
+    color: $color-muted;
+  }
+}
+
+.invitation-card-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-ms $space-md;
+  margin: 0;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: $space-xs;
+  }
+
+  dt {
+    color: $color-muted;
+  }
+
+  dd {
+    margin: 0;
+    font-size: $font-size-body-lg;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.invitation-card-actions {
+  display: flex;
+  gap: $space-sm;
+}
+
+.invitation-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $space-ms;
+  border-top: $border-w solid $color-border;
+}
+
+.invitation-card-link {
+  min-height: $control-h-touch;
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  color: $color-text-secondary;
+  font-weight: $font-weight-semibold;
+  text-underline-offset: $link-underline-offset;
+
+  &.is-primary {
+    color: $color-primary;
+  }
+}
+
+// Empty or error message in place of the cards
+.invitation-cards-message {
+  padding: $space-lg $space-md;
+  background: $color-surface;
+  border: $border-w solid $color-border;
+  border-radius: $radius-lg;
+}
+
+// Loading placeholder card (Hi-Fi 3e): name + chip, facts block, button
+$skeleton-card-head-widths: 50%, 25%;
+
+.invitation-card.is-skeleton {
+  gap: $space-ms;
+
+  > .skeleton-bar {
+    height: $space-xl; // facts block
+  }
+
+  > .skeleton-bar:last-child {
+    height: $control-h-touch; // action button
+    border-radius: $radius-md;
+  }
+}
+
+.invitation-card-skeleton-head {
+  display: flex;
+  justify-content: space-between;
+
+  @for $bar from 1 through list.length($skeleton-card-head-widths) {
+    .skeleton-bar:nth-child(#{$bar}) {
+      width: list.nth($skeleton-card-head-widths, $bar);
+    }
+  }
+
+  .skeleton-bar:last-child {
+    height: $chip-h; // status chip
+    border-radius: $radius-pill;
+  }
+}

@@ -1,0 +1,38 @@
+@use "../tokens" as *;
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  height: $chip-h;
+  padding: 0 $space-sm;
+  border: $border-w solid;
+  border-radius: $radius-pill;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+}
+
+.status-chip-pending {
+  background: $chip-pending-bg;
+  color: $chip-pending-fg;
+  border-color: $chip-pending-border;
+}
+
+.status-chip-used {
+  background: $chip-used-bg;
+  color: $chip-used-fg;
+  border-color: $chip-used-border;
+}
+
+.status-chip-expired {
+  background: $chip-expired-bg;
+  color: $chip-expired-fg;
+  border-color: $chip-expired-border;
+  border-style: dashed; // a non-colour cue (Hi-Fi)
+}
+
+.status-chip-revoked {
+  background: $chip-revoked-bg;
+  color: $chip-revoked-fg;
+  border-color: $chip-revoked-border;
+}

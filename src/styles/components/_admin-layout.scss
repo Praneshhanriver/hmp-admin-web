@@ -1,0 +1,49 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+.admin-layout-body {
+  display: flex;
+  min-height: calc(100vh - #{$layout-header-h});
+}
+
+.admin-layout-main {
+  flex: 1;
+  min-width: 0; // lets wide content scroll inside its own box (Lesson 7)
+  padding: $page-pad;
+}
+
+// Content column is capped and centred (shows on 1920 screens)
+.admin-layout-content {
+  max-width: $layout-content-max;
+  margin: 0 auto;
+}
+
+// Dark background behind the open drawer; clicking it closes the drawer
+.admin-scrim {
+  display: none;
+}
+
+// 1439 and narrower: Hi-Fi 1024 and 768 frames use the smaller page padding
+@include below($bp-lg) {
+  .admin-layout-main {
+    padding: $space-lg;
+  }
+}
+
+@include below($bp-md) {
+  .admin-scrim {
+    display: block;
+    position: fixed;
+    inset: $layout-header-h 0 0 0;
+    z-index: $z-scrim;
+    border: none;
+    padding: 0;
+    background: $color-scrim;
+  }
+}
+
+@include below($bp-sm) {
+  .admin-layout-main {
+    padding: $space-md;
+  }
+}

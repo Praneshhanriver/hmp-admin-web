@@ -1,0 +1,69 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+.toast {
+  position: fixed;
+  right: $space-lg;
+  bottom: $space-lg;
+  z-index: $z-toast;
+  display: flex;
+  align-items: flex-start;
+  gap: $space-ms;
+  width: calc(100% - #{$toast-gutter});
+  max-width: $toast-w;
+  padding: $space-md;
+  border-radius: $radius-lg;
+  background: $color-toast-bg;
+  color: $color-toast-fg;
+  box-shadow: $shadow-toast;
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  margin-top: $space-xs;
+  font-size: $icon-md;
+  color: $color-success;
+}
+
+.toast-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.toast-title {
+  font-size: $font-size-body-lg;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+}
+
+.toast-message {
+  color: $color-toast-muted;
+}
+
+.toast-dismiss {
+  flex-shrink: 0;
+  height: $control-h-sm; // 36px: meets the 32px minimum target
+  padding: 0 $space-sm;
+  border: none;
+  border-radius: $radius-md;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: $font-weight-semibold;
+  text-decoration: underline;
+  text-underline-offset: $link-underline-offset;
+  cursor: pointer;
+}
+
+@include below($bp-sm) {
+  // Hi-Fi 3j: 8px from each side, 16px from the bottom
+  .toast {
+    right: $space-sm;
+    bottom: $space-md;
+    left: $space-sm;
+    width: auto;
+    max-width: none;
+  }
+}

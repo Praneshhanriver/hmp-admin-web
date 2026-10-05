@@ -1,0 +1,108 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+.admin-header {
+  height: $layout-header-h;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-md;
+  padding: 0 $space-lg;
+  background: $color-surface;
+  border-bottom: $border-w solid $color-border;
+}
+
+.admin-header-brand {
+  display: flex;
+  align-items: baseline;
+  gap: $space-ms;
+  color: $color-text;
+  text-decoration: none;
+}
+
+.admin-header-title {
+  font-size: $font-size-h4;
+  font-weight: $font-weight-bold;
+  letter-spacing: $letter-spacing-tight;
+}
+
+.admin-header-subtitle {
+  color: $color-muted;
+}
+
+.admin-header-account {
+  height: $control-h-md;
+  display: inline-flex;
+  align-items: center;
+  gap: $space-sm;
+  padding: 0 $space-ms;
+  border: $border-w solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-surface-alt;
+  }
+}
+
+// Drawer toggle, only shown below 1024px
+.admin-header-menu {
+  display: none;
+  height: $control-h-md;
+  align-items: center;
+  gap: $space-sm;
+  padding: 0 $space-ms;
+  border: $border-w solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+}
+
+// Short labels replace the long ones on narrow screens
+.admin-header-title-short,
+.admin-header-account-short {
+  display: none;
+}
+
+@include below($bp-md) {
+  .admin-header {
+    gap: $space-sm;
+    padding: 0 $space-md;
+  }
+
+  // Touch-sized on tablets and phones
+  .admin-header-menu {
+    display: inline-flex;
+    height: $control-h-touch;
+  }
+
+  .admin-header-account {
+    height: $control-h-touch;
+    gap: $space-xs;
+    font-weight: $font-weight-semibold;
+  }
+
+  .admin-header-title,
+  .admin-header-subtitle,
+  .admin-header-account-email,
+  .admin-header-account-caret {
+    display: none;
+  }
+
+  .admin-header-title-short {
+    display: inline;
+    font-size: $font-size-body-lg;
+    font-weight: $font-weight-bold;
+  }
+
+  .admin-header-account-short {
+    display: inline;
+  }
+}
