@@ -44,8 +44,12 @@
   }
 }
 
-// Phones: "1–8 of 18" instead of "Showing 1–8"
+// Phones: "1–8 of 18" instead of "Showing 1–8", tighter page rhythm
 @include below($bp-sm) {
+  .invitation-list-page {
+    gap: $space-md;
+  }
+
   .invitation-list-range-label {
     display: none;
   }

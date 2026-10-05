@@ -14,9 +14,20 @@ export interface ToastMessage {
   message: string;
 }
 
-const SUCCESS: Record<InvitationAction, ToastMessage> = {
-  reissue: { title: "Invitation re-issued", message: "A new link was sent. The previous link no longer works." },
-  revoke: { title: "Invitation revoked", message: "The link no longer works. No new link was sent." },
+// Toast text from the Hi-Fi. Names the doctor when the invitation has one
+const SUCCESS: Record<InvitationAction, (name: string | null) => ToastMessage> = {
+  reissue: (name) => ({
+    title: "Invitation re-issued",
+    message: name
+      ? `A new link was sent to ${name}. The previous link no longer works.`
+      : "A new link was sent. The previous link no longer works.",
+  }),
+  revoke: (name) => ({
+    title: "Invitation revoked",
+    message: name
+      ? `${name}’s link no longer works. No new link was sent.`
+      : "The link no longer works. No new link was sent.",
+  }),
 };
 
 const FAILURE: Record<InvitationAction, string> = {
@@ -31,13 +42,15 @@ export function useInvitationActions(onUpdated: (updated: Invitation) => void) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
+  const [isToastPaused, setIsToastPaused] = useState(false); // mouse or keyboard focus is on the toast
 
-  // Hide the toast after a few seconds. Cleanup cancels the timer if the toast changes first
+  // Hide the toast after a few seconds, but never while the admin is reading it.
+  // Cleanup cancels the timer if the toast changes or gets paused first
   useEffect(() => {
-    if (!toast) return;
+    if (!toast || isToastPaused) return;
     const timer = setTimeout(() => setToast(null), TOAST_DURATION_MS);
     return () => clearTimeout(timer);
-  }, [toast]);
+  }, [toast, isToastPaused]);
 
   // Remove the row highlight after a short moment
   useEffect(() => {
@@ -67,7 +80,7 @@ export function useInvitationActions(onUpdated: (updated: Invitation) => void) {
         type === "reissue" ? await reissueInvitation(invitation.id) : await revokeInvitation(invitation.id);
       onUpdated(updated);
       setPendingAction(null);
-      setToast(SUCCESS[type]);
+      setToast(SUCCESS[type](updated.doctorName));
       setHighlightedId(updated.id);
     } catch {
       setErrorMessage(FAILURE[type]); // dialog stays open so the admin can try again
@@ -85,6 +98,11 @@ export function useInvitationActions(onUpdated: (updated: Invitation) => void) {
     open,
     cancel,
     confirm,
-    dismissToast: () => setToast(null),
+    dismissToast: () => {
+      setToast(null);
+      setIsToastPaused(false);
+    },
+    pauseToast: () => setIsToastPaused(true),
+    resumeToast: () => setIsToastPaused(false),
   };
 }

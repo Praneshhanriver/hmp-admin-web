@@ -49,7 +49,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
 
       <nav className="pagination pagination-compact" aria-label="Pagination">
         {previous}
-        <span aria-current="page">
+        <span className="pagination-compact-label" aria-current="page">
           Page {page} of {totalPages}
         </span>
         {next}

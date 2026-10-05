@@ -31,6 +31,7 @@
   font-size: $font-size-h2;
   line-height: $line-height-tight;
   font-weight: $font-weight-bold;
+  letter-spacing: $letter-spacing-tight;
 }
 
 @include below($bp-sm) {

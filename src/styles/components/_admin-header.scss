@@ -23,6 +23,7 @@
 .admin-header-title {
   font-size: $font-size-h4;
   font-weight: $font-weight-bold;
+  letter-spacing: $letter-spacing-tight;
 }
 
 .admin-header-subtitle {
@@ -42,6 +43,10 @@
   font: inherit;
   font-weight: $font-weight-medium;
   cursor: pointer;
+
+  &:hover {
+    background: $color-surface-alt;
+  }
 }
 
 // Drawer toggle, only shown below 1024px
@@ -51,7 +56,7 @@
   align-items: center;
   gap: $space-sm;
   padding: 0 $space-ms;
-  border: $border-w solid $color-border-strong;
+  border: $border-w solid $color-border;
   border-radius: $radius-md;
   background: $color-surface;
   color: $color-text;
@@ -68,11 +73,20 @@
 
 @include below($bp-md) {
   .admin-header {
+    gap: $space-sm;
     padding: 0 $space-md;
   }
 
+  // Touch-sized on tablets and phones
   .admin-header-menu {
     display: inline-flex;
+    height: $control-h-touch;
+  }
+
+  .admin-header-account {
+    height: $control-h-touch;
+    gap: $space-xs;
+    font-weight: $font-weight-semibold;
   }
 
   .admin-header-title,

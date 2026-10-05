@@ -17,6 +17,11 @@
   justify-content: space-between;
 }
 
+.pagination-compact-label {
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+}
+
 %pagination-button {
   display: inline-flex;
   align-items: center;
@@ -27,6 +32,7 @@
   background: $color-surface;
   color: $color-text;
   font: inherit;
+  font-weight: $font-weight-medium;
   cursor: pointer;
 
   &:hover:not(:disabled) {
@@ -72,6 +78,11 @@
     .pagination-step {
       height: $control-h-touch;
       padding: 0 $space-md;
+      font-weight: $font-weight-semibold;
+
+      &:not(:disabled) {
+        border-color: $color-border-strong;
+      }
     }
   }
 }

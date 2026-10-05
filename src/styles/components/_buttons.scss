@@ -78,7 +78,7 @@
   padding: 0 $space-xs;
   color: $color-primary;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: $link-underline-offset;
 }
 
 // Phone-sized button: 44px tall, shares the row with its neighbours

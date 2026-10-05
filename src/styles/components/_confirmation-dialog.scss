@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: $space-sm;
+  gap: $space-ms;
 }
 
 .confirm-dialog-tag {
@@ -37,10 +37,9 @@
   height: $chip-h;
   padding: 0 $space-sm;
   border: $border-w solid $color-danger-border;
-  border-radius: $radius-pill;
+  border-radius: $radius-sm; // a tag, not a status chip
   background: $color-danger-soft;
   color: $color-danger;
-  font-size: $font-size-caption;
   font-weight: $font-weight-semibold;
 }
 
@@ -72,8 +71,11 @@
 
   dd {
     margin: 0;
-    font-weight: $font-weight-semibold;
     font-variant-numeric: tabular-nums;
+  }
+
+  dd:first-of-type {
+    font-weight: $font-weight-semibold; // the invited person
   }
 }
 
@@ -99,7 +101,8 @@
 
     svg {
       flex-shrink: 0;
-      font-size: $icon-md;
+      margin-top: $space-xs;
+      font-size: $icon-sm;
       color: $color-text;
     }
   }
@@ -124,13 +127,16 @@
   flex-wrap: wrap-reverse;
   justify-content: flex-end;
   gap: $space-sm;
-  padding-top: $space-lg;
+  padding-top: $space-md;
   border-top: $border-w solid $color-border;
 }
 
-// Phones: less padding, full-width stacked buttons
+// Phones (Hi-Fi 3i): bottom sheet with a small gutter, full-width stacked buttons
 @include below($bp-sm) {
   .confirm-dialog {
+    width: calc(100% - #{$space-md});
+    max-width: none;
+    margin-bottom: $space-sm;
     padding: $space-md;
   }
 

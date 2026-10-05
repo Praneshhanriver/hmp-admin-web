@@ -57,7 +57,9 @@
   text-decoration: none;
 
   &:hover {
+    color: $color-primary;
     text-decoration: underline;
+    text-underline-offset: $link-underline-offset;
   }
 
   &.is-missing {
@@ -114,12 +116,16 @@ $skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
   }
 }
 
-// 1024–1439: tighter cells so all 7 columns fit next to the narrow sidebar
-@include between($bp-md, $bp-lg) {
+// 1439 and narrower: compact density 12/12 (Hi-Fi 1024 and 768 frames)
+@include below($bp-lg) {
   .invitation-table {
     th,
     td {
-      padding-inline: $space-ms;
+      padding: $space-ms;
+    }
+
+    thead th {
+      padding-block: 0;
     }
   }
 }

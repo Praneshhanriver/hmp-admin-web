@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 // Shared by EmptyState and ErrorState
 .state-message {
@@ -38,5 +39,20 @@
 
   strong {
     color: $color-text;
+  }
+}
+
+// Phones (Hi-Fi 3e): plain icon, full-width touch-sized button
+@include below($bp-sm) {
+  .state-message-icon,
+  .state-message-icon.is-danger {
+    width: auto;
+    height: auto;
+    background: none;
+  }
+
+  .state-message .btn {
+    width: 100%;
+    height: $control-h-touch;
   }
 }

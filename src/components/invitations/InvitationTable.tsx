@@ -116,11 +116,17 @@ function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: Invit
   return (
     <tr className={isHighlighted ? "is-highlighted" : undefined}>
       <th scope="row">
-        <Link href={detailHref} className={doctorName ? "invitation-name" : "invitation-name is-missing"}>
+        <Link
+          href={detailHref}
+          className={doctorName ? "invitation-name" : "invitation-name is-missing"}
+          aria-label={`View invitation detail for ${name}`}
+        >
           {name}
         </Link>
       </th>
-      <td className="is-secondary">{maskMobile(mobile)}</td>
+      <td className="is-secondary" aria-label={mobile ? undefined : "No contact information"}>
+        {maskMobile(mobile)}
+      </td>
       <td>{formatShortDate(issuedAt)}</td>
       <td className="is-numeric">{reissueCount}</td>
       <td>{formatShortDate(expiresAt)}</td>
@@ -184,7 +190,10 @@ function SkeletonRows() {
 function SkeletonCards() {
   return Array.from({ length: SKELETON_CARD_COUNT }, (_, cardIndex) => (
     <li key={cardIndex} className="invitation-card is-skeleton" aria-hidden>
-      <span className="skeleton-bar" />
+      <span className="invitation-card-skeleton-head">
+        <span className="skeleton-bar" />
+        <span className="skeleton-bar" />
+      </span>
       <span className="skeleton-bar" />
       <span className="skeleton-bar" />
     </li>

@@ -33,7 +33,7 @@ export default function InvitationCard({ invitation, isHighlighted, onReissue, o
       <dl className="invitation-card-facts">
         <div>
           <dt>Contact</dt>
-          <dd>{maskMobile(mobile)}</dd>
+          <dd aria-label={mobile ? undefined : "No contact information"}>{maskMobile(mobile)}</dd>
         </div>
         <div>
           <dt>Re-issues</dt>
@@ -73,7 +73,7 @@ export default function InvitationCard({ invitation, isHighlighted, onReissue, o
           </button>
         )}
         {showDetailAction && (
-          <Link href={detailHref} className="btn btn-secondary btn-touch">
+          <Link href={detailHref} className="btn btn-secondary btn-touch" aria-label={`View invitation detail for ${name}`}>
             <FileText aria-hidden /> View detail
           </Link>
         )}
@@ -81,10 +81,14 @@ export default function InvitationCard({ invitation, isHighlighted, onReissue, o
 
       {canEdit(status) && (
         <div className="invitation-card-footer">
-          <Link href={detailHref} className="invitation-card-link">
-            <FileText aria-hidden /> View detail
+          <Link href={detailHref} className="invitation-card-link" aria-label={`View invitation detail for ${name}`}>
+            View detail
           </Link>
-          <Link href={`/doctors/invitations/edit/${id}`} className="invitation-card-link is-primary">
+          <Link
+            href={`/doctors/invitations/edit/${id}`}
+            className="invitation-card-link is-primary"
+            aria-label={`Edit invitation for ${name}`}
+          >
             <PencilSimple aria-hidden /> Edit details
           </Link>
         </div>

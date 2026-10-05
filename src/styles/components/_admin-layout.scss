@@ -23,6 +23,13 @@
   display: none;
 }
 
+// 1439 and narrower: Hi-Fi 1024 and 768 frames use the smaller page padding
+@include below($bp-lg) {
+  .admin-layout-main {
+    padding: $space-lg;
+  }
+}
+
 @include below($bp-md) {
   .admin-scrim {
     display: block;
@@ -32,10 +39,6 @@
     border: none;
     padding: 0;
     background: $color-scrim;
-  }
-
-  .admin-layout-main {
-    padding: $space-lg;
   }
 }
 

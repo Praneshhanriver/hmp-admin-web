@@ -17,5 +17,5 @@ export const STATUS_FILTER_OPTIONS: { value: StatusFilter; label: string }[] = [
 export const EMPTY_FILTERS: InvitationFilters = { query: "", status: "all" };
 
 // How long the success toast and the updated-row highlight stay visible
-export const TOAST_DURATION_MS = 5000;
+export const TOAST_DURATION_MS = 6000; // Hi-Fi: at least 6 s, paused on hover/focus
 export const ROW_HIGHLIGHT_MS = 2000;

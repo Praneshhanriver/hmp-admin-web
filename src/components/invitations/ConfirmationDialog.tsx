@@ -4,6 +4,7 @@ import { useEffect, useId, useRef } from "react";
 import type { SyntheticEvent } from "react";
 import {
   ArrowClockwise,
+  CircleNotch,
   Clock,
   LinkBreak,
   PaperPlaneTilt,
@@ -80,7 +81,7 @@ export default function ConfirmationDialog({
   const bodyId = useId();
 
   const copy = COPY[variant];
-  const ConfirmIcon = copy.confirmIcon;
+  const ConfirmIcon = isSubmitting ? CircleNotch : copy.confirmIcon; // spinner while busy
   const name = invitation.doctorName ?? "No information";
   const { reissueCount } = invitation;
 

@@ -122,7 +122,13 @@ export default function InvitationListView({ mockScenario }: InvitationListViewP
       )}
 
       {actions.toast && (
-        <Toast title={actions.toast.title} message={actions.toast.message} onDismiss={actions.dismissToast} />
+        <Toast
+          title={actions.toast.title}
+          message={actions.toast.message}
+          onDismiss={actions.dismissToast}
+          onPause={actions.pauseToast}
+          onResume={actions.resumeToast}
+        />
       )}
     </>
   );
