@@ -103,6 +103,7 @@ function InvitationRow({ invitation }: { invitation: Invitation }) {
     </tr>
   );
 }
+
 // Grey placeholder rows shown while the list is loading
 function SkeletonRows() {
   return Array.from({ length: SKELETON_ROW_COUNT }, (_, rowIndex) => (

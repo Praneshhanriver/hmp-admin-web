@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import { X } from "@phosphor-icons/react";
 import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
@@ -32,7 +33,7 @@ export default function InvitationListView({ mockScenario }: InvitationListViewP
     setSearchBarKey((key) => key + 1); // a new key = a fresh SearchBar with empty fields
   }
 
-    let message = null;
+  let message: ReactNode = null;
   if (isError) {
     message = (
       <ErrorState
