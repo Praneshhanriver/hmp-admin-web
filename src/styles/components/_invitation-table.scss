@@ -1,5 +1,6 @@
 @use "sass:list";
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 .invitation-table-card {
   background: $color-surface;
@@ -110,5 +111,35 @@ $skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
   td:nth-child(7) .skeleton-bar {
     height: $control-h-sm;
     border-radius: $radius-md;
+  }
+}
+
+// 1024–1439: tighter cells so all 7 columns fit next to the narrow sidebar
+@include between($bp-md, $bp-lg) {
+  .invitation-table {
+    th,
+    td {
+      padding-inline: $space-ms;
+    }
+  }
+}
+
+// Card list: same data as the table, shown instead of it on phones
+.invitation-cards {
+  display: none;
+  flex-direction: column;
+  gap: $space-ms;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@include below($bp-sm) {
+  .invitation-table-card {
+    display: none;
+  }
+
+  .invitation-cards {
+    display: flex;
   }
 }

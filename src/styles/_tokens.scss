@@ -102,9 +102,13 @@ $page-pad: $space-xl;
 // ---------- overlays ----------
 $dialog-w: 480px;
 $toast-w: 400px;
+$z-scrim: 10;
 $z-drawer: 20;
 $z-dialog: 30;
 $z-toast: 40;
+
+// ---------- motion ----------
+$motion-duration: 200ms;
 
 // ---------- table ----------
 $table-head-h: 44px;

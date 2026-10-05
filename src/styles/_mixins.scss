@@ -1,0 +1,25 @@
+@use "tokens" as *;
+
+// Breakpoint helpers. Components never write raw widths in media queries.
+// Desktop-first: base styles are for wide screens, these narrow them down.
+
+// Screens narrower than $breakpoint
+@mixin below($breakpoint) {
+  @media (width < #{$breakpoint}) {
+    @content;
+  }
+}
+
+// Screens $breakpoint wide or wider
+@mixin from($breakpoint) {
+  @media (width >= #{$breakpoint}) {
+    @content;
+  }
+}
+
+// From $min up to (not including) $max
+@mixin between($min, $max) {
+  @media (#{$min} <= width < #{$max}) {
+    @content;
+  }
+}

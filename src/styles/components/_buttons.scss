@@ -80,3 +80,11 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+// Phone-sized button: 44px tall, shares the row with its neighbours
+.btn-touch {
+  flex: 1;
+  min-height: $control-h-touch;
+  padding: 0 $space-md;
+  gap: $space-sm;
+}

@@ -36,12 +36,17 @@ function isCurrent(pathname: string, match: string): boolean {
   return pathname === match || pathname.startsWith(`${match}/`);
 }
 
+interface AdminSidebarProps {
+  isOpen: boolean; // drawer state, only matters below 1024px
+  onNavigate: () => void; // closes the drawer after a link is chosen
+}
+
 // Left navigation. Reads the URL to mark the current page
-export default function AdminSidebar() {
+export default function AdminSidebar({ isOpen, onNavigate }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <nav id="admin-nav" className="admin-sidebar" aria-label="Administration">
+    <nav id="admin-nav" className={isOpen ? "admin-sidebar is-open" : "admin-sidebar"} aria-label="Administration">
       {NAV_ITEMS.map((item) => {
         const ItemIcon = item.icon;
         const isItemCurrent = isCurrent(pathname, item.match);
@@ -55,6 +60,7 @@ export default function AdminSidebar() {
               href={item.href}
               className={`admin-sidebar-link ${isActive ? "is-active" : ""} ${isItemCurrent && hasChildren ? "is-group-active" : ""}`}
               aria-current={isActive ? "page" : undefined}
+              onClick={onNavigate}
             >
               {ItemIcon && <ItemIcon className="icon-md" weight={isItemCurrent ? "fill" : "regular"} aria-hidden />}
               {item.label}
@@ -68,6 +74,7 @@ export default function AdminSidebar() {
                   href={child.href}
                   className={`admin-sidebar-sublink ${isChildActive ? "is-active" : ""}`}
                   aria-current={isChildActive ? "page" : undefined}
+                  onClick={onNavigate}
                 >
                   {child.label}
                 </Link>

@@ -90,9 +90,12 @@ export default function InvitationListView({ mockScenario }: InvitationListViewP
         </span>
         {isFilled && (
           <span className="invitation-list-range">
-            Showing {firstIndex + 1}–{firstIndex + pageRows.length}
+            <span className="invitation-list-range-label">Showing </span>
+            {firstIndex + 1}–{firstIndex + pageRows.length}
+            <span className="invitation-list-range-total"> of {total}</span>
           </span>
         )}
+        {isFilled && <span className="invitation-list-scroll-hint">Scroll the table sideways for Manage →</span>}
       </div>
 
       <InvitationTable

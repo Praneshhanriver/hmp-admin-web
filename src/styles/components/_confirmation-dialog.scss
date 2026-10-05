@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 // Native <dialog>: the browser puts it in the top layer, so no z-index is needed
 .confirm-dialog {
@@ -125,4 +126,15 @@
   gap: $space-sm;
   padding-top: $space-lg;
   border-top: $border-w solid $color-border;
+}
+
+// Phones: less padding, full-width stacked buttons
+@include below($bp-sm) {
+  .confirm-dialog {
+    padding: $space-md;
+  }
+
+  .confirm-dialog-actions .btn {
+    flex: 1 1 100%;
+  }
 }

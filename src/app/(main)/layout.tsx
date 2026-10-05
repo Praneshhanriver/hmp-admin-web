@@ -1,17 +1,7 @@
-import AdminHeader from "@/components/layout/AdminHeader";
-import AdminSidebar from "@/components/layout/AdminSidebar";
+import AdminShell from "@/components/layout/AdminShell";
 
-// Admin shell: wraps every page inside (main)
+// Admin shell: wraps every page inside (main). Stays a Server Component;
+// the interactive drawer lives in the AdminShell client component
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <AdminHeader accountEmail="admin@hmp.co.kr" />
-      <div className="admin-layout-body">
-        <AdminSidebar />
-        <main className="admin-layout-main">
-          <div className="admin-layout-content">{children}</div>
-        </main>
-      </div>
-    </>
-  );
+  return <AdminShell accountEmail="admin@hmp.co.kr">{children}</AdminShell>;
 }

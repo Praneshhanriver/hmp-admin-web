@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowClockwise, FileText, PencilSimple, Prohibit } from "@phosphor-icons/react/dist/ssr";
 import StatusChip from "@/components/common/StatusChip";
+import InvitationCard from "@/components/invitations/InvitationCard";
 import type { Invitation } from "@/types/invitation";
 import { formatShortDate, maskMobile } from "@/utils/format";
 import { canEdit, canOpenDetail, canReissue, canRevoke } from "@/utils/invitationRules";
@@ -8,6 +9,7 @@ import type { ReactNode } from "react";
 
 const COLUMN_COUNT = 7;
 const SKELETON_ROW_COUNT = 6;
+const SKELETON_CARD_COUNT = 3;
 
 interface InvitationTableProps {
   rows: Invitation[];
@@ -19,7 +21,8 @@ interface InvitationTableProps {
   onRevoke: (invitation: Invitation) => void;
 }
 
-// p.113c table: 7 columns, actions depend on status
+// p.113c table: 7 columns, actions depend on status.
+// Also renders the same rows as cards; CSS shows the table or the cards, never both
 export default function InvitationTable({
   rows,
   total,
@@ -52,26 +55,48 @@ export default function InvitationTable({
     ));
   }
 
+  // Same choice for the card list (below 768px)
+  function renderCards() {
+    if (isLoading) return <SkeletonCards />;
+    if (message) return <li className="invitation-cards-message">{message}</li>;
+    return rows.map((row) => (
+      <li key={row.id}>
+        <InvitationCard
+          invitation={row}
+          isHighlighted={row.id === highlightedId}
+          onReissue={onReissue}
+          onRevoke={onRevoke}
+        />
+      </li>
+    ));
+  }
+
   return (
-    <div className="invitation-table-card">
-      <div className="invitation-table-scroll">
-        <table className="invitation-table" aria-busy={isLoading}>
-          <caption className="visually-hidden">Doctor invitations, {total} results</caption>
-          <thead>
-            <tr>
-              <th scope="col">Doctor</th>
-              <th scope="col">Contact</th>
-              <th scope="col">Issued</th>
-              <th scope="col" className="is-numeric">Re-issues</th>
-              <th scope="col">Expiry (TBC)</th>
-              <th scope="col">Status</th>
-              <th scope="col">Manage</th>
-            </tr>
-          </thead>
-          <tbody>{renderBody()}</tbody>
-        </table>
+    <>
+      <div className="invitation-table-card">
+        <div className="invitation-table-scroll">
+          <table className="invitation-table" aria-busy={isLoading}>
+            <caption className="visually-hidden">Doctor invitations, {total} results</caption>
+            <thead>
+              <tr>
+                <th scope="col">Doctor</th>
+                <th scope="col">Contact</th>
+                <th scope="col">Issued</th>
+                <th scope="col" className="is-numeric">Re-issues</th>
+                <th scope="col">Expiry (TBC)</th>
+                <th scope="col">Status</th>
+                <th scope="col">Manage</th>
+              </tr>
+            </thead>
+            <tbody>{renderBody()}</tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      <ul className="invitation-cards" aria-busy={isLoading} aria-label={`Doctor invitations, ${total} results`}>
+        {renderCards()}
+      </ul>
+    </>
   );
 }
 
@@ -152,5 +177,16 @@ function SkeletonRows() {
         </td>
       ))}
     </tr>
+  ));
+}
+
+// Grey placeholder cards shown while the list is loading (below 768px)
+function SkeletonCards() {
+  return Array.from({ length: SKELETON_CARD_COUNT }, (_, cardIndex) => (
+    <li key={cardIndex} className="invitation-card is-skeleton" aria-hidden>
+      <span className="skeleton-bar" />
+      <span className="skeleton-bar" />
+      <span className="skeleton-bar" />
+    </li>
   ));
 }

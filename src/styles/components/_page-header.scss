@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 .page-header {
   display: flex;
@@ -30,4 +31,15 @@
   font-size: $font-size-h2;
   line-height: $line-height-tight;
   font-weight: $font-weight-bold;
+}
+
+@include below($bp-sm) {
+  .page-header-title {
+    font-size: $font-size-h3;
+  }
+
+  // "Issue invitation" takes the full width on phones
+  .page-header-row .btn {
+    flex: 1 1 100%;
+  }
 }

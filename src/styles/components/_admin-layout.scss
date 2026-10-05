@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 .admin-layout-body {
   display: flex;
@@ -15,4 +16,31 @@
 .admin-layout-content {
   max-width: $layout-content-max;
   margin: 0 auto;
+}
+
+// Dark background behind the open drawer; clicking it closes the drawer
+.admin-scrim {
+  display: none;
+}
+
+@include below($bp-md) {
+  .admin-scrim {
+    display: block;
+    position: fixed;
+    inset: $layout-header-h 0 0 0;
+    z-index: $z-scrim;
+    border: none;
+    padding: 0;
+    background: $color-scrim;
+  }
+
+  .admin-layout-main {
+    padding: $space-lg;
+  }
+}
+
+@include below($bp-sm) {
+  .admin-layout-main {
+    padding: $space-md;
+  }
 }

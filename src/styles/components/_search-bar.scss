@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 .search-bar {
   display: flex;
@@ -80,4 +81,17 @@
   height: $input-h;
   padding: 0 $space-lg;
   font-size: $font-size-body-lg;
+}
+
+// Phones: every field and the button on its own full-width line
+@include below($bp-sm) {
+  .search-bar {
+    padding: $space-md;
+  }
+
+  .search-bar-field-query,
+  .search-bar-field-status,
+  .search-bar-submit {
+    flex: 1 1 100%;
+  }
 }

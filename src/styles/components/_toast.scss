@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 .toast {
   position: fixed;
@@ -49,4 +50,12 @@
   text-decoration: underline;
   text-underline-offset: $space-xs;
   cursor: pointer;
+}
+
+@include below($bp-sm) {
+  .toast {
+    right: $space-md;
+    bottom: $space-md;
+    width: calc(100% - #{$space-xl});
+  }
 }

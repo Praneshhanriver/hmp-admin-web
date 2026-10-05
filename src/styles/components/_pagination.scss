@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 .pagination {
   display: flex;
@@ -10,7 +11,7 @@
   justify-content: center;
 }
 
-// Shown below 768px in Lesson 7
+// Shown below 768px instead of the page numbers
 .pagination-compact {
   display: none;
   justify-content: space-between;
@@ -56,6 +57,21 @@
 
     &:hover {
       background: $color-primary;
+    }
+  }
+}
+
+@include below($bp-sm) {
+  .pagination-full {
+    display: none;
+  }
+
+  .pagination-compact {
+    display: flex;
+
+    .pagination-step {
+      height: $control-h-touch;
+      padding: 0 $space-md;
     }
   }
 }

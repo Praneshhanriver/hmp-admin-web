@@ -1,4 +1,5 @@
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 .admin-header {
   height: $layout-header-h;
@@ -41,4 +42,53 @@
   font: inherit;
   font-weight: $font-weight-medium;
   cursor: pointer;
+}
+
+// Drawer toggle, only shown below 1024px
+.admin-header-menu {
+  display: none;
+  height: $control-h-md;
+  align-items: center;
+  gap: $space-sm;
+  padding: 0 $space-ms;
+  border: $border-w solid $color-border-strong;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+}
+
+// Short labels replace the long ones on narrow screens
+.admin-header-title-short,
+.admin-header-account-short {
+  display: none;
+}
+
+@include below($bp-md) {
+  .admin-header {
+    padding: 0 $space-md;
+  }
+
+  .admin-header-menu {
+    display: inline-flex;
+  }
+
+  .admin-header-title,
+  .admin-header-subtitle,
+  .admin-header-account-email,
+  .admin-header-account-caret {
+    display: none;
+  }
+
+  .admin-header-title-short {
+    display: inline;
+    font-size: $font-size-body-lg;
+    font-weight: $font-weight-bold;
+  }
+
+  .admin-header-account-short {
+    display: inline;
+  }
 }
