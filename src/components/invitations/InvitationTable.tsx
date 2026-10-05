@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowClockwise, FileText, PencilSimple, Prohibit } from "@phosphor-icons/react/dist/ssr";
 import StatusChip from "@/components/common/StatusChip";
 import InvitationCard from "@/components/invitations/InvitationCard";
+import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL } from "@/constants/invitation";
 import type { Invitation } from "@/types/invitation";
 import { formatShortDate, maskMobile } from "@/utils/format";
 import { canEdit, canOpenDetail, canReissue, canRevoke } from "@/utils/invitationRules";
@@ -110,7 +111,7 @@ interface InvitationRowProps {
 // One table row. Kept in the same file because only the table uses it
 function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: InvitationRowProps) {
   const { id, doctorName, mobile, status, issuedAt, expiresAt, reissueCount } = invitation;
-  const name = doctorName ?? "No information";
+  const name = doctorName ?? MISSING_NAME_LABEL;
   const detailHref = `/doctors/invitations/details/${id}`;
 
   return (
@@ -124,7 +125,7 @@ function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: Invit
           {name}
         </Link>
       </th>
-      <td className="is-secondary" aria-label={mobile ? undefined : "No contact information"}>
+      <td className="is-secondary" aria-label={mobile ? undefined : MISSING_CONTACT_SPOKEN}>
         {maskMobile(mobile)}
       </td>
       <td>{formatShortDate(issuedAt)}</td>

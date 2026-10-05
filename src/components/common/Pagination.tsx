@@ -1,4 +1,5 @@
 import { CaretLeft, CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { FIRST_PAGE } from "@/constants/invitation";
 
 interface PaginationProps {
   page: number;
@@ -10,8 +11,8 @@ interface PaginationProps {
 export default function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   if (totalPages <= 1) return null;
 
-  const pages = Array.from({ length: totalPages }, (_, index) => index + 1);
-  const isFirst = page === 1;
+  const pages = Array.from({ length: totalPages }, (_, index) => index + FIRST_PAGE);
+  const isFirst = page === FIRST_PAGE;
   const isLast = page === totalPages;
 
   const previous = (

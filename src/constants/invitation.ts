@@ -1,5 +1,13 @@
 import type { InvitationFilters, StatusFilter } from "@/types/invitation";
 
+// Pagination always starts here, and every new search returns to it
+export const FIRST_PAGE = 1;
+
+// Shown when the invitation has no name or no contact (p.113c ②: never hidden)
+export const MISSING_NAME_LABEL = "No information";
+export const MISSING_CONTACT_LABEL = "-";
+export const MISSING_CONTACT_SPOKEN = "No contact information"; // what a screen reader hears for "-"
+
 // Rows per page. The Hi-Fi shows 8 per page (18 results → 3 pages).
 // Design-check question: the spec's admin lists use 20. Confirm with the designer.
 export const INVITATION_PAGE_SIZE = 8;

@@ -6,11 +6,8 @@
   flex-wrap: wrap;
   align-items: flex-end;
   gap: $space-md;
+  @extend %card-surface;
   padding: $space-lg;
-  background: $color-surface;
-  border: $border-w solid $color-border;
-  border-radius: $radius-lg;
-  box-shadow: $shadow-card;
 }
 
 .search-bar-field {
@@ -25,12 +22,12 @@
 }
 
 .search-bar-field-query {
-  flex: 1 1 280px;
+  flex: 1 1 $search-query-basis;
 }
 
 .search-bar-field-status {
-  flex: 0 1 200px;
-  min-width: 160px;
+  flex: 0 1 $search-status-basis;
+  min-width: $search-status-min-w;
 }
 
 // Wraps an input/select so an icon can sit on top of it
@@ -61,7 +58,7 @@
 
 %search-bar-control-icon {
   position: absolute;
-  top: 50%;
+  top: 50%; // vertically centred on the field
   transform: translateY(-50%);
   color: $color-muted;
   pointer-events: none; // clicks go through to the field

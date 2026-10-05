@@ -21,6 +21,7 @@ function wait(): Promise<void> {
 // Now (+ addDays) in Korean time: "2026-10-05T14:30:00+09:00"
 function kstIso(addDays = 0): string {
   const kst = new Date(Date.now() + KST_OFFSET_MS + addDays * DAY_MS);
+  // toISOString() is UTC "YYYY-MM-DDTHH:mm:ss.sssZ"; keep the first 19 characters and add the KST offset
   return `${kst.toISOString().slice(0, 19)}+09:00`;
 }
 

@@ -9,7 +9,7 @@
   display: flex;
   align-items: flex-start;
   gap: $space-ms;
-  width: calc(100% - #{$space-2xl});
+  width: calc(100% - #{$toast-gutter});
   max-width: $toast-w;
   padding: $space-md;
   border-radius: $radius-lg;

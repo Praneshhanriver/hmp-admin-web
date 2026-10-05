@@ -23,3 +23,11 @@
     @content;
   }
 }
+
+// White card with border, large radius and soft shadow (search bar, table, cards)
+%card-surface {
+  background: $color-surface;
+  border: $border-w solid $color-border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}

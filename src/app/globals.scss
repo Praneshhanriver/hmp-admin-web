@@ -46,8 +46,8 @@ body {
 // Hidden on screen, still read by screen readers
 .visually-hidden {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: $visually-hidden-size;
+  height: $visually-hidden-size;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;

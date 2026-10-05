@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowClockwise, FileText, PencilSimple, Prohibit } from "@phosphor-icons/react/dist/ssr";
 import StatusChip from "@/components/common/StatusChip";
+import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL } from "@/constants/invitation";
 import type { Invitation } from "@/types/invitation";
 import { formatShortDate, maskMobile } from "@/utils/format";
 import { canEdit, canReissue, canRevoke } from "@/utils/invitationRules";
@@ -15,7 +16,7 @@ interface InvitationCardProps {
 // One invitation as a card: replaces the table row below 768px (Hi-Fi mobile)
 export default function InvitationCard({ invitation, isHighlighted, onReissue, onRevoke }: InvitationCardProps) {
   const { id, doctorName, mobile, status, issuedAt, expiresAt, reissueCount } = invitation;
-  const name = doctorName ?? "No information";
+  const name = doctorName ?? MISSING_NAME_LABEL;
   const detailHref = `/doctors/invitations/details/${id}`;
   // Pending shows "View detail" in the footer instead of the actions row
   const showDetailAction = !canEdit(status);
@@ -33,7 +34,7 @@ export default function InvitationCard({ invitation, isHighlighted, onReissue, o
       <dl className="invitation-card-facts">
         <div>
           <dt>Contact</dt>
-          <dd aria-label={mobile ? undefined : "No contact information"}>{maskMobile(mobile)}</dd>
+          <dd aria-label={mobile ? undefined : MISSING_CONTACT_SPOKEN}>{maskMobile(mobile)}</dd>
         </div>
         <div>
           <dt>Re-issues</dt>

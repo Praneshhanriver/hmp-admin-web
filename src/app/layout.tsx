@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import "./globals.scss";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 // Root layout: wraps every page in the app, rendered once
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>{children}</body>

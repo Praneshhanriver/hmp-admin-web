@@ -10,7 +10,7 @@ import Toast from "@/components/common/Toast";
 import ConfirmationDialog from "@/components/invitations/ConfirmationDialog";
 import InvitationTable from "@/components/invitations/InvitationTable";
 import SearchBar from "@/components/invitations/SearchBar";
-import { EMPTY_FILTERS, INVITATION_PAGE_SIZE, STATUS_FILTER_OPTIONS } from "@/constants/invitation";
+import { EMPTY_FILTERS, FIRST_PAGE, INVITATION_PAGE_SIZE, STATUS_FILTER_OPTIONS } from "@/constants/invitation";
 import { useInvitationActions } from "@/hooks/useInvitationActions";
 import { useInvitations } from "@/hooks/useInvitations";
 import type { MockScenario } from "@/services/invitationService";
@@ -24,7 +24,7 @@ interface InvitationListViewProps {
 export default function InvitationListView({ mockScenario }: InvitationListViewProps) {
   const [filters, setFilters] = useState<InvitationFilters>(EMPTY_FILTERS);
   const [searchBarKey, setSearchBarKey] = useState(0);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(FIRST_PAGE);
   const { invitations, isLoading, isError, retry, replaceInvitation } = useInvitations(filters, mockScenario);
   const actions = useInvitationActions(replaceInvitation);
 
@@ -42,7 +42,7 @@ export default function InvitationListView({ mockScenario }: InvitationListViewP
   // A new search is a new result list, so start again on page 1
   function handleSearch(nextFilters: InvitationFilters) {
     setFilters(nextFilters);
-    setPage(1);
+    setPage(FIRST_PAGE);
   }
 
   function handleClearSearch() {

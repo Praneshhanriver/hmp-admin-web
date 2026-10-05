@@ -2,8 +2,8 @@
 @use "../mixins" as *;
 
 // Native <dialog>: the browser puts it in the top layer, so no z-index is needed
-.confirm-dialog {
-  width: calc(100% - #{$space-xl});
+.confirmation-dialog {
+  width: calc(100% - #{$dialog-gutter});
   max-width: $dialog-w;
   padding: $space-lg;
   border: none;
@@ -23,14 +23,14 @@
   }
 }
 
-.confirm-dialog-head {
+.confirmation-dialog-head {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: $space-ms;
 }
 
-.confirm-dialog-tag {
+.confirmation-dialog-tag {
   display: inline-flex;
   align-items: center;
   gap: $space-xs;
@@ -43,20 +43,20 @@
   font-weight: $font-weight-semibold;
 }
 
-.confirm-dialog-title {
+.confirmation-dialog-title {
   margin: 0;
   font-size: $font-size-h3;
   font-weight: $font-weight-bold;
   line-height: $line-height-tight;
 }
 
-.confirm-dialog-body {
+.confirmation-dialog-body {
   margin: 0;
   font-size: $font-size-body-lg;
   color: $color-text-secondary;
 }
 
-.confirm-dialog-summary {
+.confirmation-dialog-summary {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: $space-sm $space-md;
@@ -79,7 +79,7 @@
   }
 }
 
-.confirm-dialog-next {
+.confirmation-dialog-next {
   display: flex;
   flex-direction: column;
   gap: $space-sm;
@@ -108,11 +108,11 @@
   }
 }
 
-.confirm-dialog-next-title {
+.confirmation-dialog-next-title {
   font-weight: $font-weight-semibold;
 }
 
-.confirm-dialog-error {
+.confirmation-dialog-error {
   margin: 0;
   padding: $space-ms $space-md;
   border: $border-w solid $color-danger-border;
@@ -122,7 +122,7 @@
 }
 
 // wrap-reverse: on narrow screens the confirm button sits on top, Cancel below
-.confirm-dialog-actions {
+.confirmation-dialog-actions {
   display: flex;
   flex-wrap: wrap-reverse;
   justify-content: flex-end;
@@ -133,14 +133,14 @@
 
 // Phones (Hi-Fi 3i): bottom sheet with a small gutter, full-width stacked buttons
 @include below($bp-sm) {
-  .confirm-dialog {
-    width: calc(100% - #{$space-md});
+  .confirmation-dialog {
+    width: calc(100% - #{$dialog-gutter-sm});
     max-width: none;
     margin-bottom: $space-sm;
     padding: $space-md;
   }
 
-  .confirm-dialog-actions .btn {
+  .confirmation-dialog-actions .btn {
     flex: 1 1 100%;
   }
 }

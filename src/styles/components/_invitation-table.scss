@@ -3,10 +3,7 @@
 @use "../mixins" as *;
 
 .invitation-table-card {
-  background: $color-surface;
-  border: $border-w solid $color-border;
-  border-radius: $radius-lg;
-  box-shadow: $shadow-card;
+  @extend %card-surface;
   overflow: hidden;
 }
 
@@ -101,16 +98,16 @@ $skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
     }
   }
 
-  td:nth-child(4) .skeleton-bar {
+  td:nth-child(4) .skeleton-bar { // Re-issues
     margin-left: auto; // Re-issues column is right-aligned
   }
 
-  td:nth-child(6) .skeleton-bar {
+  td:nth-child(6) .skeleton-bar { // Status chip
     height: $chip-h;
     border-radius: $radius-pill;
   }
 
-  td:nth-child(7) .skeleton-bar {
+  td:nth-child(7) .skeleton-bar { // Manage buttons
     height: $control-h-sm;
     border-radius: $radius-md;
   }

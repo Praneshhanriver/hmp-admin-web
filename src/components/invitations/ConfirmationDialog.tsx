@@ -12,6 +12,7 @@ import {
   Warning,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
+import { MISSING_NAME_LABEL } from "@/constants/invitation";
 import type { Invitation, InvitationAction } from "@/types/invitation";
 import { maskMobile } from "@/utils/format";
 
@@ -82,7 +83,7 @@ export default function ConfirmationDialog({
 
   const copy = COPY[variant];
   const ConfirmIcon = isSubmitting ? CircleNotch : copy.confirmIcon; // spinner while busy
-  const name = invitation.doctorName ?? "No information";
+  const name = invitation.doctorName ?? MISSING_NAME_LABEL;
   const { reissueCount } = invitation;
 
   // Open as a modal on mount; on unmount close it and give focus back to the row button
@@ -107,28 +108,28 @@ export default function ConfirmationDialog({
   return (
     <dialog
       ref={dialogRef}
-      className="confirm-dialog"
+      className="confirmation-dialog"
       role="alertdialog"
       aria-modal="true"
       aria-labelledby={titleId}
       aria-describedby={bodyId}
       onCancel={handleCancel}
     >
-      <div className="confirm-dialog-head">
+      <div className="confirmation-dialog-head">
         {copy.tag && (
-          <span className="confirm-dialog-tag">
+          <span className="confirmation-dialog-tag">
             <Warning aria-hidden /> {copy.tag}
           </span>
         )}
-        <h2 id={titleId} className="confirm-dialog-title">
+        <h2 id={titleId} className="confirmation-dialog-title">
           {copy.title}
         </h2>
-        <p id={bodyId} className="confirm-dialog-body">
+        <p id={bodyId} className="confirmation-dialog-body">
           {copy.body(name)}
         </p>
       </div>
 
-      <dl className="confirm-dialog-summary">
+      <dl className="confirmation-dialog-summary">
         <dt>Invited person</dt>
         <dd>{name}</dd>
         <dt>Contact</dt>
@@ -137,8 +138,8 @@ export default function ConfirmationDialog({
         <dd>{variant === "reissue" ? `${reissueCount} → ${reissueCount + 1}` : reissueCount}</dd>
       </dl>
 
-      <div className="confirm-dialog-next">
-        <span className="confirm-dialog-next-title">What happens next</span>
+      <div className="confirmation-dialog-next">
+        <span className="confirmation-dialog-next-title">What happens next</span>
         <ul>
           {copy.points.map(({ icon: PointIcon, text }) => (
             <li key={text}>
@@ -149,12 +150,12 @@ export default function ConfirmationDialog({
       </div>
 
       {errorMessage && (
-        <p className="confirm-dialog-error" role="alert">
+        <p className="confirmation-dialog-error" role="alert">
           {errorMessage}
         </p>
       )}
 
-      <div className="confirm-dialog-actions">
+      <div className="confirmation-dialog-actions">
         <button ref={cancelRef} type="button" className="btn btn-secondary btn-lg" disabled={isSubmitting} onClick={onCancel}>
           Cancel
         </button>

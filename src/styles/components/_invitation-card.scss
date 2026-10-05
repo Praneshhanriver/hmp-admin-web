@@ -1,5 +1,6 @@
 @use "sass:list";
 @use "../tokens" as *;
+@use "../mixins" as *;
 
 // One invitation as a card (below 768px, Hi-Fi mobile)
 .invitation-card {
@@ -7,10 +8,7 @@
   flex-direction: column;
   gap: $space-md;
   padding: $space-md;
-  background: $color-surface;
-  border: $border-w solid $color-border;
-  border-radius: $radius-lg;
-  box-shadow: $shadow-card;
+  @extend %card-surface;
 
   &.is-highlighted {
     background: $color-row-highlight;

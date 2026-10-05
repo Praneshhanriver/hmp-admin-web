@@ -90,9 +90,11 @@ $input-h: 44px;
 $chip-h: 28px;
 $border-w: 1px;
 $focus-w: 2px;
+$opacity-disabled: 0.6;
 $icon-sm: 16px;
 $icon-md: 20px;
 $icon-lg: 32px;
+$state-icon-badge-size: 64px; // round badge behind the empty/error icon
 
 // ---------- layout ----------
 $layout-header-h: 64px;
@@ -101,16 +103,26 @@ $layout-sidebar-w-md: 200px;
 $layout-content-max: 1200px;
 $page-pad: $space-xl;
 
+// ---------- search bar (Hi-Fi field sizes) ----------
+$search-query-basis: 280px;
+$search-status-basis: 200px;
+$search-status-min-w: 160px;
+
 // ---------- overlays ----------
 $dialog-w: 480px;
 $toast-w: 400px;
+$dialog-gutter: $space-xl; // total side space around the dialog
+$dialog-gutter-sm: $space-md; // phones: 8px each side (Hi-Fi 3i)
+$toast-gutter: $space-2xl;
 $z-scrim: 10;
 $z-drawer: 20;
-$z-dialog: 30;
-$z-toast: 40;
+$z-toast: 40; // <dialog> uses the top layer, so it needs no z-index
 
 // ---------- motion ----------
 $motion-duration: 200ms;
+
+// ---------- accessibility ----------
+$visually-hidden-size: 1px; // smallest box screen readers still announce
 
 // ---------- table ----------
 $table-head-h: 44px;
