@@ -8,6 +8,7 @@ interface UseInvitationsResult {
   isLoading: boolean;
   isError: boolean;
   retry: () => void;
+  replaceInvitation: (updated: Invitation) => void;
 }
 
 // Loads invitations for the given filters and tracks loading / error
@@ -39,5 +40,10 @@ export function useInvitations(filters: InvitationFilters, scenario: MockScenari
     };
   }, [filters, scenario, attempt]);
 
-  return { invitations, isLoading, isError, retry: () => setAttempt((count) => count + 1) };
+  // Swaps in one updated row after an action, without loading the list again
+  function replaceInvitation(updated: Invitation) {
+    setInvitations((current) => current.map((invitation) => (invitation.id === updated.id ? updated : invitation)));
+  }
+
+  return { invitations, isLoading, isError, retry: () => setAttempt((count) => count + 1), replaceInvitation };
 }

@@ -1,0 +1,128 @@
+@use "../tokens" as *;
+
+// Native <dialog>: the browser puts it in the top layer, so no z-index is needed
+.confirm-dialog {
+  width: calc(100% - #{$space-xl});
+  max-width: $dialog-w;
+  padding: $space-lg;
+  border: none;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  color: $color-text;
+  box-shadow: $shadow-dialog;
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+    gap: $space-lg;
+  }
+
+  &::backdrop {
+    background: $color-scrim;
+  }
+}
+
+.confirm-dialog-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: $space-sm;
+}
+
+.confirm-dialog-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  height: $chip-h;
+  padding: 0 $space-sm;
+  border: $border-w solid $color-danger-border;
+  border-radius: $radius-pill;
+  background: $color-danger-soft;
+  color: $color-danger;
+  font-size: $font-size-caption;
+  font-weight: $font-weight-semibold;
+}
+
+.confirm-dialog-title {
+  margin: 0;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+}
+
+.confirm-dialog-body {
+  margin: 0;
+  font-size: $font-size-body-lg;
+  color: $color-text-secondary;
+}
+
+.confirm-dialog-summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: $space-sm $space-md;
+  margin: 0;
+  padding: $space-md;
+  border-radius: $radius-md;
+  background: $color-surface-alt;
+
+  dt {
+    color: $color-muted;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: $font-weight-semibold;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.confirm-dialog-next {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-sm;
+    color: $color-text-secondary;
+
+    svg {
+      flex-shrink: 0;
+      font-size: $icon-md;
+      color: $color-text;
+    }
+  }
+}
+
+.confirm-dialog-next-title {
+  font-weight: $font-weight-semibold;
+}
+
+.confirm-dialog-error {
+  margin: 0;
+  padding: $space-ms $space-md;
+  border: $border-w solid $color-danger-border;
+  border-radius: $radius-md;
+  background: $color-danger-soft;
+  color: $color-danger;
+}
+
+// wrap-reverse: on narrow screens the confirm button sits on top, Cancel below
+.confirm-dialog-actions {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-end;
+  gap: $space-sm;
+  padding-top: $space-lg;
+  border-top: $border-w solid $color-border;
+}

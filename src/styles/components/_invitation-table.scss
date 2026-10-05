@@ -71,6 +71,11 @@
   gap: $space-sm;
 }
 
+// Row just re-issued or revoked: brief tint so the admin sees what changed
+.invitation-table tbody tr.is-highlighted > * {
+  background: $color-row-highlight;
+}
+
 // Full-width cell that holds the empty or error message
 .invitation-table .invitation-table-message {
   padding: $space-2xl $space-lg;

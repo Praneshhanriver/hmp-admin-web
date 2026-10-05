@@ -15,3 +15,7 @@ export const STATUS_FILTER_OPTIONS: { value: StatusFilter; label: string }[] = [
 
 // Starting point: no search text, every status
 export const EMPTY_FILTERS: InvitationFilters = { query: "", status: "all" };
+
+// How long the success toast and the updated-row highlight stay visible
+export const TOAST_DURATION_MS = 5000;
+export const ROW_HIGHLIGHT_MS = 2000;

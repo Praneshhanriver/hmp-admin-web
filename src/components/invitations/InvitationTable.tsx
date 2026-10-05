@@ -14,10 +14,21 @@ interface InvitationTableProps {
   total: number;
   isLoading: boolean;
   message?: ReactNode; // empty or error state, shown inside the table
+  highlightedId: string | null; // row just changed by an action
+  onReissue: (invitation: Invitation) => void;
+  onRevoke: (invitation: Invitation) => void;
 }
 
 // p.113c table: 7 columns, actions depend on status
-export default function InvitationTable({ rows, total, isLoading, message }: InvitationTableProps) {
+export default function InvitationTable({
+  rows,
+  total,
+  isLoading,
+  message,
+  highlightedId,
+  onReissue,
+  onRevoke,
+}: InvitationTableProps) {
   // Exactly one of: skeleton, message, or the real rows
   function renderBody() {
     if (isLoading) return <SkeletonRows />;
@@ -30,7 +41,15 @@ export default function InvitationTable({ rows, total, isLoading, message }: Inv
         </tr>
       );
     }
-    return rows.map((row) => <InvitationRow key={row.id} invitation={row} />);
+    return rows.map((row) => (
+      <InvitationRow
+        key={row.id}
+        invitation={row}
+        isHighlighted={row.id === highlightedId}
+        onReissue={onReissue}
+        onRevoke={onRevoke}
+      />
+    ));
   }
 
   return (
@@ -56,14 +75,21 @@ export default function InvitationTable({ rows, total, isLoading, message }: Inv
   );
 }
 
+interface InvitationRowProps {
+  invitation: Invitation;
+  isHighlighted: boolean;
+  onReissue: (invitation: Invitation) => void;
+  onRevoke: (invitation: Invitation) => void;
+}
+
 // One table row. Kept in the same file because only the table uses it
-function InvitationRow({ invitation }: { invitation: Invitation }) {
+function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: InvitationRowProps) {
   const { id, doctorName, mobile, status, issuedAt, expiresAt, reissueCount } = invitation;
   const name = doctorName ?? "No information";
   const detailHref = `/doctors/invitations/details/${id}`;
 
   return (
-    <tr>
+    <tr className={isHighlighted ? "is-highlighted" : undefined}>
       <th scope="row">
         <Link href={detailHref} className={doctorName ? "invitation-name" : "invitation-name is-missing"}>
           {name}
@@ -79,12 +105,24 @@ function InvitationRow({ invitation }: { invitation: Invitation }) {
       <td>
         <div className="invitation-actions">
           {canReissue(status) && (
-            <button type="button" className="btn btn-secondary btn-sm" aria-label={`Re-issue invitation for ${name}`}>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              aria-label={`Re-issue invitation for ${name}`}
+              aria-haspopup="dialog"
+              onClick={() => onReissue(invitation)}
+            >
               <ArrowClockwise aria-hidden /> Re-issue
             </button>
           )}
           {canRevoke(status) && (
-            <button type="button" className="btn btn-danger-outline btn-sm" aria-label={`Revoke invitation for ${name}`}>
+            <button
+              type="button"
+              className="btn btn-danger-outline btn-sm"
+              aria-label={`Revoke invitation for ${name}`}
+              aria-haspopup="dialog"
+              onClick={() => onRevoke(invitation)}
+            >
               <Prohibit aria-hidden /> Revoke
             </button>
           )}

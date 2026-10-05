@@ -13,6 +13,11 @@
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 .btn-sm {
@@ -24,6 +29,13 @@
   height: $control-h-md;
   padding: 0 $space-md;
   gap: $space-sm;
+}
+
+.btn-lg {
+  height: $control-h-lg;
+  padding: 0 $space-lg;
+  gap: $space-sm;
+  font-size: $font-size-body-lg;
 }
 
 .btn-primary {
@@ -44,6 +56,12 @@
   &:hover {
     background: $color-surface-alt;
   }
+}
+
+.btn-danger {
+  background: $color-danger;
+  border-color: $color-danger;
+  color: $color-on-danger;
 }
 
 .btn-danger-outline {

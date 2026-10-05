@@ -1,0 +1,61 @@
+@use "../tokens" as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+}
+
+.pagination-full {
+  justify-content: center;
+}
+
+// Shown below 768px in Lesson 7
+.pagination-compact {
+  display: none;
+  justify-content: space-between;
+}
+
+%pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: $control-h-sm;
+  border: $border-w solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: $color-surface-alt;
+  }
+}
+
+.pagination-step {
+  @extend %pagination-button;
+  gap: $space-xs;
+  padding: 0 $space-ms;
+
+  &:disabled {
+    color: $color-placeholder;
+    cursor: not-allowed;
+  }
+}
+
+.pagination-page {
+  @extend %pagination-button;
+  min-width: $control-h-sm;
+
+  &.is-current {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: $color-on-primary;
+    font-weight: $font-weight-bold;
+
+    &:hover {
+      background: $color-primary;
+    }
+  }
+}

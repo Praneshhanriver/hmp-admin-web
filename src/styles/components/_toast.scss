@@ -1,0 +1,52 @@
+@use "../tokens" as *;
+
+.toast {
+  position: fixed;
+  right: $space-lg;
+  bottom: $space-lg;
+  z-index: $z-toast;
+  display: flex;
+  align-items: flex-start;
+  gap: $space-ms;
+  width: calc(100% - #{$space-2xl});
+  max-width: $toast-w;
+  padding: $space-md;
+  border-radius: $radius-lg;
+  background: $color-toast-bg;
+  color: $color-toast-fg;
+  box-shadow: $shadow-toast;
+}
+
+.toast-icon {
+  flex-shrink: 0;
+  font-size: $icon-md;
+  color: $color-success;
+}
+
+.toast-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.toast-title {
+  font-weight: $font-weight-semibold;
+}
+
+.toast-message {
+  color: $color-toast-muted;
+}
+
+.toast-dismiss {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: $font-weight-semibold;
+  text-decoration: underline;
+  text-underline-offset: $space-xs;
+  cursor: pointer;
+}

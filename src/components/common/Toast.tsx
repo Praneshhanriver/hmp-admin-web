@@ -1,0 +1,23 @@
+import { CheckCircle } from "@phosphor-icons/react/dist/ssr";
+
+interface ToastProps {
+  title: string;
+  message: string;
+  onDismiss: () => void;
+}
+
+// Short success message in the corner; hides itself after a few seconds
+export default function Toast({ title, message, onDismiss }: ToastProps) {
+  return (
+    <div className="toast" role="status" aria-live="polite">
+      <CheckCircle className="toast-icon" weight="fill" aria-hidden />
+      <span className="toast-text">
+        <span className="toast-title">{title}</span>
+        <span className="toast-message">{message}</span>
+      </span>
+      <button type="button" className="toast-dismiss" onClick={onDismiss}>
+        Dismiss
+      </button>
+    </div>
+  );
+}
