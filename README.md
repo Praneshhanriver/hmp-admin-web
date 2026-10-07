@@ -8,9 +8,9 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 ## Links
 | | |
 |---|---|
-| **Demo (web)** | <https://hmp-admin-web.vercel.app/doctors/invitations/list> |
-| **Demo (API)** | `DEMO_API_URL` — see [How to run](#how-to-run) · free Render service: the first load after a quiet period can take about a minute |
-| **Frontend repo** | <https://github.com/Praneshhanriver/hmp-admin-web> — branch `main` (HW2 work on `feature/hw2-invitation-crud`, HW1 on `feature/hw1-invitation-list`) |
+| **Demo (web)** | Being deployed (Vercel, after the API is on Render). Until then <https://hmp-admin-web.vercel.app/doctors/invitations/list> shows Homework 1 |
+| **Demo (API)** | Being deployed (Render, Docker) · free service: the first load after a quiet period can take about a minute. Run locally: [How to run](#how-to-run) |
+| **Frontend repo** | <https://github.com/Praneshhanriver/hmp-admin-web> — HW2 on `feature/hw2-invitation-crud` (merged to `main` with the demo deploy); HW1 on `main` |
 | **Backend repo** | <https://github.com/Praneshhanriver/hmp-admin-api> — branch `main` |
 | **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e: [wireframe](docs/design/doctor-invitation-crud-wireframe.jpg) · [Hi-Fi](docs/design/doctor-invitation-crud-hifi.jpg) (original HTML in [`docs/design/`](docs/design)) |
 

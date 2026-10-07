@@ -19,9 +19,9 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 | | Frontend | Backend |
 |---|---|---|
 | Repo | <https://github.com/Praneshhanriver/hmp-admin-web> | <https://github.com/Praneshhanriver/hmp-admin-api> |
-| Branch | `feature/hw2-invitation-crud` → merged to `main` | `main` |
-| Commit | `WEB_COMMIT` | `API_COMMIT` |
-| Link | <https://hmp-admin-web.vercel.app/doctors/invitations/list> | `DEMO_API_URL` (Render, Docker) |
+| Branch | `feature/hw2-invitation-crud` (merged to `main` with the demo deploy) | `main` |
+| Commit | [`7807565`](https://github.com/Praneshhanriver/hmp-admin-web/commit/7807565) (code tested here) | [`84e3dd6`](https://github.com/Praneshhanriver/hmp-admin-api/commit/84e3dd6) |
+| Link | Being deployed: web on Vercel (<https://hmp-admin-web.vercel.app>, still HW1 until the merge) | Being deployed on Render (Docker) |
 | Date | 2026-10-07 | 2026-10-07 |
 | Runtime | Node 24.21 (20+ supported) · Next.js 15.5.27 | Java 21.0.12 · Spring Boot 4.0.8 · H2 in memory |
 
@@ -138,7 +138,7 @@ $ npm run test:e2e         (e2e/invitations.spec.ts)
   ✓ 21 Screen sizes › no sideways scrolling at 768px on list, create and detail
   ✓ 22 Screen sizes › no sideways scrolling at 375px on list, create and detail
   ✓ 23 Screen sizes › shows cards instead of the table on phones
-  23 passed (1.3m)
+  23 passed (1.9m)
 
 $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 1 create: a new invitation appears in the list as Pending
@@ -148,7 +148,7 @@ $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 5 re-issue: a revoked invitation goes back to Pending with a new link
   ✓ 6 history lists every step, oldest first
   ✓ 7 a second invitation for the same email is refused by the API
-  7 passed (36.1s)
+  7 passed (49.6s)
 ```
 Console check on the production build (list, create, detail, edit): no errors, except the browser's own log of
 the API's 404 when a detail id does not exist (expected).
