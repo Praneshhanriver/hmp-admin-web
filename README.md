@@ -12,7 +12,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 | **Demo (API)** | `DEMO_API_URL` — see [How to run](#how-to-run) · free Render service: the first load after a quiet period can take about a minute |
 | **Frontend repo** | <https://github.com/Praneshhanriver/hmp-admin-web> — branch `main` (HW2 work on `feature/hw2-invitation-crud`, HW1 on `feature/hw1-invitation-list`) |
 | **Backend repo** | <https://github.com/Praneshhanriver/hmp-admin-api> — branch `main` |
-| **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e (exports attached on the Notion page) |
+| **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e: [wireframe](docs/design/doctor-invitation-crud-wireframe.jpg) · [Hi-Fi](docs/design/doctor-invitation-crud-hifi.jpg) (original HTML in [`docs/design/`](docs/design)) |
 
 ## What I built
 | Screen | Route | Spec |
@@ -52,7 +52,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 | Feedback | Fix |
 |---|---|
 | README demo line "TO FILL IN", repo link on the feature branch | This README: demo + `main` links |
-| Design links need a Claude Design login | Wireframe and Hi-Fi exports attached on the Notion page |
+| Design links need a Claude Design login | Wireframe and Hi-Fi exported to [`docs/design/`](docs/design) (images + HTML) and attached on the Notion page |
 | Dates `26/09/08` | WM format, `utils/format.ts` (`formatDate`, `formatLongDate`, `formatDateTime`) |
 | Use the TanStack Query hook pattern in `src/hooks/API/<domain>/` | `src/hooks/API/invitations/`, one hook per file |
 | A few fixed values left in component partials | Skeleton widths moved to `_tokens.scss`; comments name tokens, not pixels |

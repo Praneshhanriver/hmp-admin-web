@@ -45,7 +45,7 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 | Issue | What changed |
 |---|---|
 | README demo line "TO FILL IN", repo link on the feature branch | README rewritten with demo + `main` links |
-| Design only visible with a Claude Design login | Exports attached on the Notion page |
+| Design only visible with a Claude Design login | Exports in `docs/design/` and on the Notion page |
 | Date format `26/09/08` | WM format everywhere (`utils/format.ts`) |
 | Use TanStack Query hooks in `src/hooks/API/<domain>/` | `src/hooks/API/invitations/`, one hook per file |
 | Fixed values in component partials | Moved to `_tokens.scss`; comments name tokens |
