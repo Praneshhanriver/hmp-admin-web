@@ -14,7 +14,7 @@ import {
 import type { Icon } from "@phosphor-icons/react";
 import { MISSING_NAME_LABEL } from "@/constants/invitation";
 import type { Invitation, InvitationAction } from "@/types/invitation";
-import { maskMobile } from "@/utils/format";
+import { formatContact, formatNumber } from "@/utils/format";
 
 interface ConfirmationDialogProps {
   variant: InvitationAction;
@@ -133,9 +133,13 @@ export default function ConfirmationDialog({
         <dt>Invited person</dt>
         <dd>{name}</dd>
         <dt>Contact</dt>
-        <dd>{maskMobile(invitation.mobile)}</dd>
+        <dd>{formatContact(invitation.maskedMobile)}</dd>
         <dt>Re-issues</dt>
-        <dd>{variant === "reissue" ? `${reissueCount} → ${reissueCount + 1}` : reissueCount}</dd>
+        <dd>
+          {variant === "reissue"
+            ? `${formatNumber(reissueCount)} → ${formatNumber(reissueCount + 1)}`
+            : formatNumber(reissueCount)}
+        </dd>
       </dl>
 
       <div className="confirmation-dialog-next">

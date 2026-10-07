@@ -1,0 +1,119 @@
+# QA test cases — Doctor Invitations (Admin ADM-003)
+
+**Feature:** Doctor invitation list, issue, detail, edit, delete (revoke) and re-issue on the real API
+**Spec:** p.113b Issue · p.113c List · p.113e Detail · Edit = training extension
+**Build:** see [build-report.md](build-report.md) · **Format:** WM | QA Template — each case is a "Verify that …"
+statement, positive scenario first, then the invalid and boundary cases (condition in brackets).
+
+**Before you start**
+1. API running (`hmp-admin-api`, `./mvnw spring-boot:run`) or the demo API on Render (first call can take ~1 min).
+2. Web running (`npm run dev`) and open <http://localhost:3000/doctors/invitations/list>.
+3. Restart the API to get the 18 demo invitations back (6 Pending · 5 Used · 4 Expired · 3 Revoked).
+4. Fill in **Result** with Pass / Fail + note. **Auto** = the Playwright test that covers the case
+   (`R-n` = `e2e/invitations.spec.ts` test n, `M-n` = `e2e/invitations.mutation.spec.ts` test n).
+
+---
+
+## 1. Page opens
+
+| ID | Verify that … | Steps | Expected | Auto | Result |
+|---|---|---|---|---|---|
+| TC-01 | the list opens with the right title and data | Open the list | Tab title "Doctor Invitations · HMP Administration", H1 "Doctor Invitations", "18 invitations", 8 rows, sidebar "Invitations" marked current | R-1 | |
+| TC-02 | contact and dates follow the rules | Look at any row | Contact masked `010-****-5678`; Issued / Expiry as `YYYY-MM-DD` (WM date format) | R-1 | |
+| TC-03 | an invitation without details is still listed (missing data) | Filter Revoked | Row with "No information" (grey) and contact "-" (screen reader: "No contact information") | — | |
+| TC-04 | actions follow the status | Look at the Manage column | Pending: Re-issue + Revoke + Edit · Used: Detail · Expired / Revoked: Re-issue | — | |
+| TC-05 | `/` opens the list | Open <http://localhost:3000/> | Redirects to the list | — | |
+
+## 2. Main flow (create → list → edit → delete) — data changes
+
+| ID | Verify that … | Steps | Expected | Auto | Result |
+|---|---|---|---|---|---|
+| TC-10 | an invitation can be issued (positive) | Issue invitation → name `Dr. QA Test`, email `qa.test@clinic.co.kr`, mobile `01024681357` → Issue invitation | Back on the list; toast "Invitation issued — A link was sent to Dr. QA Test. It works until <date>."; new row on top, Pending, `010-****-1357`, Re-issues 0 | M-1 | |
+| TC-11 | the new invitation's detail shows its history | Click the doctor's name | Facts card + History: "Invitation issued · <date time> · by admin@hmp.co.kr" with the "Current link" tag | M-2 | |
+| TC-12 | a pending invitation can be edited | Row → Edit → change mobile to `010-2468-9999` → Save and re-issue | Toast "Invitation updated"; row shows `010-****-9999`, Re-issues 1; history adds "Details corrected" | M-3 | |
+| TC-13 | delete (revoke) works and keeps the row as history | Row → Revoke → dialog → Revoke invitation | Dialog: "Cannot be undone", focus on Cancel. After: toast "Invitation revoked", chip Revoked, Revoke and Edit buttons gone, row still listed | M-4 | |
+| TC-14 | a revoked invitation can be re-issued | Row → Re-issue → dialog shows "1 → 2" → Re-issue invitation | Toast "Invitation re-issued", chip Pending, Re-issues 2 | M-5 | |
+| TC-15 | the history lists every step oldest first | Open the detail | Issued → Details corrected → Revoked → Re-issued (Current link) | M-6 | |
+| TC-16 | Cancel in a dialog changes nothing | Revoke → Cancel (or Esc) | Dialog closes, focus back on the Revoke button, nothing changed | — | |
+| TC-17 | Issue cannot be sent twice (double click) | Fill the form, double-click Issue invitation | Button turns "Issuing…" and disabled; only one new row | — | |
+
+## 3. Validation (browser and API use the same rules and words)
+
+| ID | Verify that … | Steps | Expected | Auto | Result |
+|---|---|---|---|---|---|
+| TC-20 | every field is required (empty fields) | Issue invitation with all fields empty | "Enter the doctor's name." · "Enter an email address." · "Enter a mobile number."; red border + icon + words; focus on Doctor's name | R-13 | |
+| TC-21 | name length is checked (1 character) | Name `K` | "The doctor's name must be 2 to 50 characters." | R-14 | |
+| TC-22 | name length is checked (51 characters) | Name of 51 characters | Same message | API test | |
+| TC-23 | spaces around a value are ignored | Name `  K  ` | Counted as 1 character → length message (browser and API both trim) | API check | |
+| TC-24 | email format is checked (wrong format) | Email `name@host` | "Enter an email address in the format name@example.com." | R-14 | |
+| TC-25 | email length is checked (more than 100 characters) | 101-character email | "The email address must be 100 characters or fewer." | API test | |
+| TC-26 | mobile format is checked (wrong format) | Mobile `010-123`, `020-1234-5678`, `abc` | "Enter a mobile number like 010-1234-5678." | R-14 | |
+| TC-27 | mobile without hyphens is accepted | Mobile `01012345678` | Accepted; stored and shown as `010-1234-5678` | R-14, M-1 | |
+| TC-28 | messages update while typing after the first try | After TC-26, type a valid mobile | Mobile message disappears without pressing the button again | R-14 | |
+| TC-29 | the API refuses a second pending invitation (server error under the field) | Issue with `kim.hanmi@clinic.co.kr` (already Pending) | Under Email: "An invitation for this email is already waiting to be used. Re-issue it from the list instead."; focus on Email; typed values kept; still on the form | R-15, M-7 | |
+| TC-30 | the API refuses a doctor who already signed up | Issue with `lee.seojun@clinic.co.kr` (Used) | Under Email: "A doctor with this email has already signed up. No new invitation is needed." | API test | |
+| TC-31 | the server's field message clears when that field is changed | After TC-29, change Email | Message disappears | R-15 | |
+| TC-32 | a server error keeps what was typed (server error) | Stop the API, fill the form, Issue invitation | Red box: "We can't reach the server. Check your connection and try again. What you typed is kept."; values kept; button enabled again | R-16 (HTTP 500 variant) | |
+| TC-33 | email case does not create duplicates | Issue with `KIM.HANMI@CLINIC.CO.KR` | Same 409 message as TC-29 | M-7 | |
+
+## 4. Edit rules
+
+| ID | Verify that … | Steps | Expected | Auto | Result |
+|---|---|---|---|---|---|
+| TC-40 | the edit form is prefilled | Pending row → Edit | Name, email and full mobile filled in; blue notice "Saving sends a corrected link…" | R-17 | |
+| TC-41 | Save stays disabled until something changes | Open Edit, change nothing | "Save and re-issue" disabled; enabled after a change | R-17 | |
+| TC-42 | a non-pending invitation cannot be edited | Open `/doctors/invitations/edit/<id of a Used row>` | "This invitation can't be edited — Only pending invitations can be edited. This one is Used." + Back to the list + View detail | R-18 | |
+| TC-43 | leaving with unsaved changes asks first | Change a field, then close or reload the tab | Browser asks "Leave site?" | — | |
+
+## 5. List behaviour: search, filter, paging
+
+| ID | Verify that … | Steps | Expected | Auto | Result |
+|---|---|---|---|---|---|
+| TC-50 | search by name works | Search `Kim Han-mi` | "1 invitation", only Dr. Kim Han-mi; URL has `?q=Kim+Han-mi` | R-2 | |
+| TC-51 | search by visible contact digits works | Search `5678` | Only Dr. Kim Han-mi (`010-****-5678`) | — | |
+| TC-52 | hidden middle digits are never searched (privacy) | Search `1234` | Only Dr. Lee Seo-jun (`010-****-1234`); Dr. Kim Han-mi (hidden 1234) not found | R-3 | |
+| TC-53 | status filter works | Status Revoked → Search | All chips "Revoked"; URL has `status=revoked` | R-4 | |
+| TC-54 | no results echo the search | `Kang Bo-ra` + Pending → Search | "No invitations found — Nothing matches "Kang Bo-ra" with status Pending." + Clear search | R-5 | |
+| TC-55 | Clear search resets everything | On TC-54 click Clear search | Empty field, All statuses, 8 rows, page 1 | R-5 | |
+| TC-56 | paging works | Next / page 2 | Page 2 marked current, "Showing 9–16 of 18", URL `page=2` | R-6 | |
+| TC-57 | the search survives reload and Back | Search, open a detail, press Back (or reload) | Same search, same page | R-2 | |
+| TC-58 | a page past the end is handled (boundary) | Open `?page=99` | "This page has no invitations" + Go to page 1 | — | |
+| TC-59 | sort order | Look at the list | Newest invitation first (by first issue date) | — | |
+| TC-60 | list refreshes by itself after a change | Do TC-13 | Row updates without reloading the page | M-4 | |
+| TC-61 | a name containing digits is not a contact search | Search `E2E` (after creating `Dr. E2E Test`) | Only names containing "E2E"; no doctor whose contact contains a 2 | API test | |
+
+## 6. Roles
+
+| ID | Verify that … | Expected | Result |
+|---|---|---|---|
+| TC-70 | roles and permissions | **Not applicable** — the homework app has no login (one admin, `admin@hmp.co.kr`, written into the history) | N/A |
+
+## 7. States: loading, empty, error
+
+| ID | Verify that … | Steps | Expected | Auto | Result |
+|---|---|---|---|---|---|
+| TC-80 | loading shows a skeleton, not old data | Open the list on a slow connection (DevTools → Network → Slow 4G) | "Loading invitations…", grey rows, table `aria-busy="true"` | R-7 | |
+| TC-81 | empty data has its own message | (forced in the test) API returns no invitations | "0 invitations", "No invitations yet", no pagination | R-8 | |
+| TC-82 | an API error shows the API's message with Retry | Make the API return 500 | "Unable to load invitations — Something went wrong on our side. Please try again in a moment. Your search is kept." + Retry; never the empty state | R-9 | |
+| TC-83 | Retry recovers and keeps the search | On TC-82 fix the API, click Retry | Rows load; search text still there | R-9 | |
+| TC-84 | API down shows a plain message (server error) | Stop the API, reload the list | "We can't reach the server. Check your connection and try again." + Retry | R-10 | |
+| TC-85 | unknown or invalid detail id | Open `/details/999999` and `/details/abc` | "Invitation not found" + Back to the list (no API call for `abc`) | R-12 | |
+| TC-86 | detail and edit have loading and error states | Slow 4G / stop API on a detail page | Skeleton card, then "Unable to load the invitation" + Retry | — | |
+| TC-87 | dialog failure keeps the dialog open | Stop the API, Revoke → confirm | Dialog stays open with "We can't reach the server…"; Cancel still works | — | |
+
+## 8. Screen sizes (WM widths)
+
+| ID | Verify that … | Steps | Expected | Auto | Result |
+|---|---|---|---|---|---|
+| TC-90 | no sideways scrolling at 1920 / 1366 / 768 / 375 | DevTools device mode at each width on list, create, detail, edit | No horizontal page scroll; the table scrolls inside its card at 768 | R-19…22 | |
+| TC-91 | phones show cards | 375 px list | Cards with 44 px buttons, "Page 1 of 3" paging | R-23 | |
+| TC-92 | forms on phones | 375 px create / edit | Full-width fields; full-width buttons, main action on top | — | |
+| TC-93 | all ten WM widths | 1920 · 1600 · 1366 · 1280 · 1024 · 991 · 768 · 640 · 480 · 375 | Matches `docs/screenshots/hw2/*-w<width>.png` | screenshots | |
+
+## 9. Accessibility (spot checks)
+
+| ID | Verify that … | Expected | Result |
+|---|---|---|---|
+| TC-95 | keyboard only | Every action reachable with Tab / Enter / Esc; visible focus ring | |
+| TC-96 | labels and errors | Labels always above fields; errors in words, linked with `aria-describedby`, field `aria-invalid` | |
+| TC-97 | status never by colour alone | Chips show icon + word + border | |

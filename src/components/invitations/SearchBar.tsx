@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import type { FormEvent } from "react";
 import { CaretDown, MagnifyingGlass } from "@phosphor-icons/react";
-import { STATUS_FILTER_OPTIONS } from "@/constants/invitation";
+import { SEARCH_MAX_LENGTH, STATUS_FILTER_OPTIONS } from "@/constants/invitation";
 import type { InvitationFilters, StatusFilter } from "@/types/invitation";
 
 interface SearchBarProps {
@@ -34,6 +34,7 @@ export default function SearchBar({ initialFilters, onSearch }: SearchBarProps) 
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
+            maxLength={SEARCH_MAX_LENGTH}
             placeholder="e.g. Kim Han-mi or 5678"
           />
         </div>

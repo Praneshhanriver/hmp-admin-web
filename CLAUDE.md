@@ -6,11 +6,14 @@
 - HMP Telemedicine **Administration** web (Admin ADM-003, Doctor Invitation Management).
 - Spec PDF pages: **p.113b** Issue invitation, **p.113c** Invitation list, **p.113e** Invitation detail.
   Design source: Claude Design wireframe + Hi-Fi ("Doctor Invitation CRUD"), Design System v1.11 (test).
-- **Homework 1 (done):** the invitation list only — mock data, search + status filter, loading / empty /
-  no-results / error states, pagination, Re-issue and Revoke dialogs, toast, responsive 1920 → 375.
-- **Homework 2 (next):** Issue (create), Detail + history, Edit (training extension), real API.
-  Links to those screens exist already and 404 until then.
-- Open design questions live in `docs/design-check.md`; manual tests in `docs/qa-checklist.md`.
+- **Homework 1 (passed):** the invitation list — search + status filter, all states, pagination, dialogs, toast,
+  responsive 1920 → 375.
+- **Homework 2:** Issue (create), Detail + history, Edit (training extension), Delete (= revoke) on the real API.
+- **Backend:** Spring Boot repo `hmp-admin-api` (sibling folder). API base `NEXT_PUBLIC_API_BASE_URL`
+  (default `http://localhost:8080`), endpoints under `/api/v1/admin/doctor-invitations`. Errors are RFC 7807
+  `{ status, code, detail, errors: [{ field, message }] }`.
+- Docs: `docs/design-check.md` (open questions), `docs/qa-test-cases.md` (WM QA cases), `docs/build-report.md`
+  (QA hand-over), `docs/error-messages.md` (every message, WM layout).
 
 ## Stack and commands
 Next.js 15 (App Router, Turbopack) · React 19 · TypeScript (strict) · SCSS (Dart Sass modules) ·
@@ -21,7 +24,11 @@ npm run dev        # http://localhost:3000/doctors/invitations/list
 npx tsc --noEmit   # type check
 npm run lint       # ESLint (next/core-web-vitals + typescript)
 npm run build      # production build; must show no warnings
+npm run test:e2e   # Playwright read-only tests (API + web must be running)
+npm run test:e2e:mutation   # create / edit / revoke tests — changes data, run on purpose
 ```
+Backend (in `../hmp-admin-api`): `./mvnw spring-boot:run` (port 8080, H2 in memory, 18 demo rows on every start),
+`./mvnw verify` (tests).
 `npm run build` and `npm run dev` share `.next/`. Never build while a dev server is running
 (it breaks the dev server with "Failed to load chunk"); stop it first or build in a copy.
 
@@ -29,17 +36,20 @@ npm run build      # production build; must show no warnings
 ```
 src/app/                       routes only; "/" redirects to the list
 src/app/(main)/                route group = admin shell layout, not part of the URL
-  doctors/invitations/list/    page.tsx (Server Component)
-  # convention: list/, create/, details/[id]/, edit/[id]/
+  doctors/invitations/         list/, create/, details/[id]/, edit/[id]/ — each page.tsx is a Server Component
 src/components/layout/         AdminShell (client), AdminHeader, AdminSidebar
 src/components/common/         reusable: PageHeader, StatusChip, Pagination, EmptyState, ErrorState, Toast
-src/components/invitations/    feature: InvitationListView, SearchBar, InvitationTable, InvitationCard, ConfirmationDialog
-src/hooks/                     useInvitations (load list), useInvitationActions (re-issue / revoke flow)
-src/services/                  invitationService — the only place that touches data
+src/components/providers/      QueryProvider (TanStack Query), ToastProvider (one toast for the whole admin)
+src/components/invitations/    feature: list view, search bar, table, card, dialog, form, create/detail/edit views
+src/api-services/              apiClient (axios + ApiError), InvitationService — the only files that call the API
+src/hooks/API/invitations/     one TanStack hook per file: useGetInvitationsList, useGetInvitationDetail,
+                               useCreateInvitation, useUpdateInvitation, useReissueInvitation, useDeleteInvitation
+src/hooks/                     useInvitationActions (re-issue / revoke dialog flow)
 src/types/                     Invitation, InvitationStatus, filters
 src/constants/                 page size, labels, timings (UPPER_SNAKE_CASE)
-src/utils/                     pure helpers: maskMobile, formatDate (WM YYYY-MM-DD), filterInvitations, invitationRules
-src/mocks/                     18 mock invitations (replaced by the API in Homework 2)
+src/utils/                     api-integration (API_ENDPOINTS, QUERIES), format, invitationValidation, invitationRules,
+                               listParams (list search <-> URL), routeParams
+e2e/                           invitations.spec.ts (read-only), invitations.mutation.spec.ts (changes data)
 src/styles/                    _palette, _tokens, _mixins, components/ (one partial per component)
 ```
 
@@ -62,20 +72,29 @@ src/styles/                    _palette, _tokens, _mixins, components/ (one part
 - Icons: `@phosphor-icons/react/dist/ssr` in files **without** `"use client"`; `@phosphor-icons/react` in client files.
 - Props get a named `interface XxxProps`. No `any`.
 - **Derived values are calculated, not stored** (count, total pages, page rows, isEmpty).
-- **Immutable updates**: `map` / spread to replace items; never mutate state or the mock store in place.
+- **Immutable updates**: `map` / spread to replace items; never mutate state or cached data in place.
 - **Effects** only for syncing with things outside React (fetch, timers, document listeners). Correct dependency
-  array, always a cleanup (`clearTimeout`, `removeEventListener`, the `ignore` flag for stale requests).
+  array, always a cleanup (`clearTimeout`, `removeEventListener`). Data fetching is TanStack Query, not effects.
 - User actions are handled in event handlers, not effects.
 - Reset a component's internal state by changing its `key` (see `SearchBar`).
 
 ## Data rules
-- **Service + hook pattern**: components call hooks; hooks call `services/invitationService`; only the service
-  reads mocks (later the API). Components never import `mocks/`.
-- Mock scenarios via the URL: `?mock=error`, `?mock=empty` (parsed by `toMockScenario`).
-- **Never show raw server errors**; show the plain-language ErrorState with Retry. Keep the search on retry.
+- **3 layers (Divii pattern)**: path in `API_ENDPOINTS` → axios call in `api-services/InvitationService` →
+  TanStack hook in `hooks/API/invitations/`. Components only call hooks. No mock data.
+- Server data lives in the TanStack cache only — never copy it into `useState`. Mutations invalidate
+  `QUERIES.INVITATIONS.all` so lists and details reload by themselves.
+- List search, status and page live in the URL (`?q=&status=&page=`); the page reads them and passes props.
+- Every failure becomes an `ApiError` whose `message` is safe to show (the API's plain `detail`, or a fixed
+  network message). **Never show raw error text.** Field errors (`fieldErrors`) go under their field.
+- Form validation in `utils/invitationValidation.ts` must match the backend `InvitationRequest` exactly
+  (same rules, order and words). Change both together.
+- Dates: WM format — `YYYY-MM-DD` in tables/cards, `September 8, 2026` on detail, `… 08:33 PM` in history.
+  Numbers: `formatNumber` (three-digit commas).
 - **Error state is never an empty state.** Empty (no data) ≠ no results (filters) ≠ error.
-- Contact is **masked everywhere** (`010-****-5678`) via `maskMobile`; missing → `-` (spoken "No contact information").
-- Search on contact matches **only the digits visible on screen**, so it never reveals masked digits.
+- Contact is **masked everywhere** (`010-****-5678`); the list API already sends `maskedMobile`. Only the detail
+  (for the edit form) has the full number. Missing → `-` (spoken "No contact information").
+- The API's contact search matches **only the digits visible on screen**, so it never reveals masked digits.
+- Delete = revoke (spec p.113c): `DELETE /{id}`, the row stays as Revoked.
 - Actions by status come from `utils/invitationRules.ts` (Pending: Re-issue + Revoke + Edit; Used: Detail;
   Expired/Revoked: Re-issue). Don't hard-code status checks in components.
 
@@ -102,4 +121,5 @@ src/styles/                    _palette, _tokens, _mixins, components/ (one part
 - Don't store derived values in state or fetch inside components.
 - Don't show unmasked phone numbers or raw error text.
 - Don't make `layout.tsx` or `page.tsx` client components.
-- Don't build Homework 2 screens unless asked.
+- Don't add mock data or call axios outside `api-services/`.
+- Don't run `*.mutation.spec.ts` against a shared server without telling the team.

@@ -2,9 +2,9 @@ import Link from "next/link";
 import { ArrowClockwise, FileText, PencilSimple, Prohibit } from "@phosphor-icons/react/dist/ssr";
 import StatusChip from "@/components/common/StatusChip";
 import InvitationCard from "@/components/invitations/InvitationCard";
-import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL } from "@/constants/invitation";
+import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL, ROUTES } from "@/constants/invitation";
 import type { Invitation } from "@/types/invitation";
-import { formatDate, maskMobile } from "@/utils/format";
+import { formatContact, formatDate, formatNumber } from "@/utils/format";
 import { canEdit, canOpenDetail, canReissue, canRevoke } from "@/utils/invitationRules";
 import type { ReactNode } from "react";
 
@@ -17,7 +17,7 @@ interface InvitationTableProps {
   total: number;
   isLoading: boolean;
   message?: ReactNode; // empty or error state, shown inside the table
-  highlightedId: string | null; // row just changed by an action
+  highlightedId: number | null; // row just changed by an action
   onReissue: (invitation: Invitation) => void;
   onRevoke: (invitation: Invitation) => void;
 }
@@ -77,7 +77,7 @@ export default function InvitationTable({
       <div className="invitation-table-card">
         <div className="invitation-table-scroll">
           <table className="invitation-table" aria-busy={isLoading}>
-            <caption className="visually-hidden">Doctor invitations, {total} results</caption>
+            <caption className="visually-hidden">Doctor invitations, {formatNumber(total)} results</caption>
             <thead>
               <tr>
                 <th scope="col">Doctor</th>
@@ -110,9 +110,9 @@ interface InvitationRowProps {
 
 // One table row. Kept in the same file because only the table uses it
 function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: InvitationRowProps) {
-  const { id, doctorName, mobile, status, issuedAt, expiresAt, reissueCount } = invitation;
+  const { id, doctorName, maskedMobile, status, issuedAt, expiresAt, reissueCount } = invitation;
   const name = doctorName ?? MISSING_NAME_LABEL;
-  const detailHref = `/doctors/invitations/details/${id}`;
+  const detailHref = ROUTES.detail(id);
 
   return (
     <tr className={isHighlighted ? "is-highlighted" : undefined}>
@@ -125,11 +125,11 @@ function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: Invit
           {name}
         </Link>
       </th>
-      <td className="is-secondary" aria-label={mobile ? undefined : MISSING_CONTACT_SPOKEN}>
-        {maskMobile(mobile)}
+      <td className="is-secondary" aria-label={maskedMobile ? undefined : MISSING_CONTACT_SPOKEN}>
+        {formatContact(maskedMobile)}
       </td>
       <td>{formatDate(issuedAt)}</td>
-      <td className="is-numeric">{reissueCount}</td>
+      <td className="is-numeric">{formatNumber(reissueCount)}</td>
       <td>{formatDate(expiresAt)}</td>
       <td>
         <StatusChip status={status} />
@@ -164,7 +164,7 @@ function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: Invit
             </Link>
           )}
           {canEdit(status) && (
-            <Link href={`/doctors/invitations/edit/${id}`} className="btn btn-link btn-sm" aria-label={`Edit invitation for ${name}`}>
+            <Link href={ROUTES.edit(id)} className="btn btn-link btn-sm" aria-label={`Edit invitation for ${name}`}>
               <PencilSimple aria-hidden /> Edit
             </Link>
           )}
