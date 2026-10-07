@@ -28,11 +28,15 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
   echoed + Clear search), error with the API's message + Retry, page-past-the-end.
 - **Issue / Edit form:** labels above fields; the browser checks the **same rules with the same words** as the
   backend; the backend's own errors (e.g. "already waiting to be used") appear under the field; on any error what
-  was typed is kept; the button can't be pressed twice; Edit is prefilled and enabled only after a change.
-- **Detail:** facts (masked contact, WM dates) and the full history, oldest first, with the current link marked.
+  was typed is kept; the button can't be pressed twice; Edit is prefilled, enabled only after a change, and updates
+  the details only — it sends no new link (Re-issue does that), as in the Hi-Fi.
+- **Detail:** read-only notice, facts (masked contact, status, WM dates) and the history timeline, oldest first,
+  with the current link marked.
+- **Matches the Hi-Fi:** every screen and state was compared with the Claude Design frames at 1440 / 768 / 375 —
+  side-by-side images in [docs/design/compare](docs/design/compare), every design frame in [docs/design/frames](docs/design/frames).
 - **After every change** the list and detail reload by themselves (TanStack Query invalidation), with a toast that
   survives the page change.
-- **Formats:** WM dates (`2026-09-08` in tables, `September 8, 2026` on detail, `… 08:33 PM` in history),
+- **Formats:** WM dates `2026-09-08` everywhere (as in the Hi-Fi), history times `2026-09-08 08:33 PM`,
   three-digit commas, plain error messages ([docs/error-messages.md](docs/error-messages.md)).
 - **Responsive** 1920 → 375 on every screen (cards, drawer, full-width form buttons on phones).
 
@@ -53,7 +57,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 |---|---|
 | README demo line "TO FILL IN", repo link on the feature branch | This README: demo + `main` links |
 | Design links need a Claude Design login | Wireframe and Hi-Fi exported to [`docs/design/`](docs/design) (images + HTML) and attached on the Notion page |
-| Dates `26/09/08` | WM format, `utils/format.ts` (`formatDate`, `formatLongDate`, `formatDateTime`) |
+| Dates `26/09/08` | WM format `YYYY-MM-DD`, `utils/format.ts` (`formatDate`, `formatDateTime`) |
 | Use the TanStack Query hook pattern in `src/hooks/API/<domain>/` | `src/hooks/API/invitations/`, one hook per file |
 | A few fixed values left in component partials | Skeleton widths moved to `_tokens.scss`; comments name tokens, not pixels |
 

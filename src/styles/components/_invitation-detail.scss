@@ -1,66 +1,88 @@
 @use "../tokens" as *;
 @use "../mixins" as *;
 
-// W-03: facts card, history card, Back button. Also used for not-found / error / loading
+// W-03 (Hi-Fi 1c): read-only notice, facts card, history card, Back button.
+// The card is also used for not-found / error / loading
+.invitation-detail-notice {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin: 0;
+  padding: $space-ms $space-md;
+  border-radius: $radius-md;
+  background: $color-surface-alt;
+  color: $color-text-secondary;
+
+  > svg {
+    flex: none;
+  }
+
+  strong {
+    color: $color-text;
+  }
+}
+
 .invitation-detail-card {
   @extend %card-surface;
   display: flex;
   flex-direction: column;
   gap: $space-lg;
-  padding: $space-xl;
+  padding: $space-lg;
 
   &.is-loading {
-    gap: $space-md;
+    gap: $space-lg;
   }
 }
 
-.invitation-detail-skeleton-title {
-  width: $skeleton-detail-title-w;
-  height: $space-xl;
-}
-
-.invitation-detail-head {
+.invitation-detail-section-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: $space-ms;
-}
-
-.invitation-detail-name {
-  margin: 0;
-  font-size: $font-size-h3;
-  line-height: $line-height-tight;
-  overflow-wrap: anywhere; // long names wrap, never overflow
-
-  &.is-missing {
-    color: $color-muted;
-    font-style: italic;
-  }
-}
-
-// Label / value pairs in two columns, one column on phones
-.invitation-detail-facts {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); // two columns
-  gap: $space-md $space-lg;
-  margin: 0;
-
-  dt {
-    color: $color-muted;
-  }
-
-  dd {
-    margin: 0;
-    font-size: $font-size-body-lg;
-    font-weight: $font-weight-medium;
-    overflow-wrap: anywhere;
-  }
+  gap: $space-md;
 }
 
 .invitation-detail-section-title {
   margin: 0;
   font-size: $font-size-h4;
+  font-weight: $font-weight-semibold;
+}
+
+.invitation-detail-section-note {
+  color: $color-text-secondary;
+}
+
+// Six facts in three columns (two on phones, Hi-Fi 3h)
+.invitation-detail-facts {
+  display: grid;
+  grid-template-columns: repeat($detail-facts-columns, minmax(0, 1fr));
+  gap: $space-lg $space-lg;
+  margin: 0;
+
+  dt {
+    margin-bottom: $space-xs;
+    color: $color-text-secondary;
+  }
+
+  dd {
+    margin: 0;
+    font-size: $font-size-body-lg;
+    overflow-wrap: anywhere; // long names wrap, never overflow
+
+    // The status chip keeps its own size inside the larger fact text
+    .status-chip {
+      font-size: $font-size-body;
+    }
+
+    &.is-missing {
+      color: $color-muted;
+      font-style: italic;
+    }
+  }
+
+  // Hi-Fi 1c: only the invited person is bold
+  div:first-child dd {
+    font-weight: $font-weight-semibold;
+  }
 }
 
 .invitation-detail-actions {
@@ -69,19 +91,55 @@
   gap: $space-ms;
 }
 
-// History: oldest first, a line between the icons
+// Loading (Hi-Fi 2m): title bar, six fact bars, one large block
+.invitation-detail-skeleton-title {
+  width: $skeleton-detail-title-w;
+  height: $space-lg;
+}
+
+.invitation-detail-skeleton-facts {
+  display: grid;
+  grid-template-columns: repeat($detail-facts-columns, minmax(0, 1fr)); // same columns as the facts
+  gap: $space-lg;
+}
+
+.invitation-detail-skeleton-fact {
+  height: $control-h-lg;
+}
+
+.invitation-detail-skeleton-block {
+  height: $skeleton-detail-block-h;
+}
+
+// History (Hi-Fi 1c): a timeline, oldest first, a line joining the icons
 .invitation-history {
   display: flex;
   flex-direction: column;
-  gap: $space-md;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .invitation-history-item {
+  position: relative;
   display: flex;
   gap: $space-ms;
+  padding-bottom: $space-lg;
+
+  // The connecting line, centred under the icon, down to the next item
+  &:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: $history-icon-badge-size;
+    bottom: 0;
+    left: 0;
+    width: $history-icon-badge-size;
+    background: linear-gradient($color-border-strong, $color-border-strong) center / $border-w 100% no-repeat;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
 }
 
 // Round badge with the action icon centred inside
@@ -92,16 +150,19 @@
   justify-content: center;
   width: $history-icon-badge-size;
   height: $history-icon-badge-size;
+  border: $border-w solid $color-border-strong;
   border-radius: $radius-pill;
-  font-size: $icon-md;
-  background: $color-surface-alt;
+  background: $color-surface;
   color: $color-text-secondary;
+  font-size: $icon-sm;
 }
 
 .invitation-history-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: $space-xs;
+  min-height: $history-icon-badge-size; // the label lines up with the middle of the icon
 }
 
 .invitation-history-label {
@@ -109,31 +170,32 @@
   align-items: center;
   flex-wrap: wrap;
   gap: $space-sm;
+  font-size: $font-size-body-lg;
   font-weight: $font-weight-semibold;
 }
 
 .invitation-history-tag {
   padding: 0 $space-sm;
-  border: $border-w solid $chip-pending-border;
-  border-radius: $radius-pill;
+  border-radius: $radius-sm;
   background: $chip-pending-bg;
   color: $chip-pending-fg;
-  font-size: $font-size-caption;
+  font-size: $font-size-body;
   font-weight: $font-weight-semibold;
 }
 
 .invitation-history-meta {
-  color: $color-muted;
+  color: $color-text-secondary;
   overflow-wrap: anywhere;
 }
 
 @include below($bp-sm) {
   .invitation-detail-card {
-    padding: $space-lg $space-md;
+    padding: $space-md;
   }
 
-  .invitation-detail-facts {
-    grid-template-columns: minmax(0, 1fr);
+  .invitation-detail-facts,
+  .invitation-detail-skeleton-facts {
+    grid-template-columns: repeat($detail-facts-columns-sm, minmax(0, 1fr));
   }
 
   .invitation-detail-actions .btn {

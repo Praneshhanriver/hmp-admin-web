@@ -10,24 +10,25 @@ import {
 import type { HistoryAction, InvitationHistoryEntry, InvitationStatus } from "@/types/invitation";
 import { formatDateTime } from "@/utils/format";
 
+// Short labels as in the Hi-Fi history ("Issued", "Re-issued")
 const ACTION_CONFIG: Record<HistoryAction, { label: string; icon: Icon }> = {
-  issued: { label: "Invitation issued", icon: PaperPlaneTilt },
-  reissued: { label: "Re-issued — a new link was sent", icon: ArrowClockwise },
-  edited: { label: "Details corrected — a corrected link was sent", icon: PencilSimple },
-  revoked: { label: "Revoked — the link stopped working", icon: Prohibit },
-  used: { label: "Used — the doctor signed up", icon: CheckCircle },
-  expired: { label: "Expired — the link passed its expiry", icon: HourglassLow },
+  issued: { label: "Issued", icon: PaperPlaneTilt },
+  reissued: { label: "Re-issued", icon: ArrowClockwise },
+  edited: { label: "Details updated", icon: PencilSimple },
+  revoked: { label: "Revoked", icon: Prohibit },
+  used: { label: "Used — doctor signed up", icon: CheckCircle },
+  expired: { label: "Expired", icon: HourglassLow },
 };
 
 // These actions send a link; the newest of them is the one that still works while Pending
-const SENDS_LINK: HistoryAction[] = ["issued", "reissued", "edited"];
+const SENDS_LINK: HistoryAction[] = ["issued", "reissued"];
 
 interface InvitationHistoryListProps {
   history: InvitationHistoryEntry[]; // oldest first, as the API returns it
   status: InvitationStatus;
 }
 
-// p.113e history: oldest first, newest last; who did it, or "System" for automatic events
+// p.113e history (Hi-Fi 1c): a timeline, oldest first; who did it, or "System" for automatic events
 export default function InvitationHistoryList({ history, status }: InvitationHistoryListProps) {
   const currentLinkId =
     status === "pending" ? history.findLast((entry) => SENDS_LINK.includes(entry.action))?.id : undefined;
@@ -49,7 +50,7 @@ export default function InvitationHistoryList({ history, status }: InvitationHis
               <span className="invitation-history-meta">
                 <time dateTime={entry.occurredAt}>{formatDateTime(entry.occurredAt)}</time>
                 {" · "}
-                {entry.actor ? `by ${entry.actor}` : "System"}
+                {entry.actor ?? "System"}
               </span>
             </span>
           </li>

@@ -41,9 +41,6 @@ export const DOCTOR_NAME_MAX_LENGTH = 50;
 export const EMAIL_MAX_LENGTH = 100;
 export const SEARCH_MAX_LENGTH = 50;
 
-// Shown on the form. The real value is the backend setting hmp.invitation.validity (still TBC in the spec)
-export const INVITATION_VALIDITY_LABEL = "14 days";
-
 // How long the success toast and the updated-row highlight stay visible
 export const TOAST_DURATION_MS = 6000; // Hi-Fi: at least 6 s, paused on hover/focus
 export const ROW_HIGHLIGHT_MS = 2000;

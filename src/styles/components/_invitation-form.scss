@@ -6,19 +6,27 @@
   display: flex;
   flex-direction: column;
   gap: $space-lg;
-  max-width: $sub-page-max-w;
+  max-width: $detail-card-max-w;
+
+  // Issue / Edit: the Hi-Fi form column is narrower
+  &.is-form {
+    max-width: $form-card-max-w;
+  }
 }
 
-// W-02 / W-04: the form sits in a white card
-.invitation-form-card {
-  @extend %card-surface;
-  padding: $space-xl;
-}
-
+// W-02 / W-04 (Hi-Fi 1b, 1d): banners above, the fields in a white card
 .invitation-form {
   display: flex;
   flex-direction: column;
+  gap: $space-md;
+}
+
+.invitation-form-card {
+  @extend %card-surface;
+  display: flex;
+  flex-direction: column;
   gap: $space-lg;
+  padding: $space-lg;
 }
 
 .invitation-form-field {
@@ -27,12 +35,13 @@
   gap: $space-sm;
 }
 
-// Label always visible above the field
+// Label always visible above the field; "Required" in a lighter weight next to it
 .invitation-form-label {
   font-weight: $font-weight-semibold;
 }
 
 .invitation-form-required {
+  margin-left: $space-xs;
   font-weight: $font-weight-regular;
   color: $color-muted;
 }
@@ -45,10 +54,14 @@
   background: $color-surface;
   color: $color-text;
   font: inherit;
-  font-size: $font-size-body-lg; // 16px: phones do not zoom into the field
+  font-size: $font-size-body-lg; // phones do not zoom into the field
 
   &::placeholder {
     color: $color-placeholder;
+  }
+
+  &:hover {
+    border-color: $color-muted;
   }
 
   // Invalid: thicker red border + the message in words (never colour alone)
@@ -68,61 +81,138 @@
   gap: $space-xs;
   color: $color-danger;
   font-weight: $font-weight-medium;
-}
 
-// Edit: explains that saving sends a corrected link
-.invitation-form-notice {
-  display: flex;
-  gap: $space-sm;
-  margin: 0;
-  padding: $space-ms $space-md;
-  border: $border-w solid $color-info-border;
-  border-radius: $radius-md;
-  background: $color-info-bg;
-  color: $color-info-fg;
-}
-
-.invitation-form-validity {
-  display: flex;
-  align-items: center;
-  gap: $space-sm;
-  margin: 0;
-  color: $color-muted;
-}
-
-// Error that belongs to no single field (server down, server error)
-.invitation-form-error {
-  display: flex;
-  gap: $space-sm;
-  margin: 0;
-  padding: $space-ms $space-md;
-  border: $border-w solid $color-danger-border;
-  border-radius: $radius-md;
-  background: $color-danger-soft;
-  color: $color-danger;
-}
-
-// Icons beside wrapping text keep their size
-.invitation-form-notice,
-.invitation-form-validity,
-.invitation-form-error {
   > svg {
     flex: none;
   }
 }
 
+// Hi-Fi 2g / 2i: "3 fields need attention", "The invitation could not be issued"
+.invitation-form-banner {
+  display: flex;
+  gap: $space-ms;
+  padding: $space-md;
+  border: $border-w solid $color-danger-border;
+  border-radius: $radius-lg;
+  background: $color-danger-soft;
+  color: $color-text;
+
+  > svg {
+    flex: none;
+    color: $color-danger;
+  }
+}
+
+.invitation-form-banner-title {
+  margin: 0;
+  color: $color-danger;
+  font-size: $font-size-body-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.invitation-form-banner-text {
+  margin: 0;
+}
+
+// Hi-Fi 1b: "Validity period to be confirmed"
+.invitation-form-info {
+  display: flex;
+  gap: $space-ms;
+  padding: $space-md $space-md;
+  border-radius: $radius-md;
+  background: $color-primary-soft;
+  color: $color-text-secondary;
+
+  > svg {
+    flex: none;
+    color: $color-nav-active-fg;
+  }
+}
+
+.invitation-form-info-title {
+  margin: 0;
+  color: $color-text;
+  font-weight: $font-weight-semibold;
+}
+
+.invitation-form-info-text {
+  margin: 0;
+}
+
+// Issue: one full-width button (Hi-Fi 1b)
+.invitation-form-submit {
+  width: 100%;
+}
+
+// Edit: divider, then Cancel + Save changes on the right (Hi-Fi 1d)
 .invitation-form-actions {
   display: flex;
   justify-content: flex-end;
+  gap: $space-sm;
+  padding-top: $space-lg;
+  border-top: $border-w solid $color-border;
+}
+
+// Edit (Hi-Fi 1d): dashed summary box above the form
+.invitation-edit-summary {
+  display: flex;
+  flex-direction: column;
   gap: $space-ms;
+  padding: $space-md;
+  border: $border-w dashed $color-border-strong;
+  border-radius: $radius-lg;
+  background: $color-surface-alt;
+}
+
+.invitation-edit-summary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $space-sm;
+}
+
+.invitation-edit-summary-title {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin: 0;
+  font-size: $font-size-body-lg;
+  font-weight: $font-weight-semibold;
+}
+
+.invitation-edit-summary-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-xs $space-lg;
+  margin: 0;
+
+  div {
+    display: flex;
+    gap: $space-xs;
+  }
+
+  dt {
+    color: $color-text-secondary;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.invitation-edit-summary-text {
+  margin: 0;
+  color: $color-text-secondary;
 }
 
 @include below($bp-sm) {
   .invitation-form-card {
-    padding: $space-lg $space-md;
+    padding: $space-md;
   }
 
-  // Phones: full-width buttons, the main action on top
+  // Phones: full-width buttons, Save on top (Hi-Fi 3g)
   .invitation-form-actions {
     flex-direction: column-reverse;
 
@@ -130,5 +220,9 @@
       width: 100%;
       min-height: $control-h-touch;
     }
+  }
+
+  .invitation-form-submit {
+    min-height: $control-h-touch;
   }
 }

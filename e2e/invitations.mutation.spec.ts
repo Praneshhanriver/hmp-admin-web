@@ -42,7 +42,7 @@ test("create: a new invitation appears in the list as Pending", async ({ page })
 
   await expect(page).toHaveURL(/\/doctors\/invitations\/list$/);
   await expect(toast(page)).toContainText("Invitation issued");
-  await expect(toast(page)).toContainText(`A link was sent to ${doctor.name}.`);
+  await expect(toast(page)).toContainText(`${doctor.name} can now start sign-up from the link.`);
 
   await findInList(page);
   await expect(row(page)).toContainText("010-****-1357"); // masked, never the full number
@@ -54,28 +54,29 @@ test("details: the new invitation has one history line", async ({ page }) => {
   await findInList(page);
   await row(page).getByRole("link", { name: `View invitation detail for ${doctor.name}` }).click();
 
-  await expect(page.getByRole("heading", { level: 2, name: doctor.name })).toBeVisible();
+  await expect(page.locator(".invitation-detail-facts")).toContainText(doctor.name);
   const history = page.locator(".invitation-history-item");
   await expect(history).toHaveCount(1);
-  await expect(history.first()).toContainText("Invitation issued");
+  await expect(history.first()).toContainText("Issued");
   await expect(history.first()).toContainText("Current link");
-  await expect(history.first()).toContainText("by admin@hmp.co.kr");
+  await expect(history.first()).toContainText("· admin@hmp.co.kr");
 });
 
-test("edit: the corrected details are saved and a corrected link is sent", async ({ page }) => {
+test("edit: the corrected details are saved, no new link is sent", async ({ page }) => {
   await findInList(page);
   await row(page).getByRole("link", { name: `Edit invitation for ${doctor.name}` }).click();
 
   await expect(page.getByLabel(/Mobile number/)).toHaveValue("010-2468-1357");
   await page.getByLabel(/Mobile number/).fill("010-2468-9999");
-  await page.getByRole("button", { name: "Save and re-issue" }).click();
+  await page.getByRole("button", { name: "Save changes" }).click();
 
   await expect(page).toHaveURL(/\/doctors\/invitations\/list$/);
-  await expect(toast(page)).toContainText("Invitation updated");
+  await expect(toast(page)).toContainText("Changes saved");
+  await expect(toast(page)).toContainText("No new link was sent.");
 
   await findInList(page);
   await expect(row(page)).toContainText("010-****-9999");
-  await expect(row(page).locator("td").nth(2)).toHaveText("1"); // edit re-issues
+  await expect(row(page).locator("td").nth(2)).toHaveText("0"); // Hi-Fi 1d: edit sends no new link
 });
 
 test("delete (revoke): the link stops working and the row stays as Revoked", async ({ page }) => {
@@ -98,12 +99,12 @@ test("re-issue: a revoked invitation goes back to Pending with a new link", asyn
   await row(page).getByRole("button", { name: `Re-issue invitation for ${doctor.name}` }).click();
 
   const dialog = page.getByRole("alertdialog", { name: "Re-issue invitation?" });
-  await expect(dialog).toContainText("1 → 2");
+  await expect(dialog).toContainText("0 → 1");
   await dialog.getByRole("button", { name: "Re-issue invitation" }).click();
 
   await expect(toast(page)).toContainText("Invitation re-issued");
   await expect(row(page)).toContainText("Pending");
-  await expect(row(page).locator("td").nth(2)).toHaveText("2");
+  await expect(row(page).locator("td").nth(2)).toHaveText("1");
 });
 
 test("history lists every step, oldest first", async ({ page }) => {
@@ -112,8 +113,8 @@ test("history lists every step, oldest first", async ({ page }) => {
 
   const history = page.locator(".invitation-history-item");
   await expect(history).toHaveCount(4);
-  await expect(history.nth(0)).toContainText("Invitation issued");
-  await expect(history.nth(1)).toContainText("Details corrected");
+  await expect(history.nth(0)).toContainText("Issued");
+  await expect(history.nth(1)).toContainText("Details updated");
   await expect(history.nth(2)).toContainText("Revoked");
   await expect(history.nth(3)).toContainText("Re-issued");
   await expect(history.nth(3)).toContainText("Current link");

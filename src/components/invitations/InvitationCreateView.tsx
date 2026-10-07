@@ -6,9 +6,8 @@ import { useToast } from "@/components/providers/ToastProvider";
 import { EMPTY_FORM_VALUES, ROUTES } from "@/constants/invitation";
 import { useCreateInvitation } from "@/hooks/API/invitations/useCreateInvitation";
 import type { InvitationFormValues } from "@/types/invitation";
-import { formatLongDate } from "@/utils/format";
 
-// W-02 Issue invitation: POST → toast → back to the list, where the new row is on top as Pending
+// W-02 Issue invitation: POST → toast → back to the list, where the new row is on top as Pending (Hi-Fi 2f)
 export default function InvitationCreateView() {
   const router = useRouter();
   const { showToast } = useToast();
@@ -19,7 +18,7 @@ export default function InvitationCreateView() {
       onSuccess: (created) => {
         showToast({
           title: "Invitation issued",
-          message: `A link was sent to ${created.doctorName}. It works until ${formatLongDate(created.expiresAt)}.`,
+          message: `${created.doctorName} can now start sign-up from the link.`,
         });
         router.push(ROUTES.list);
       },
@@ -27,16 +26,13 @@ export default function InvitationCreateView() {
   }
 
   return (
-    <section className="invitation-form-card" aria-label="Issue invitation form">
-      <InvitationForm
-        mode="create"
-        initialValues={EMPTY_FORM_VALUES}
-        // stays disabled after success too, while the list page opens: no second invitation by double click
-        isSubmitting={create.isPending || create.isSuccess}
-        submitError={create.error}
-        onSubmit={handleSubmit}
-        cancelHref={ROUTES.list}
-      />
-    </section>
+    <InvitationForm
+      mode="create"
+      initialValues={EMPTY_FORM_VALUES}
+      // stays disabled after success too, while the list page opens: no second invitation by double click
+      isSubmitting={create.isPending || create.isSuccess}
+      submitError={create.error}
+      onSubmit={handleSubmit}
+    />
   );
 }
