@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { ArrowClockwise, FileText, PencilSimple, Prohibit } from "@phosphor-icons/react/dist/ssr";
 import StatusChip from "@/components/common/StatusChip";
-import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL } from "@/constants/invitation";
+import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL, ROUTES } from "@/constants/invitation";
 import type { Invitation } from "@/types/invitation";
-import { formatShortDate, maskMobile } from "@/utils/format";
+import { formatContact, formatDate, formatNumber } from "@/utils/format";
 import { canEdit, canReissue, canRevoke } from "@/utils/invitationRules";
 
 interface InvitationCardProps {
@@ -15,9 +15,9 @@ interface InvitationCardProps {
 
 // One invitation as a card: replaces the table row below 768px (Hi-Fi mobile)
 export default function InvitationCard({ invitation, isHighlighted, onReissue, onRevoke }: InvitationCardProps) {
-  const { id, doctorName, mobile, status, issuedAt, expiresAt, reissueCount } = invitation;
+  const { id, doctorName, maskedMobile, status, issuedAt, expiresAt, reissueCount } = invitation;
   const name = doctorName ?? MISSING_NAME_LABEL;
-  const detailHref = `/doctors/invitations/details/${id}`;
+  const detailHref = ROUTES.detail(id);
   // Pending shows "View detail" in the footer instead of the actions row
   const showDetailAction = !canEdit(status);
 
@@ -34,19 +34,19 @@ export default function InvitationCard({ invitation, isHighlighted, onReissue, o
       <dl className="invitation-card-facts">
         <div>
           <dt>Contact</dt>
-          <dd aria-label={mobile ? undefined : MISSING_CONTACT_SPOKEN}>{maskMobile(mobile)}</dd>
+          <dd aria-label={maskedMobile ? undefined : MISSING_CONTACT_SPOKEN}>{formatContact(maskedMobile)}</dd>
         </div>
         <div>
           <dt>Re-issues</dt>
-          <dd>{reissueCount}</dd>
+          <dd>{formatNumber(reissueCount)}</dd>
         </div>
         <div>
           <dt>Issued</dt>
-          <dd>{formatShortDate(issuedAt)}</dd>
+          <dd>{formatDate(issuedAt)}</dd>
         </div>
         <div>
           <dt>Expiry (TBC)</dt>
-          <dd>{formatShortDate(expiresAt)}</dd>
+          <dd>{formatDate(expiresAt)}</dd>
         </div>
       </dl>
 
@@ -86,7 +86,7 @@ export default function InvitationCard({ invitation, isHighlighted, onReissue, o
             View detail
           </Link>
           <Link
-            href={`/doctors/invitations/edit/${id}`}
+            href={ROUTES.edit(id)}
             className="invitation-card-link is-primary"
             aria-label={`Edit invitation for ${name}`}
           >

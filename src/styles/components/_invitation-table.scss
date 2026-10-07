@@ -81,9 +81,7 @@
   padding: $space-2xl $space-lg;
 }
 
-// Loading placeholders: one grey bar per cell, widths differ per column
-$skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
-
+// Loading placeholders: one grey bar per cell, widths differ per column ($skeleton-table-widths)
 .skeleton-bar {
   display: block;
   height: $space-md;
@@ -92,9 +90,9 @@ $skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
 }
 
 .invitation-table-skeleton {
-  @for $column from 1 through list.length($skeleton-widths) {
+  @for $column from 1 through list.length($skeleton-table-widths) {
     td:nth-child(#{$column}) .skeleton-bar {
-      width: list.nth($skeleton-widths, $column);
+      width: list.nth($skeleton-table-widths, $column);
     }
   }
 
@@ -113,7 +111,7 @@ $skeleton-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
   }
 }
 
-// 1439 and narrower: compact density 12/12 (Hi-Fi 1024 and 768 frames)
+// Below $bp-lg: compact density 12/12 (Hi-Fi 1024 and 768 frames)
 @include below($bp-lg) {
   .invitation-table {
     th,

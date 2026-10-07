@@ -1,0 +1,134 @@
+@use "../tokens" as *;
+@use "../mixins" as *;
+
+// Shared column of the create, detail and edit pages
+.invitation-sub-page {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+  max-width: $sub-page-max-w;
+}
+
+// W-02 / W-04: the form sits in a white card
+.invitation-form-card {
+  @extend %card-surface;
+  padding: $space-xl;
+}
+
+.invitation-form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-lg;
+}
+
+.invitation-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+}
+
+// Label always visible above the field
+.invitation-form-label {
+  font-weight: $font-weight-semibold;
+}
+
+.invitation-form-required {
+  font-weight: $font-weight-regular;
+  color: $color-muted;
+}
+
+.invitation-form-input {
+  height: $input-h;
+  padding: 0 $space-ms;
+  border: $border-w solid $color-border-strong;
+  border-radius: $radius-md;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  font-size: $font-size-body-lg; // 16px: phones do not zoom into the field
+
+  &::placeholder {
+    color: $color-placeholder;
+  }
+
+  // Invalid: thicker red border + the message in words (never colour alone)
+  .is-invalid & {
+    border-color: $color-danger;
+    box-shadow: inset 0 0 0 $border-w $color-danger;
+  }
+}
+
+.invitation-form-hint {
+  color: $color-muted;
+}
+
+.invitation-form-field-error {
+  display: flex;
+  align-items: center;
+  gap: $space-xs;
+  color: $color-danger;
+  font-weight: $font-weight-medium;
+}
+
+// Edit: explains that saving sends a corrected link
+.invitation-form-notice {
+  display: flex;
+  gap: $space-sm;
+  margin: 0;
+  padding: $space-ms $space-md;
+  border: $border-w solid $color-info-border;
+  border-radius: $radius-md;
+  background: $color-info-bg;
+  color: $color-info-fg;
+}
+
+.invitation-form-validity {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin: 0;
+  color: $color-muted;
+}
+
+// Error that belongs to no single field (server down, server error)
+.invitation-form-error {
+  display: flex;
+  gap: $space-sm;
+  margin: 0;
+  padding: $space-ms $space-md;
+  border: $border-w solid $color-danger-border;
+  border-radius: $radius-md;
+  background: $color-danger-soft;
+  color: $color-danger;
+}
+
+// Icons beside wrapping text keep their size
+.invitation-form-notice,
+.invitation-form-validity,
+.invitation-form-error {
+  > svg {
+    flex: none;
+  }
+}
+
+.invitation-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $space-ms;
+}
+
+@include below($bp-sm) {
+  .invitation-form-card {
+    padding: $space-lg $space-md;
+  }
+
+  // Phones: full-width buttons, the main action on top
+  .invitation-form-actions {
+    flex-direction: column-reverse;
+
+    .btn {
+      width: 100%;
+      min-height: $control-h-touch;
+    }
+  }
+}

@@ -49,7 +49,7 @@
   }
 }
 
-// Drawer toggle, only shown below 1024px
+// Drawer toggle, only shown below $bp-md
 .admin-header-menu {
   display: none;
   height: $control-h-md;

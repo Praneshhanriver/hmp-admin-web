@@ -2,7 +2,7 @@
 @use "../tokens" as *;
 @use "../mixins" as *;
 
-// One invitation as a card (below 768px, Hi-Fi mobile)
+// One invitation as a card (below $bp-sm, Hi-Fi mobile)
 .invitation-card {
   display: flex;
   flex-direction: column;
@@ -92,7 +92,6 @@
 }
 
 // Loading placeholder card (Hi-Fi 3e): name + chip, facts block, button
-$skeleton-card-head-widths: 50%, 25%;
 
 .invitation-card.is-skeleton {
   gap: $space-ms;

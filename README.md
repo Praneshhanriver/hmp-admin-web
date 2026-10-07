@@ -1,165 +1,173 @@
-# HMP Admin — Doctor Invitation List (Homework 1)
+# HMP Admin — Doctor Invitations
 
-The **Doctor Invitation list** of the HMP Telemedicine Administration web (Admin ADM-003, spec p.113c), built with
-Next.js 15 App Router, React 19, TypeScript and SCSS from a Claude Design wireframe and Hi-Fi. Admins can search
-invitations by doctor name or the visible contact digits, filter by status, page through the results, and
-re-issue or revoke an invitation through a confirmation dialog with a toast and a highlighted row. Data comes from
-an in-memory mock service, every list state (loading, empty, no results, error) is designed, and the layout works
-at every width from 1920 down to 375 without sideways page scrolling.
+The **Doctor Invitations** feature of the HMP Telemedicine Administration web (Admin ADM-003): list, issue, detail
+with history, edit, delete (= revoke) and re-issue, on a real Spring Boot API.
+Next.js 15 App Router · React 19 · TypeScript · SCSS · TanStack Query · axios · Playwright.
+Built for the AI Frontend Training — Homework 1 (list screen, passed) and Homework 2 (full feature on a real API).
 
 ## Links
-- **Demo:** [TO FILL IN after deployment]
-- **Repository branch:** <https://github.com/Praneshhanriver/hmp-admin-web/tree/feature/hw1-invitation-list>
+| | |
+|---|---|
+| **Demo (web)** | <https://hmp-admin-web.vercel.app/doctors/invitations/list> |
+| **Demo (API)** | `DEMO_API_URL` — see [How to run](#how-to-run) · free Render service: the first load after a quiet period can take about a minute |
+| **Frontend repo** | <https://github.com/Praneshhanriver/hmp-admin-web> — branch `main` (HW2 work on `feature/hw2-invitation-crud`, HW1 on `feature/hw1-invitation-list`) |
+| **Backend repo** | <https://github.com/Praneshhanriver/hmp-admin-api> — branch `main` |
+| **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e (exports attached on the Notion page) |
 
 ## What I built
-**Screen** — `/doctors/invitations/list` inside the admin shell (header, sidebar with the current page marked).
-Table columns: Doctor · Contact (masked `010-****-5678`) · Issued · Re-issues · Expiry (TBC) · Status · Manage.
+| Screen | Route | Spec |
+|---|---|---|
+| Invitation list | `/doctors/invitations/list?q=&status=&page=` | p.113c |
+| Issue invitation | `/doctors/invitations/create` | p.113b |
+| Invitation detail + history | `/doctors/invitations/details/[id]` | p.113e |
+| Edit (Pending only) | `/doctors/invitations/edit/[id]` | training extension |
+| Delete = Revoke, and Re-issue | dialogs on the list | p.113c (no hard delete: the row stays as Revoked) |
 
-**States**
-- Loading: skeleton rows (cards on phones), `aria-busy`, "Loading invitations…".
-- Filled: "18 invitations · Showing 1–8", 8 rows per page.
-- No results: echoes the search ("Nothing matches "Kang Bo-ra" with status Pending.") + Clear search.
-- Empty: "No invitations yet" (`?mock=empty`).
-- Error: plain-language message + Retry; the search is kept (`?mock=error`). Never shown as an empty state.
+- **List:** server-side search (doctor name, or only the contact digits visible on screen), status filter and
+  paging; the search lives in the URL, so Back and reload keep it. Loading skeleton, empty, no results (search
+  echoed + Clear search), error with the API's message + Retry, page-past-the-end.
+- **Issue / Edit form:** labels above fields; the browser checks the **same rules with the same words** as the
+  backend; the backend's own errors (e.g. "already waiting to be used") appear under the field; on any error what
+  was typed is kept; the button can't be pressed twice; Edit is prefilled and enabled only after a change.
+- **Detail:** facts (masked contact, WM dates) and the full history, oldest first, with the current link marked.
+- **After every change** the list and detail reload by themselves (TanStack Query invalidation), with a toast that
+  survives the page change.
+- **Formats:** WM dates (`2026-09-08` in tables, `September 8, 2026` on detail, `… 08:33 PM` in history),
+  three-digit commas, plain error messages ([docs/error-messages.md](docs/error-messages.md)).
+- **Responsive** 1920 → 375 on every screen (cards, drawer, full-width form buttons on phones).
 
-**Interactions**
-- Search by name or by the contact digits shown on screen (Enter or the Search button) + Status filter.
-- Pagination (Previous / numbers / Next); a new search returns to page 1.
-- Re-issue (count n → n+1) and Revoke ("Cannot be undone") in a native modal dialog: focus starts on Cancel,
-  Esc cancels, busy label + spinner, then a toast (6s, pauses on hover/focus) and a 2s row highlight.
-- Actions follow the status rules (Pending: Re-issue + Revoke + Edit · Used: Detail · Expired / Revoked: Re-issue).
+### Homework 2 checklist
+- [x] List, create, details, edit, delete on a real API — [hmp-admin-api](https://github.com/Praneshhanriver/hmp-admin-api) (Spring Boot, 33 tests)
+- [x] Service + hook pattern — `API_ENDPOINTS` → `api-services/InvitationService` → `hooks/API/invitations/use*` (TanStack Query); no API calls in components
+- [x] Search, filter and paging on the list — done by the API
+- [x] Validation matches the backend — same rules, order and messages; backend errors shown under the field
+- [x] Loading, empty and error states, with the API's error messages
+- [x] WM date, number and error-message formats
+- [x] All screen sizes — [docs/screenshots/hw2](docs/screenshots/hw2) (10 widths × 4 screens)
+- [x] Test cases in WM QA Template format — [docs/qa-test-cases.md](docs/qa-test-cases.md) (58 cases)
+- [x] Playwright test + separate mutation test — `e2e/invitations.spec.ts` (23) · `e2e/invitations.mutation.spec.ts` (7)
+- [x] QA build report — [docs/build-report.md](docs/build-report.md)
 
-**Responsive behaviour**
-- ≥1440: 240px sidebar; 1920: content capped at 1200px and centred.
-- 1024–1439: 200px sidebar, compact table density.
-- <1024: sidebar becomes a drawer behind a **Menu** button (Esc, the dark background or a link closes it; closed
-  links are skipped by Tab); the table scrolls sideways inside its own card.
-- <768: the table becomes cards with 44px buttons, pagination becomes "Page 1 of 3", the dialog becomes a bottom sheet.
-
-### Homework 1 requirements
-- [x] One list screen from a design, with mock data — p.113c from the Hi-Fi, 18 mock invitations
-- [x] Works at every size 1920 → 375 — measured at 10 widths, see [Responsive check](#responsive-check)
-- [x] CLAUDE.md and skills — [`CLAUDE.md`](CLAUDE.md); skills check in [Prompts and skills](#prompts-and-skills-used)
-- [x] Design check — [`docs/design-check.md`](docs/design-check.md)
-- [x] Reuse of components — `PageHeader`, `StatusChip`, `Pagination`, `EmptyState`, `ErrorState`, `Toast`, one
-      `ConfirmationDialog` for both actions; SCSS placeholders `%card-surface`, `%sidebar-link`, `%pagination-button`
-- [x] WM naming — palette `colour + code` (`$blue-600`), semantic tokens, lowercase-hyphen classes,
-      PascalCase components, `use*` hooks, UPPER_SNAKE_CASE constants
-- [x] No hardcoded colours or numbers — raw values only in `_palette.scss`, `_tokens.scss`, `_mixins.scss`;
-      breakpoints only through the mixins
-- [x] Loading, empty and filled states — plus no-results and error
+### Homework 1 feedback — fixed
+| Feedback | Fix |
+|---|---|
+| README demo line "TO FILL IN", repo link on the feature branch | This README: demo + `main` links |
+| Design links need a Claude Design login | Wireframe and Hi-Fi exports attached on the Notion page |
+| Dates `26/09/08` | WM format, `utils/format.ts` (`formatDate`, `formatLongDate`, `formatDateTime`) |
+| Use the TanStack Query hook pattern in `src/hooks/API/<domain>/` | `src/hooks/API/invitations/`, one hook per file |
+| A few fixed values left in component partials | Skeleton widths moved to `_tokens.scss`; comments name tokens, not pixels |
 
 ## How to run
-Prerequisites: **Node.js 20+** and npm.
+Needs **Node.js 20+** and **Java 21**. Two terminals, side by side folders:
 
 ```bash
+# 1. API — http://localhost:8080 (18 demo invitations on every start)
+git clone https://github.com/Praneshhanriver/hmp-admin-api.git
+cd hmp-admin-api
+./mvnw spring-boot:run            # Windows: mvnw.cmd spring-boot:run
+
+# 2. Web — http://localhost:3000
+git clone https://github.com/Praneshhanriver/hmp-admin-web.git
+cd hmp-admin-web
 npm install
+cp .env.example .env.local        # NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
 npm run dev
 ```
-Open <http://localhost:3000/doctors/invitations/list> (`/` redirects there).
+Open <http://localhost:3000> (redirects to the list).
 
 | To see | Do |
 |---|---|
-| Loading | Reload the page (the mock waits 0.8s) |
-| Error state | <http://localhost:3000/doctors/invitations/list?mock=error> |
-| Empty state | <http://localhost:3000/doctors/invitations/list?mock=empty> |
+| Loading | DevTools → Network → Slow 4G, reload |
+| Error | Stop the API, reload the list → message + Retry; start the API, press Retry |
 | No results | Search `Kang Bo-ra` with status **Pending** |
-| Privacy-safe contact search | Search `5678` → only Dr. Kim Han-mi (Dr. Jung Min-seok's hidden middle digits 5678 are not searched) |
+| Empty | Covered by the Playwright test (the API always has demo data) |
+| Backend validation on screen | Issue invitation with `kim.hanmi@clinic.co.kr` → "already waiting to be used" under Email |
+| Privacy-safe contact search | Search `1234` → only Dr. Lee Seo-jun (Dr. Kim Han-mi's hidden middle digits are 1234) |
+| Full flow | Issue → find it → Edit → Revoke → Re-issue → open its detail and read the history |
 
-Checks (all pass with no warnings):
+### Checks
 ```bash
 npx tsc --noEmit
 npm run lint
-npm run build   # stop `npm run dev` first: both use the .next folder
+npm run build                     # stop `npm run dev` first: both use .next/
+npx playwright install chromium   # once
+npm run test:e2e                  # read-only, API + web running
+npm run test:e2e:mutation         # creates / edits / revokes data — run on purpose
+# backend: cd ../hmp-admin-api && ./mvnw verify
 ```
-Manual test cases: [`docs/qa-checklist.md`](docs/qa-checklist.md).
+Real output of every check: [docs/build-report.md](docs/build-report.md#9-results-of-lint-type-check-build-and-tests).
 
 ## Project structure
 ```
-src/
-  app/(main)/doctors/invitations/list/   the list route (Server Component); (main) = admin shell layout
-  components/layout/                     AdminShell (drawer state), AdminHeader, AdminSidebar
-  components/common/                     reusable UI: PageHeader, StatusChip, Pagination, EmptyState, ErrorState, Toast
-  components/invitations/                feature UI: list view, search bar, table, card, confirmation dialog
-  hooks/                                 useInvitations (load), useInvitationActions (re-issue / revoke)
-  services/                              invitationService: the only place that touches data (mock now, API later)
-  types/  constants/  utils/  mocks/     data shapes, named values, pure helpers, 18 mock invitations
-  styles/                                _palette, _tokens, _mixins + one partial per component
-docs/                                    design check, QA checklist, screenshots
+src/app/(main)/doctors/invitations/   list/ create/ details/[id]/ edit/[id]/ — thin Server Component pages
+src/api-services/                     apiClient (axios + ApiError) · InvitationService (the only API calls)
+src/hooks/API/invitations/            useGetInvitationsList · useGetInvitationDetail · useCreate/Update/Reissue/DeleteInvitation
+src/hooks/useInvitationActions.ts     Re-issue / Revoke dialog flow
+src/components/providers/             QueryProvider · ToastProvider
+src/components/invitations/           list view, search bar, table, card, dialog, form, create / detail / edit views
+src/components/common/  layout/       PageHeader, StatusChip, Pagination, EmptyState, ErrorState, Toast · admin shell
+src/utils/                            api-integration (API_ENDPOINTS, QUERIES), format, invitationValidation, listParams
+src/styles/                           _palette · _tokens · _mixins · one partial per component
+e2e/                                  Playwright: invitations.spec.ts, invitations.mutation.spec.ts
+docs/                                 design check · QA test cases · build report · error messages · screenshots
 ```
 
-## Design source
-Wireframe and Hi-Fi were made in **Claude Design** from the spec PDF pages **p.113b, p.113c and p.113e**, using
-**Design System v1.11 (test)** (Surfing Bear: Pretendard, Phosphor icons). The Hi-Fi's `invitation-tokens.css`
-is mirrored one to one in `src/styles/_tokens.scss`. Differences and open questions:
-[`docs/design-check.md`](docs/design-check.md).
-
-## How I worked
-- **Lessons 1–4** (app shell, tokens, table, search and filter) — typed by hand in guided lessons with Claude (chat).
-- **Lessons 5–8** (service + hook and states, pagination and dialogs, responsive layout, final audit) — implemented
-  with **Claude Code** from detailed prompts. For each step I reviewed the plan before approving it and ran the
-  manual tests. I committed Lessons 1–6 myself; for Lesson 7, the Hi-Fi alignment and this final step I asked
-  Claude Code to commit and push for me after reviewing the changes.
-- After Lesson 7, Claude Code compared the build with the Hi-Fi file component by component and fixed the gaps
-  (card link labels, toast target size and timing, 44px touch targets, dialog tag, phone dialog and toast).
+## React and Next.js concepts used (where to look)
+| Concept | Where |
+|---|---|
+| Server vs client components | Every `page.tsx` is a Server Component that reads `params` / `searchParams`; `"use client"` only on views with state, events or hooks |
+| Dynamic routes | `details/[id]`, `edit/[id]` → `parseInvitationId` (non-numbers show "not found" without an API call) |
+| Custom hooks / TanStack Query | `hooks/API/invitations/*`: `useQuery` with cache keys from `QUERIES`, `useMutation` + `invalidateQueries` |
+| Controlled form | `InvitationForm`: value from state, `onChange` updates state, derived errors (not stored) |
+| Context | `ToastProvider` (`createContext` + `useToast`) so the toast survives navigation |
+| Effects with cleanup | Toast timer, row highlight timer, `beforeunload` listener, focus after a server error |
+| Resetting state with `key` | `SearchBar key={query|status}`, `EditForm key={id}` |
+| Env variables | `NEXT_PUBLIC_API_BASE_URL` (baked in at build time) |
 
 ## Prompts and skills used
-| Prompt | What it did |
-|---|---|
-| Claude Design — wireframe | Low-fidelity layout, hierarchy, notes and all states for list / create / detail / edit from p.113b, c, e |
-| Claude Design — Hi-Fi | Same screens on Design System v1.11: tokens, components, responsive frames 1920 · 1024 · 768 · 375 |
-| Claude Code — Lesson 5 | Service + hook pattern, mock scenarios, loading / empty / no-results / error states |
-| Claude Code — Lesson 6 | Pagination, Re-issue / Revoke dialogs, toast and row highlight |
-| Claude Code — Lesson 7 | Breakpoint mixins, drawer, cards, compact pagination, sidebar current-page style |
-| Claude Code — Hi-Fi check | Compared the code with the Hi-Fi and wireframe and fixed every gap found |
-| Claude Code — final | Quality audit (tokens, naming, reuse, unused code), CLAUDE.md, design check, QA checklist, README, verification |
+**Skills:** the training skills (`fe-*`, `smoke-test`, `fe-build-handoff`) have not been shared yet, so they are not
+installed. The project rules are in [`CLAUDE.md`](CLAUDE.md) (both repos); WM pages were read through the Notion
+connector.
 
-**Skills:** official training skills are not available yet; `CLAUDE.md` holds the project rules. The project has
-no `.claude/skills/`; the user-level folder only has a personal `weekly-report` skill and the built-in document
-skills (docx, pdf, pptx, xlsx …) — none for design checks, so the design check was done by hand.
+**Main prompt (Claude Code, exact text):**
+```
+now start working on the backend for the same
+<pasted: the Slack announcement of the AI Frontend Training homework>
+https://app.notion.com/p/3e9326b2d5fb80c0872def7b6a848d3c --> This is the trainging page go throuhg this deeply
+understnad the requirements and build the Homework-2 in java spring boot in backend complete the same end to end
+with full proper testing off the backened with fromtend complete both end to end
+https://app.notion.com/p/divii/Pranesh-Ghosh-3f0326b2d5fb8157a257c5731cfd03b8 -->> This I have submitted for HW-1
+now check the slack status and also complete the HW-2
+check slack notion and everything and complete the HW-2
+```
+How the work went from that prompt:
+1. Claude Code read the training page, my HW1 page (with Vaishali's feedback) and the Slack thread, and showed a plan.
+2. I answered four decisions: packages (`@tanstack/react-query`, `axios`, `@playwright/test`), **Delete = Revoke**
+   (as in the spec), a separate backend repo, H2 + Flyway.
+3. Backend first (entity rules, validation, errors, 33 tests, Docker), checked with curl; then the frontend data
+   layer, screens, Playwright, docs. Type-check and lint after every step; build, all tests and screenshots at the end.
 
 ## Problem I hit and how I solved it
-**Masked digits leaked through search.** The contact is shown as `010-****-5678`, but search first matched the full
-number, so searching `5678` returned Dr. Kim Han-mi (`010-****-5678`) **and** Dr. Jung Min-seok, whose hidden
-middle digits are 5678 (`010-5678-1357`) — the search revealed digits the screen hides. Fix: `filterInvitations`
-builds the masked string with the same `maskMobile` used for display and matches only those visible digits. A
-search for the full number now needs the server (noted in the design check).
+**The demo data would have been all "Expired".** Caught while planning the seed data: the HW1 mocks have fixed
+September dates with a 14-day validity. Loaded as they were, every Pending invitation would already be past its
+expiry, so the new expiry job would turn all six into Expired the moment the API started — no Pending rows to edit,
+revoke or test. Fix: the `DemoDataSeeder` builds the 18
+invitations with dates **relative to start-up** ("issued 2 days ago") and through the same domain methods as real
+requests (`issue`, `reissue`, `revoke`, `markUsed`, `expireIfDue`), so their history is real too. Every restart
+(including Render waking up) gives the same, valid demo.
 
-Two more:
-- **404 on the list page** — the route-group folder was named `main` instead of `(main)`, so it became part of the
-  URL (`/main/doctors/...`). Renaming it to `(main)` keeps the shared layout without changing the URL.
-- **Sass deprecation warnings** — the global `length()` / `nth()` functions are deprecated in Dart Sass;
-  `@use "sass:list"` with `list.length()` / `list.nth()` removed the warnings from the build.
-- (Bonus) **"Failed to load chunk" in dev** — running `npm run build` while `npm run dev` was running overwrote the
-  shared `.next` folder. Stop the dev server before building (now in CLAUDE.md).
+Also found along the way:
+- **Re-issuing an old invitation could create a second live link.** Revoke A, issue B for the same email, then
+  re-issue A → two Pending invitations. Found by trying it with curl against the running API. The service now runs the same duplicate check on re-issue (API test
+  `reissuingARevokedInvitationIsRefusedWhenTheEmailHasANewerPendingOne`).
+- **" K " passed the length check on the API but not in the browser** (the API counted the spaces). Noticed while copying
+  the rules into the frontend. The request record now trims before validation, so both sides agree.
+- **Validation messages came back in a random order** (Bean Validation has no fixed order), so "required" and
+  "too short" could swap. Noticed in code review. The handler now picks one message per field in a fixed order: required → length → format.
 
-## Responsive check
-Measured in headless Chrome at each width (page `scrollWidth` vs viewport) and in DevTools device mode.
-
-| Width | Layout | Result | Screenshot |
-|---|---|---|---|
-| 1920 | 240px sidebar, content capped and centred | No sideways scroll | [docs/screenshots/w1920.png](docs/screenshots/w1920.png) |
-| 1440 | 240px sidebar | No sideways scroll | [docs/screenshots/w1440.png](docs/screenshots/w1440.png) |
-| 1366 | 200px sidebar, compact table | No sideways scroll | [docs/screenshots/w1366.png](docs/screenshots/w1366.png) |
-| 1280 | 200px sidebar, compact table | No sideways scroll | [docs/screenshots/w1280.png](docs/screenshots/w1280.png) |
-| 1024 | 200px sidebar, all columns fit | No sideways scroll | [docs/screenshots/w1024.png](docs/screenshots/w1024.png) |
-| 991 | Menu drawer, table fits | No sideways scroll | [docs/screenshots/w991.png](docs/screenshots/w991.png) |
-| 768 | Menu drawer, table scrolls inside its card | No sideways scroll | [docs/screenshots/w768.png](docs/screenshots/w768.png) |
-| 640 | Cards, "Page 1 of 3" | No sideways scroll | [docs/screenshots/w640.png](docs/screenshots/w640.png) |
-| 480 | Cards | No sideways scroll | [docs/screenshots/w480.png](docs/screenshots/w480.png) |
-| 375 | Cards, bottom-sheet dialog | No sideways scroll | [docs/screenshots/w375.png](docs/screenshots/w375.png) |
-
-The dark "N" badge in the screenshots is the Next.js dev-mode indicator, not part of the app.
-
-## Known limitations and Homework 2 next steps
-From [`docs/design-check.md`](docs/design-check.md):
-- Issue invitation, Detail and Edit links lead to Homework 2 screens and **404 for now**; so do the other sidebar sections.
-- Contact search matches only the visible digits; full-number search needs the server.
-- Expiry after re-issue is mocked as 14 days — the validity period is TBC (S12 ▸ INVITATION).
-- After Revoke the Revoke button disappears, so focus cannot return to it.
-- Re-issued / revoked rows stay in a filtered list until the next search (intentional).
-- The action failure message exists but cannot be triggered with the mock.
-- Open designer questions: rows per page (8 vs 20), date format, drawer breakpoint, scroll-hint range, Detail
-  action on Expired/Revoked cards; reviewer question: PrimeReact vs custom components.
-- **Homework 2:** Issue invitation (p.113b), Detail + history (p.113e), Edit (extension), and the real API behind
-  `invitationService`.
+## Known limitations
+- No login: every admin action is recorded as `admin@hmp.co.kr`; "Used" exists only in the demo data (no doctor
+  sign-up in this homework).
+- Unsaved-changes warning only on tab close / reload, not on in-app links.
+- Other sidebar sections (Patients, Doctor list, Consultations, Settings) are outside this feature and 404.
+- Open designer questions: [docs/design-check.md](docs/design-check.md#still-open).

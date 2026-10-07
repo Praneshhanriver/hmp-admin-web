@@ -13,9 +13,21 @@
   gap: $space-sm;
   color: $color-muted;
 
+  flex-wrap: wrap;
+
   [aria-current="page"] {
     color: $color-text-secondary;
   }
+}
+
+// "Invitations" in the breadcrumb of the create / detail / edit pages
+.page-header-crumb-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: $control-h-sm; // click target
+  color: $color-primary;
+  text-decoration: underline;
+  text-underline-offset: $link-underline-offset;
 }
 
 .page-header-row {

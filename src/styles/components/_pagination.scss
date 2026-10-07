@@ -11,7 +11,7 @@
   justify-content: center;
 }
 
-// Shown below 768px instead of the page numbers
+// Shown below $bp-sm instead of the page numbers
 .pagination-compact {
   display: none;
   justify-content: space-between;

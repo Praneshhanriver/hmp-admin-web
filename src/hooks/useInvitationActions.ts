@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import { ROW_HIGHLIGHT_MS, TOAST_DURATION_MS } from "@/constants/invitation";
-import { reissueInvitation, revokeInvitation } from "@/services/invitationService";
+import { useToast } from "@/components/providers/ToastProvider";
+import type { ToastMessage } from "@/components/providers/ToastProvider";
+import { ROW_HIGHLIGHT_MS } from "@/constants/invitation";
+import { useDeleteInvitation } from "@/hooks/API/invitations/useDeleteInvitation";
+import { useReissueInvitation } from "@/hooks/API/invitations/useReissueInvitation";
 import type { Invitation, InvitationAction } from "@/types/invitation";
 
 // The action waiting for confirmation in the dialog
 export interface PendingAction {
   type: InvitationAction;
   invitation: Invitation;
-}
-
-export interface ToastMessage {
-  title: string;
-  message: string;
 }
 
 // Toast text from the Hi-Fi. Names the doctor when the invitation has one
@@ -30,79 +28,53 @@ const SUCCESS: Record<InvitationAction, (name: string | null) => ToastMessage> =
   }),
 };
 
-const FAILURE: Record<InvitationAction, string> = {
-  reissue: "The invitation could not be re-issued. Please try again.",
-  revoke: "The invitation could not be revoked. Please try again.",
-};
-
-// Re-issue / Revoke flow: confirm dialog → service call → toast + row highlight
-export function useInvitationActions(onUpdated: (updated: Invitation) => void) {
+// Re-issue / Revoke flow: confirm dialog → API call → list reloads → toast + row highlight.
+// On failure the dialog stays open and shows the API's message, so the admin can try again
+export function useInvitationActions() {
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [toast, setToast] = useState<ToastMessage | null>(null);
-  const [highlightedId, setHighlightedId] = useState<string | null>(null);
-  const [isToastPaused, setIsToastPaused] = useState(false); // mouse or keyboard focus is on the toast
+  const [highlightedId, setHighlightedId] = useState<number | null>(null);
+  const reissue = useReissueInvitation();
+  const revoke = useDeleteInvitation();
+  const { showToast } = useToast();
 
-  // Hide the toast after a few seconds, but never while the admin is reading it.
-  // Cleanup cancels the timer if the toast changes or gets paused first
-  useEffect(() => {
-    if (!toast || isToastPaused) return;
-    const timer = setTimeout(() => setToast(null), TOAST_DURATION_MS);
-    return () => clearTimeout(timer);
-  }, [toast, isToastPaused]);
+  const mutation = pendingAction?.type === "revoke" ? revoke : reissue;
 
   // Remove the row highlight after a short moment
   useEffect(() => {
-    if (!highlightedId) return;
+    if (highlightedId === null) return;
     const timer = setTimeout(() => setHighlightedId(null), ROW_HIGHLIGHT_MS);
     return () => clearTimeout(timer);
   }, [highlightedId]);
 
   function open(type: InvitationAction, invitation: Invitation) {
-    setErrorMessage(null);
+    reissue.reset(); // forget the error of an earlier attempt
+    revoke.reset();
     setPendingAction({ type, invitation });
   }
 
   function cancel() {
-    setErrorMessage(null);
     setPendingAction(null);
   }
 
-  async function confirm() {
+  function confirm() {
     if (!pendingAction) return;
     const { type, invitation } = pendingAction;
-
-    setIsSubmitting(true);
-    setErrorMessage(null);
-    try {
-      const updated =
-        type === "reissue" ? await reissueInvitation(invitation.id) : await revokeInvitation(invitation.id);
-      onUpdated(updated);
-      setPendingAction(null);
-      setToast(SUCCESS[type](updated.doctorName));
-      setHighlightedId(updated.id);
-    } catch {
-      setErrorMessage(FAILURE[type]); // dialog stays open so the admin can try again
-    } finally {
-      setIsSubmitting(false);
-    }
+    mutation.mutate(invitation.id, {
+      onSuccess: (updated) => {
+        setPendingAction(null);
+        showToast(SUCCESS[type](updated.doctorName));
+        setHighlightedId(updated.id);
+      },
+    });
   }
 
   return {
     pendingAction,
-    isSubmitting,
-    errorMessage,
-    toast,
+    isSubmitting: mutation.isPending,
+    errorMessage: mutation.error?.message ?? null,
     highlightedId,
     open,
     cancel,
     confirm,
-    dismissToast: () => {
-      setToast(null);
-      setIsToastPaused(false);
-    },
-    pauseToast: () => setIsToastPaused(true),
-    resumeToast: () => setIsToastPaused(false),
   };
 }

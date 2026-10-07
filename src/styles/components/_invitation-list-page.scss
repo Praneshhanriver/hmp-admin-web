@@ -33,7 +33,7 @@
   color: $color-muted;
 }
 
-// 768–1023: the table scrolls inside its card, so tell the admin
+// $bp-sm to $bp-md: the table scrolls inside its card, so tell the admin
 @include between($bp-sm, $bp-md) {
   .invitation-list-range {
     display: none;
