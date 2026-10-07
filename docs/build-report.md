@@ -19,9 +19,9 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 | | Frontend | Backend |
 |---|---|---|
 | Repo | <https://github.com/Praneshhanriver/hmp-admin-web> | <https://github.com/Praneshhanriver/hmp-admin-api> |
-| Branch | `feature/hw2-invitation-crud` (merged to `main` with the demo deploy) | `main` |
-| Commit | [`7807565`](https://github.com/Praneshhanriver/hmp-admin-web/commit/7807565) (code tested here) | [`84e3dd6`](https://github.com/Praneshhanriver/hmp-admin-api/commit/84e3dd6) |
-| Link | Being deployed: web on Vercel (<https://hmp-admin-web.vercel.app>, still HW1 until the merge) | Being deployed on Render (Docker) |
+| Branch | `main` (from `feature/hw2-invitation-crud`) | `main` |
+| Commit | [`cef5379`](https://github.com/Praneshhanriver/hmp-admin-web/commit/cef5379) (deployed and tested) | [`84e3dd6`](https://github.com/Praneshhanriver/hmp-admin-api/commit/84e3dd6) (deployed) |
+| Link | <https://hmp-admin-web.vercel.app/doctors/invitations/list> (Vercel) | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> (Render, Docker) |
 | Date | 2026-10-07 | 2026-10-07 |
 | Runtime | Node 24.21 (20+ supported) · Next.js 15.5.27 | Java 21.0.12 · Spring Boot 4.0.8 · H2 in memory |
 
@@ -150,6 +150,16 @@ $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 7 a second invitation for the same email is refused by the API
   7 passed (49.6s)
 ```
+Then against the **live demo** (`PLAYWRIGHT_BASE_URL=https://hmp-admin-web.vercel.app`, API on Render), 7 Oct 2026:
+```text
+$ npx playwright test
+  23 passed (2.9m)
+$ npm run test:e2e:mutation
+  7 passed (1.1m)
+```
+The live mutation run leaves one "Dr. E2E Test …" invitation (Pending, re-issued twice) in the demo data; it disappears when the
+Render service restarts.
+
 Console check on the production build (list, create, detail, edit): no errors, except the browser's own log of
 the API's 404 when a detail id does not exist (expected).
 
@@ -157,7 +167,7 @@ the API's 404 when a detail id does not exist (expected).
 - Widths: 1920 · 1600 · 1366 · 1280 · 1024 · 991 · 768 · 640 · 480 · 375 on list, create, detail and edit: no
   sideways scrolling at any width. Screenshots: [screenshots/hw2](screenshots/hw2) (`<screen>-w<width>.png`, plus
   `create-errors-*` and `edit-not-editable-*`). Playwright re-checks 1920 / 1366 / 768 / 375 on every run.
-- Browser: Chromium (Playwright 1.63, Desktop Chrome profile). Safari / Firefox / real phones not checked.
+- Browser: Chromium (Playwright 1.63, Desktop Chrome profile), locally and on the live demo. Safari / Firefox / real phones not checked.
 
 ## References
 - Training page (Steps 3–8, section 13): <https://app.notion.com/p/3e9326b2d5fb80c0872def7b6a848d3c>
