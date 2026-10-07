@@ -3,7 +3,7 @@ import { ArrowClockwise, FileText, PencilSimple, Prohibit } from "@phosphor-icon
 import StatusChip from "@/components/common/StatusChip";
 import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL } from "@/constants/invitation";
 import type { Invitation } from "@/types/invitation";
-import { formatShortDate, maskMobile } from "@/utils/format";
+import { formatDate, maskMobile } from "@/utils/format";
 import { canEdit, canReissue, canRevoke } from "@/utils/invitationRules";
 
 interface InvitationCardProps {
@@ -42,11 +42,11 @@ export default function InvitationCard({ invitation, isHighlighted, onReissue, o
         </div>
         <div>
           <dt>Issued</dt>
-          <dd>{formatShortDate(issuedAt)}</dd>
+          <dd>{formatDate(issuedAt)}</dd>
         </div>
         <div>
           <dt>Expiry (TBC)</dt>
-          <dd>{formatShortDate(expiresAt)}</dd>
+          <dd>{formatDate(expiresAt)}</dd>
         </div>
       </dl>
 

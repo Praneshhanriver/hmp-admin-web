@@ -56,14 +56,14 @@
   padding: 0 $space-ms 0 $space-2xl;
 }
 
-// 1024–1439: narrower sidebar so the table has room
+// $bp-md to $bp-lg: narrower sidebar so the table has room
 @include between($bp-md, $bp-lg) {
   .admin-sidebar {
     width: $layout-sidebar-w-md;
   }
 }
 
-// Below 1024: off-canvas drawer under the header, opened by the Menu button
+// Below $bp-md: off-canvas drawer under the header, opened by the Menu button
 @include below($bp-md) {
   .admin-sidebar {
     position: fixed;

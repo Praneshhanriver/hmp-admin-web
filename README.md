@@ -8,12 +8,25 @@ an in-memory mock service, every list state (loading, empty, no results, error) 
 at every width from 1920 down to 375 without sideways page scrolling.
 
 ## Links
-- **Demo:** [TO FILL IN after deployment]
-- **Repository branch:** <https://github.com/Praneshhanriver/hmp-admin-web/tree/feature/hw1-invitation-list>
+- **Demo:** <https://hmp-admin-web.vercel.app/doctors/invitations/list> (Vercel, deployed from `main`)
+- **Repository:** <https://github.com/Praneshhanriver/hmp-admin-web> — branch `main` (lesson-by-lesson commits on `feature/hw1-invitation-list`)
+- **Design:** [wireframe](docs/design/doctor-invitation-crud-wireframe.jpg) · [Hi-Fi](docs/design/doctor-invitation-crud-hifi.jpg) (full-canvas exports; the original Claude Design HTML files are next to them in [`docs/design/`](docs/design))
+
+## Fixes after the Homework 1 review (2026-10-07)
+| Review point | What changed |
+|---|---|
+| README demo line said "TO FILL IN" and the repo link pointed to the feature branch | Links above: live demo and branch `main` |
+| Design links open only with a Claude Design login | Wireframe and Hi-Fi exported as images (and the original HTML) in [`docs/design/`](docs/design), also attached on the Notion page |
+| Dates shown as `26/09/08`; WM English format is `May 1, 2016` or `YYYY-MM-DD` | `formatShortDate` replaced by `formatDate` → `2026-09-08` in the table and the cards |
+| Use the TanStack Query hook pattern in `src/hooks/API/<domain>/` for Homework 2 | Done in Homework 2 (`src/hooks/API/invitations/`); the HW1 list keeps its mock service |
+| A few fixed values left in component partials | Skeleton widths moved to `_tokens.scss` (`$skeleton-table-widths`, `$skeleton-card-head-widths`); comments now name tokens (`$bp-md`, `$control-h-touch`) instead of pixel numbers |
+
+Screenshots were retaken from the production build at all WM widths, now including 1600.
 
 ## What I built
 **Screen** — `/doctors/invitations/list` inside the admin shell (header, sidebar with the current page marked).
 Table columns: Doctor · Contact (masked `010-****-5678`) · Issued · Re-issues · Expiry (TBC) · Status · Manage.
+Dates in the WM format `YYYY-MM-DD`.
 
 **States**
 - Loading: skeleton rows (cards on phones), `aria-busy`, "Loading invitations…".
@@ -139,6 +152,7 @@ Measured in headless Chrome at each width (page `scrollWidth` vs viewport) and i
 | Width | Layout | Result | Screenshot |
 |---|---|---|---|
 | 1920 | 240px sidebar, content capped and centred | No sideways scroll | [docs/screenshots/w1920.png](docs/screenshots/w1920.png) |
+| 1600 | 240px sidebar | No sideways scroll | [docs/screenshots/w1600.png](docs/screenshots/w1600.png) |
 | 1440 | 240px sidebar | No sideways scroll | [docs/screenshots/w1440.png](docs/screenshots/w1440.png) |
 | 1366 | 200px sidebar, compact table | No sideways scroll | [docs/screenshots/w1366.png](docs/screenshots/w1366.png) |
 | 1280 | 200px sidebar, compact table | No sideways scroll | [docs/screenshots/w1280.png](docs/screenshots/w1280.png) |
@@ -149,7 +163,7 @@ Measured in headless Chrome at each width (page `scrollWidth` vs viewport) and i
 | 480 | Cards | No sideways scroll | [docs/screenshots/w480.png](docs/screenshots/w480.png) |
 | 375 | Cards, bottom-sheet dialog | No sideways scroll | [docs/screenshots/w375.png](docs/screenshots/w375.png) |
 
-The dark "N" badge in the screenshots is the Next.js dev-mode indicator, not part of the app.
+Screenshots are from the production build (`npm run build && npm run start`).
 
 ## Known limitations and Homework 2 next steps
 From [`docs/design-check.md`](docs/design-check.md):

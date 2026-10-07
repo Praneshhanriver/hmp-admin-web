@@ -81,7 +81,7 @@
   text-underline-offset: $link-underline-offset;
 }
 
-// Phone-sized button: 44px tall, shares the row with its neighbours
+// Phone-sized button: $control-h-touch tall, shares the row with its neighbours
 .btn-touch {
   flex: 1;
   min-height: $control-h-touch;

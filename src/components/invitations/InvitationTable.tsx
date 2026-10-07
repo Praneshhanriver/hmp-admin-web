@@ -4,7 +4,7 @@ import StatusChip from "@/components/common/StatusChip";
 import InvitationCard from "@/components/invitations/InvitationCard";
 import { MISSING_CONTACT_SPOKEN, MISSING_NAME_LABEL } from "@/constants/invitation";
 import type { Invitation } from "@/types/invitation";
-import { formatShortDate, maskMobile } from "@/utils/format";
+import { formatDate, maskMobile } from "@/utils/format";
 import { canEdit, canOpenDetail, canReissue, canRevoke } from "@/utils/invitationRules";
 import type { ReactNode } from "react";
 
@@ -128,9 +128,9 @@ function InvitationRow({ invitation, isHighlighted, onReissue, onRevoke }: Invit
       <td className="is-secondary" aria-label={mobile ? undefined : MISSING_CONTACT_SPOKEN}>
         {maskMobile(mobile)}
       </td>
-      <td>{formatShortDate(issuedAt)}</td>
+      <td>{formatDate(issuedAt)}</td>
       <td className="is-numeric">{reissueCount}</td>
-      <td>{formatShortDate(expiresAt)}</td>
+      <td>{formatDate(expiresAt)}</td>
       <td>
         <StatusChip status={status} />
       </td>

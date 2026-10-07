@@ -130,6 +130,11 @@ $table-cell-px: 16px;
 $table-cell-py: 14px;
 $table-min-w: 720px;
 
+// ---------- loading skeletons ----------
+// Bar width per column: Doctor, Contact, Issued, Re-issues, Expiry, Status, Manage
+$skeleton-table-widths: 80%, 75%, 65%, 30%, 65%, 80%, 60%;
+$skeleton-card-head-widths: 50%, 25%; // name, status chip
+
 // ---------- breakpoints ----------
 $bp-xs: 375px;
 $bp-sm: 768px;

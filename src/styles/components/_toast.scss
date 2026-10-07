@@ -44,7 +44,7 @@
 
 .toast-dismiss {
   flex-shrink: 0;
-  height: $control-h-sm; // 36px: meets the 32px minimum target
+  height: $control-h-sm; // meets the minimum click target
   padding: 0 $space-sm;
   border: none;
   border-radius: $radius-md;
@@ -58,7 +58,7 @@
 }
 
 @include below($bp-sm) {
-  // Hi-Fi 3j: 8px from each side, 16px from the bottom
+  // Hi-Fi 3j: $space-sm from each side, $space-md from the bottom
   .toast {
     right: $space-sm;
     bottom: $space-md;

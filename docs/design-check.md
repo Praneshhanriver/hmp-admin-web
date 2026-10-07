@@ -21,7 +21,7 @@ so they are checked together.
 | 7 | Focus after Revoke | Hi-Fi: focus returns to the Revoke button that opened the dialog | After Revoke the row is Revoked and its Revoke button is gone, so focus cannot return to it (falls to the page) | Known limitation · Question |
 | 8 | Updated row in a filtered list | Not specified | A re-issued/revoked row stays in the current filtered list (e.g. "Pending") until the next Search, so the admin sees what changed | Our addition (intentional) |
 | 9 | Action failure | Hi-Fi has no failure frame for Re-issue/Revoke | Error message inside the dialog, dialog stays open to retry. Cannot be triggered with the mock (no `?mock=` for actions) | Our addition · untestable in HW1 |
-| 10 | Date format | Spec uses three formats: `26/09/08`, `2026 09 08`, `2026.07.12` | `26/09/08` everywhere (`formatShortDate`, Hi-Fi list format) | Question for designer |
+| 10 | Date format | Spec uses three formats: `26/09/08`, `2026 09 08`, `2026.07.12` | After review: WM English format `YYYY-MM-DD` in the table and cards (`formatDate`) | Fixed |
 | 11 | Mobile masking | Spec masking examples are inconsistent | `010-****-5678` everywhere (`maskMobile`), missing → `-` | Decided by Hi-Fi |
 | 12 | Body text size | p.112 uses 13px; elsewhere and Hi-Fi minimum 14px | `$font-size-body: 14px`, nothing smaller in the list (the old 12px dialog tag was fixed to 14px) | Decided by Hi-Fi |
 | 13 | Linked screens | Issue invitation (p.113b), Detail (p.113e), Edit (training extension) | Links exist and lead to `/create`, `/details/[id]`, `/edit/[id]` — **404 until Homework 2** | Known limitation |
