@@ -8,9 +8,8 @@ export function maskMobile(mobile: string | null): string {
   return `${digits.slice(0, 3)}-****-${digits.slice(-4)}`;
 }
 
-// "2026-09-08T10:00:00+09:00" → "26/09/08" (list date format in the Hi-Fi)
-export function formatShortDate(iso: string): string {
-  // ISO starts "YYYY-MM-DD" (first 10 characters); the year is shortened to its last 2 digits
-  const [year, month, day] = iso.slice(0, 10).split("-");
-  return `${year.slice(2)}/${month}/${day}`;
+// "2026-09-08T10:00:00+09:00" → "2026-09-08"
+// WM Date format (English): "May 1, 2016" or "YYYY-MM-DD". Tables and cards use YYYY-MM-DD (short, lines up)
+export function formatDate(iso: string): string {
+  return iso.slice(0, 10); // ISO starts with "YYYY-MM-DD"
 }

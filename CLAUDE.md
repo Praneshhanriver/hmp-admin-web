@@ -38,7 +38,7 @@ src/hooks/                     useInvitations (load list), useInvitationActions 
 src/services/                  invitationService — the only place that touches data
 src/types/                     Invitation, InvitationStatus, filters
 src/constants/                 page size, labels, timings (UPPER_SNAKE_CASE)
-src/utils/                     pure helpers: maskMobile, formatShortDate, filterInvitations, invitationRules
+src/utils/                     pure helpers: maskMobile, formatDate (WM YYYY-MM-DD), filterInvitations, invitationRules
 src/mocks/                     18 mock invitations (replaced by the API in Homework 2)
 src/styles/                    _palette, _tokens, _mixins, components/ (one partial per component)
 ```

@@ -23,7 +23,7 @@
   display: none;
 }
 
-// 1439 and narrower: Hi-Fi 1024 and 768 frames use the smaller page padding
+// Below $bp-lg: Hi-Fi 1024 and 768 frames use the smaller page padding
 @include below($bp-lg) {
   .admin-layout-main {
     padding: $space-lg;
