@@ -20,7 +20,7 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 |---|---|---|
 | Repo | <https://github.com/Praneshhanriver/hmp-admin-web> | <https://github.com/Praneshhanriver/hmp-admin-api> |
 | Branch | `main` (from `feature/hw2-invitation-crud`) | `main` |
-| Commit | [`cef5379`](https://github.com/Praneshhanriver/hmp-admin-web/commit/cef5379) (deployed and tested) | [`84e3dd6`](https://github.com/Praneshhanriver/hmp-admin-api/commit/84e3dd6) (deployed) |
+| Commit | [`81a9837`](https://github.com/Praneshhanriver/hmp-admin-web/commit/81a9837) (deployed and tested) | [`95dcf01`](https://github.com/Praneshhanriver/hmp-admin-api/commit/95dcf01) (deployed) |
 | Link | <https://hmp-admin-web.vercel.app/doctors/invitations/list> (Vercel) | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> (Render, Docker) |
 | Date | 2026-10-07 | 2026-10-07 |
 | Runtime | Node 24.21 (20+ supported) · Next.js 15.5.27 | Java 21.0.12 · Spring Boot 4.0.8 · H2 in memory |
@@ -140,7 +140,7 @@ $ npm run test:e2e         (e2e/invitations.spec.ts)
   ✓ 21 Screen sizes › no sideways scrolling at 768px on list, create and detail
   ✓ 22 Screen sizes › no sideways scrolling at 375px on list, create and detail
   ✓ 23 Screen sizes › shows cards instead of the table on phones
-  23 passed (1.9m)
+  23 passed (1.1m)
 
 $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 1 create: a new invitation appears in the list as Pending
@@ -150,14 +150,14 @@ $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 5 re-issue: a revoked invitation goes back to Pending with a new link
   ✓ 6 history lists every step, oldest first
   ✓ 7 a second invitation for the same email is refused by the API
-  7 passed (49.6s)
+  7 passed (24.6s)
 ```
 Then against the **live demo** (`PLAYWRIGHT_BASE_URL=https://hmp-admin-web.vercel.app`, API on Render), 7 Oct 2026:
 ```text
 $ npx playwright test
-  23 passed (2.9m)
+  23 passed (2.2m)
 $ npm run test:e2e:mutation
-  7 passed (1.1m)
+  7 passed (51.7s)
 ```
 The live mutation run leaves one "Dr. E2E Test …" invitation (Pending, re-issued twice) in the demo data; it disappears when the
 Render service restarts.
