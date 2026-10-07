@@ -80,6 +80,7 @@ statement, positive scenario first, then the invalid and boundary cases (conditi
 | TC-58 | a page past the end is handled (boundary) | Open `?page=99` | "This page has no invitations" + Go to page 1 | — | |
 | TC-59 | sort order | Look at the list | Newest invitation first (by first issue date) | — | |
 | TC-60 | list refreshes by itself after a change | Do TC-13 | Row updates without reloading the page | M-4 | |
+| TC-61 | a name containing digits is not a contact search | Search `E2E` (after creating `Dr. E2E Test`) | Only names containing "E2E"; no doctor whose contact contains a 2 | API test | |
 
 ## 6. Roles
 

@@ -37,14 +37,14 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 - **Responsive** 1920 → 375 on every screen (cards, drawer, full-width form buttons on phones).
 
 ### Homework 2 checklist
-- [x] List, create, details, edit, delete on a real API — [hmp-admin-api](https://github.com/Praneshhanriver/hmp-admin-api) (Spring Boot, 33 tests)
+- [x] List, create, details, edit, delete on a real API — [hmp-admin-api](https://github.com/Praneshhanriver/hmp-admin-api) (Spring Boot, 34 tests)
 - [x] Service + hook pattern — `API_ENDPOINTS` → `api-services/InvitationService` → `hooks/API/invitations/use*` (TanStack Query); no API calls in components
 - [x] Search, filter and paging on the list — done by the API
 - [x] Validation matches the backend — same rules, order and messages; backend errors shown under the field
 - [x] Loading, empty and error states, with the API's error messages
 - [x] WM date, number and error-message formats
 - [x] All screen sizes — [docs/screenshots/hw2](docs/screenshots/hw2) (10 widths × 4 screens)
-- [x] Test cases in WM QA Template format — [docs/qa-test-cases.md](docs/qa-test-cases.md) (58 cases)
+- [x] Test cases in WM QA Template format — [docs/qa-test-cases.md](docs/qa-test-cases.md) (59 cases)
 - [x] Playwright test + separate mutation test — `e2e/invitations.spec.ts` (23) · `e2e/invitations.mutation.spec.ts` (7)
 - [x] QA build report — [docs/build-report.md](docs/build-report.md)
 
@@ -144,7 +144,7 @@ How the work went from that prompt:
 1. Claude Code read the training page, my HW1 page (with Vaishali's feedback) and the Slack thread, and showed a plan.
 2. I answered four decisions: packages (`@tanstack/react-query`, `axios`, `@playwright/test`), **Delete = Revoke**
    (as in the spec), a separate backend repo, H2 + Flyway.
-3. Backend first (entity rules, validation, errors, 33 tests, Docker), checked with curl; then the frontend data
+3. Backend first (entity rules, validation, errors, 34 tests, Docker), checked with curl; then the frontend data
    layer, screens, Playwright, docs. Type-check and lint after every step; build, all tests and screenshots at the end.
 
 ## Problem I hit and how I solved it

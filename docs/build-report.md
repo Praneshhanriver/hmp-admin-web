@@ -9,7 +9,7 @@ edit, delete (= revoke) and re-issue, connected to a Spring Boot API built for t
 Author: Pranesh Ghosh · Reviewer: Vaishali Naruka · Date: 2026-10-07.
 
 ## Summary
-Lint, type-check, production build, 33 backend tests, 23 Playwright tests and 7 Playwright mutation tests all pass
+Lint, type-check, production build, 34 backend tests, 23 Playwright tests and 7 Playwright mutation tests all pass
 (output in part 9). The feature runs end to end on the real API: create → list → edit → delete → re-issue.
 No hard delete (spec p.113c); there is no login (one fixed admin).
 
@@ -52,7 +52,7 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 
 Found and fixed during this build: re-issuing an old invitation could create a second live link for the same
 email; spaces around a name were counted by the API but not by the browser; validation messages came back in a
-random order; sidebar links to unbuilt screens caused console 404s (prefetch turned off).
+random order; a name containing a digit ("E2E") also matched contact numbers (contact search now only for phone-like text); sidebar links to unbuilt screens caused console 404s (prefetch turned off).
 
 ### 5. Test accounts / roles
 Not applicable: the admin web has no login in this homework. Every admin action is recorded as `admin@hmp.co.kr`.
@@ -64,10 +64,10 @@ Useful rows: Dr. Kim Han-mi (Pending, `kim.hanmi@clinic.co.kr`), Dr. Lee Seo-jun
 Dr. Park Ji-ho (Expired, re-issued once), Dr. Kang Bo-ra (Used).
 
 ### 7. What to test
-Full list with steps and expected results: [qa-test-cases.md](qa-test-cases.md) (58 cases). Priorities:
+Full list with steps and expected results: [qa-test-cases.md](qa-test-cases.md) (59 cases). Priorities:
 1. Issue → it appears on top as Pending → Edit → Revoke → Re-issue → detail history shows all four steps (TC-10…15).
 2. Every form rule with wrong values; the server's "already waiting" message under Email (TC-20…33).
-3. Search by name, by visible digits, never by hidden digits; status filter; paging; Back keeps the search (TC-50…58).
+3. Search by name, by visible digits, never by hidden digits; status filter; paging; Back keeps the search (TC-50…61).
 4. Loading, empty, error (stop the API) and Retry (TC-80…87).
 5. Edit rules: prefilled, disabled until changed, refused for non-Pending (TC-40…43).
 6. Widths 1920 / 1366 / 768 / 375 on all four screens (TC-90…93).
@@ -107,11 +107,11 @@ Route (app)                               Size  First Load JS
 exit 0 — 0 warnings
 
 $ ./mvnw verify            (hmp-admin-api)
-[INFO] Tests run: 12 -- in InvitationApiIntegrationTest
+[INFO] Tests run: 13 -- in InvitationApiIntegrationTest
 [INFO] Tests run: 6  -- in InvitationTest
 [INFO] Tests run: 14 -- in MobileNumbersTest
 [INFO] Tests run: 1  -- in HmpAdminApiApplicationTests
-[INFO] Tests run: 33, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 34, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 
 $ npm run test:e2e         (e2e/invitations.spec.ts)
