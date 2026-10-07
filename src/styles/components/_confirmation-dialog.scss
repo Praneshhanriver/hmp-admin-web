@@ -144,3 +144,10 @@
     flex: 1 1 100%;
   }
 }
+
+// Focus starts on Cancel (the safe choice). Hi-Fi 1e / 3i show its focus ring even when the dialog
+// was opened with the mouse, so the ring is drawn on :focus here, not only :focus-visible
+.confirmation-dialog-actions .btn:focus {
+  outline: $focus-w solid $color-focus;
+  outline-offset: $focus-w;
+}

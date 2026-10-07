@@ -112,8 +112,12 @@ $search-status-basis: 200px;
 $search-status-min-w: 160px;
 
 // ---------- create / detail / edit pages ----------
-$sub-page-max-w: 720px; // form and detail cards stay readable on wide screens
+$form-card-max-w: 560px; // Hi-Fi 1b / 1d: issue and edit forms
+$detail-card-max-w: 880px; // Hi-Fi 1c: detail and history cards
 $history-icon-badge-size: 36px;
+$skeleton-detail-block-h: 144px; // Hi-Fi 2m: the large grey block
+$detail-facts-columns: 3; // Hi-Fi 1c: Invited person · Contact · Status
+$detail-facts-columns-sm: 2; // Hi-Fi 3h: phones
 
 // ---------- overlays ----------
 $dialog-w: 480px;

@@ -164,20 +164,24 @@ test.describe("Invitation detail", () => {
     await table(page).getByRole("link", { name: "View invitation detail for Dr. Park Ji-ho" }).first().click();
 
     await expect(page).toHaveTitle("Invitation detail · HMP Administration");
-    await expect(page.getByRole("heading", { level: 2, name: "Dr. Park Ji-ho" })).toBeVisible();
+    await expect(page.getByText("Read-only. Re-issue and revoke are done from the invitation list.")).toBeVisible();
+    await expect(page.locator(".invitation-detail-facts")).toContainText("Dr. Park Ji-ho");
     await expect(page.getByText("010-****-8765")).toBeVisible();
-    // WM long date format: "September 8, 2026"
-    await expect(page.locator(".invitation-detail-facts dd").nth(2)).toHaveText(/^[A-Z][a-z]+ \d{1,2}, \d{4}$/);
+    await expect(page.locator(".invitation-detail-facts")).toContainText("Expired"); // status chip in the facts
+    // Issued on: WM format YYYY-MM-DD, as in the Hi-Fi
+    await expect(page.locator(".invitation-detail-facts dd").nth(3)).toHaveText(/^\d{4}-\d{2}-\d{2}$/);
 
     const history = page.locator(".invitation-history-item");
     await expect(history).toHaveCount(3);
-    await expect(history.nth(0)).toContainText("Invitation issued");
+    await expect(history.nth(0)).toContainText("Issued");
     await expect(history.nth(1)).toContainText("Re-issued");
     await expect(history.nth(2)).toContainText("Expired");
     await expect(history.nth(2)).toContainText("System");
     await expect(history.nth(0)).toContainText(/\d{2}:\d{2} (AM|PM)/);
 
-    await page.getByRole("link", { name: "Back to the list" }).click();
+    // Hi-Fi 1c has two: "← Back to the list" above the breadcrumb and the button below the history
+    await expect(page.getByRole("link", { name: "Back to the list" })).toHaveCount(2);
+    await page.getByRole("link", { name: "Back to the list" }).last().click();
     await expect(page).toHaveURL(/\/doctors\/invitations\/list/);
   });
 
@@ -193,13 +197,15 @@ test.describe("Invitation detail", () => {
 test.describe("Issue invitation form", () => {
   test("requires every field and puts focus on the first problem", async ({ page }) => {
     await page.goto("/doctors/invitations/create");
-    await expect(page).toHaveTitle("Issue invitation · HMP Administration");
+    await expect(page).toHaveTitle("Issue Doctor Invitation · HMP Administration");
+    await expect(page.getByRole("heading", { level: 1, name: "Issue Doctor Invitation" })).toBeVisible();
 
     await page.getByRole("button", { name: "Issue invitation" }).click();
 
     await expect(page.getByText("Enter the doctor's name.")).toBeVisible();
-    await expect(page.getByText("Enter an email address.")).toBeVisible();
-    await expect(page.getByText("Enter a mobile number.")).toBeVisible();
+    await expect(page.getByText("Enter a valid email address, e.g. name@clinic.co.kr.")).toBeVisible();
+    await expect(page.getByText("Enter a Korean mobile number, e.g. 010-1234-5678.")).toBeVisible();
+    await expect(page.getByText("3 fields need attention")).toBeVisible(); // Hi-Fi 2g summary
     await expect(page.getByLabel(/Doctor's name/)).toBeFocused();
     await expect(page.getByLabel(/Doctor's name/)).toHaveAttribute("aria-invalid", "true");
   });
@@ -213,12 +219,13 @@ test.describe("Issue invitation form", () => {
     await page.getByRole("button", { name: "Issue invitation" }).click();
 
     await expect(page.getByText("The doctor's name must be 2 to 50 characters.")).toBeVisible();
-    await expect(page.getByText("Enter an email address in the format name@example.com.")).toBeVisible();
-    await expect(page.getByText("Enter a mobile number like 010-1234-5678.")).toBeVisible();
+    await expect(page.getByText("Enter a valid email address, e.g. name@clinic.co.kr.")).toBeVisible();
+    await expect(page.getByText("Enter a Korean mobile number, e.g. 010-1234-5678.")).toBeVisible();
 
     // Messages update while typing after the first try
     await page.getByLabel(/Mobile number/).fill("01012345678");
-    await expect(page.getByText("Enter a mobile number like 010-1234-5678.")).toHaveCount(0);
+    await expect(page.getByText("Enter a Korean mobile number, e.g. 010-1234-5678.")).toHaveCount(0);
+    await expect(page.getByText("2 fields need attention")).toBeVisible();
   });
 
   test("shows the backend's own error under the field and keeps what was typed", async ({ page }) => {
@@ -259,9 +266,10 @@ test.describe("Issue invitation form", () => {
     await page.getByLabel(/Mobile number/).fill("010-5555-0000");
     await page.getByRole("button", { name: "Issue invitation" }).click();
 
-    await expect(page.locator(".invitation-form").getByRole("alert")).toContainText(
-      "Something went wrong on our side. Please try again in a moment. What you typed is kept.",
-    );
+    // Hi-Fi 2i
+    const banner = page.locator(".invitation-form").getByRole("alert");
+    await expect(banner).toContainText("The invitation could not be issued");
+    await expect(banner).toContainText("Nothing was sent to the doctor. Something went wrong on our side. Please try again in a moment.");
     await expect(page.getByLabel(/Email/)).toHaveValue("server.error@clinic.co.kr");
     await expect(page.getByRole("button", { name: "Issue invitation" })).toBeEnabled();
   });
@@ -278,7 +286,9 @@ test.describe("Edit invitation", () => {
     await expect(page.getByLabel(/Email/)).toHaveValue("kim.hanmi@clinic.co.kr");
     await expect(page.getByLabel(/Mobile number/)).toHaveValue("010-1234-5678");
 
-    const save = page.getByRole("button", { name: "Save and re-issue" });
+    const save = page.getByRole("button", { name: "Save changes" });
+    await expect(page.getByText("Editing an existing invitation")).toBeVisible();
+    await expect(page.getByText("Dr. Kim Han-mi · pending invitation")).toBeVisible();
     await expect(save).toBeDisabled();
     await page.getByLabel(/Mobile number/).fill("010-1234-9999");
     await expect(save).toBeEnabled();

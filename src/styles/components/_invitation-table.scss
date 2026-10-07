@@ -23,6 +23,7 @@
     text-align: left;
     border-bottom: $border-w solid $color-border;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap; // Hi-Fi: one line per row; when space runs out the table scrolls inside its card
   }
 
   thead th {
@@ -64,11 +65,17 @@
   }
 }
 
+// Hi-Fi 3b (1024): the buttons stack so every column fits.
+// Hi-Fi 3c (768): they stay in one row and the table scrolls inside its card
 .invitation-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: $space-sm;
+
+  @include below($bp-md) {
+    flex-wrap: nowrap;
+  }
 }
 
 // Row just re-issued or revoked: brief tint so the admin sees what changed
@@ -121,6 +128,17 @@
 
     thead th {
       padding-block: 0;
+    }
+  }
+}
+
+// $bp-md to $bp-lg (Hi-Fi 3b, 1024): the narrowest desktop. Tighter side padding so every column fits
+// without scrolling (the WM date YYYY-MM-DD is two characters longer than the Hi-Fi's 26/09/08)
+@include between($bp-md, $bp-lg) {
+  .invitation-table {
+    th,
+    td {
+      padding-inline: $space-sm;
     }
   }
 }

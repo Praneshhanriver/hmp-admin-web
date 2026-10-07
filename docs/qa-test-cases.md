@@ -28,12 +28,12 @@ statement, positive scenario first, then the invalid and boundary cases (conditi
 
 | ID | Verify that … | Steps | Expected | Auto | Result |
 |---|---|---|---|---|---|
-| TC-10 | an invitation can be issued (positive) | Issue invitation → name `Dr. QA Test`, email `qa.test@clinic.co.kr`, mobile `01024681357` → Issue invitation | Back on the list; toast "Invitation issued — A link was sent to Dr. QA Test. It works until <date>."; new row on top, Pending, `010-****-1357`, Re-issues 0 | M-1 | |
-| TC-11 | the new invitation's detail shows its history | Click the doctor's name | Facts card + History: "Invitation issued · <date time> · by admin@hmp.co.kr" with the "Current link" tag | M-2 | |
-| TC-12 | a pending invitation can be edited | Row → Edit → change mobile to `010-2468-9999` → Save and re-issue | Toast "Invitation updated"; row shows `010-****-9999`, Re-issues 1; history adds "Details corrected" | M-3 | |
+| TC-10 | an invitation can be issued (positive) | Issue invitation → name `Dr. QA Test`, email `qa.test@clinic.co.kr`, mobile `01024681357` → Issue invitation | Back on the list; toast "Invitation issued — Dr. QA Test can now start sign-up from the link."; new row on top, Pending, `010-****-1357`, Re-issues 0 | M-1 | |
+| TC-11 | the new invitation's detail shows its history | Click the doctor's name | Facts card + History: "Issued · <YYYY-MM-DD hh:mm AM/PM> · admin@hmp.co.kr" with the "Current link" tag | M-2 | |
+| TC-12 | a pending invitation can be edited, without sending a new link | Row → Edit → change mobile to `010-2468-9999` → Save changes | Toast "Changes saved — …details were updated. No new link was sent."; row shows `010-****-9999`, **Re-issues still 0**, same Issued / Expiry; history adds "Details updated" | M-3 | |
 | TC-13 | delete (revoke) works and keeps the row as history | Row → Revoke → dialog → Revoke invitation | Dialog: "Cannot be undone", focus on Cancel. After: toast "Invitation revoked", chip Revoked, Revoke and Edit buttons gone, row still listed | M-4 | |
-| TC-14 | a revoked invitation can be re-issued | Row → Re-issue → dialog shows "1 → 2" → Re-issue invitation | Toast "Invitation re-issued", chip Pending, Re-issues 2 | M-5 | |
-| TC-15 | the history lists every step oldest first | Open the detail | Issued → Details corrected → Revoked → Re-issued (Current link) | M-6 | |
+| TC-14 | a revoked invitation can be re-issued | Row → Re-issue → dialog shows "0 → 1" → Re-issue invitation | Toast "Invitation re-issued", chip Pending, Re-issues 1 | M-5 | |
+| TC-15 | the history lists every step oldest first | Open the detail | Issued → Details updated → Revoked → Re-issued (Current link) | M-6 | |
 | TC-16 | Cancel in a dialog changes nothing | Revoke → Cancel (or Esc) | Dialog closes, focus back on the Revoke button, nothing changed | — | |
 | TC-17 | Issue cannot be sent twice (double click) | Fill the form, double-click Issue invitation | Button turns "Issuing…" and disabled; only one new row | — | |
 
@@ -41,27 +41,27 @@ statement, positive scenario first, then the invalid and boundary cases (conditi
 
 | ID | Verify that … | Steps | Expected | Auto | Result |
 |---|---|---|---|---|---|
-| TC-20 | every field is required (empty fields) | Issue invitation with all fields empty | "Enter the doctor's name." · "Enter an email address." · "Enter a mobile number."; red border + icon + words; focus on Doctor's name | R-13 | |
+| TC-20 | every field is required (empty fields) | Issue invitation with all fields empty | Red box "3 fields need attention"; under the fields "Enter the doctor's name." · "Enter a valid email address, e.g. name@clinic.co.kr." · "Enter a Korean mobile number, e.g. 010-1234-5678."; red border + icon + words; focus on Doctor's name | R-13 | |
 | TC-21 | name length is checked (1 character) | Name `K` | "The doctor's name must be 2 to 50 characters." | R-14 | |
 | TC-22 | name length is checked (51 characters) | Name of 51 characters | Same message | API test | |
 | TC-23 | spaces around a value are ignored | Name `  K  ` | Counted as 1 character → length message (browser and API both trim) | API check | |
-| TC-24 | email format is checked (wrong format) | Email `name@host` | "Enter an email address in the format name@example.com." | R-14 | |
+| TC-24 | email format is checked (wrong format) | Email `name@host` | "Enter a valid email address, e.g. name@clinic.co.kr." | R-14 | |
 | TC-25 | email length is checked (more than 100 characters) | 101-character email | "The email address must be 100 characters or fewer." | API test | |
-| TC-26 | mobile format is checked (wrong format) | Mobile `010-123`, `020-1234-5678`, `abc` | "Enter a mobile number like 010-1234-5678." | R-14 | |
+| TC-26 | mobile format is checked (wrong format) | Mobile `010-123`, `020-1234-5678`, `abc` | "Enter a Korean mobile number, e.g. 010-1234-5678." | R-14 | |
 | TC-27 | mobile without hyphens is accepted | Mobile `01012345678` | Accepted; stored and shown as `010-1234-5678` | R-14, M-1 | |
 | TC-28 | messages update while typing after the first try | After TC-26, type a valid mobile | Mobile message disappears without pressing the button again | R-14 | |
 | TC-29 | the API refuses a second pending invitation (server error under the field) | Issue with `kim.hanmi@clinic.co.kr` (already Pending) | Under Email: "An invitation for this email is already waiting to be used. Re-issue it from the list instead."; focus on Email; typed values kept; still on the form | R-15, M-7 | |
 | TC-30 | the API refuses a doctor who already signed up | Issue with `lee.seojun@clinic.co.kr` (Used) | Under Email: "A doctor with this email has already signed up. No new invitation is needed." | API test | |
 | TC-31 | the server's field message clears when that field is changed | After TC-29, change Email | Message disappears | R-15 | |
-| TC-32 | a server error keeps what was typed (server error) | Stop the API, fill the form, Issue invitation | Red box: "We can't reach the server. Check your connection and try again. What you typed is kept."; values kept; button enabled again | R-16 (HTTP 500 variant) | |
+| TC-32 | a server error keeps what was typed (server error) | Stop the API, fill the form, Issue invitation | Red box "The invitation could not be issued — Nothing was sent to the doctor. We can't reach the server. Check your connection and try again."; values kept; button enabled again | R-16 (HTTP 500 variant) | |
 | TC-33 | email case does not create duplicates | Issue with `KIM.HANMI@CLINIC.CO.KR` | Same 409 message as TC-29 | M-7 | |
 
 ## 4. Edit rules
 
 | ID | Verify that … | Steps | Expected | Auto | Result |
 |---|---|---|---|---|---|
-| TC-40 | the edit form is prefilled | Pending row → Edit | Name, email and full mobile filled in; blue notice "Saving sends a corrected link…" | R-17 | |
-| TC-41 | Save stays disabled until something changes | Open Edit, change nothing | "Save and re-issue" disabled; enabled after a change | R-17 | |
+| TC-40 | the edit form is prefilled | Pending row → Edit | Name, email and full mobile filled in; "Editing" tag, "Dr. … · pending invitation", dashed box "Editing an existing invitation" with Issued / Expiry / Re-issues and "…It does not send a new link" | R-17 | |
+| TC-41 | Save stays disabled until something changes | Open Edit, change nothing | "Save changes" disabled; enabled after a change | R-17 | |
 | TC-42 | a non-pending invitation cannot be edited | Open `/doctors/invitations/edit/<id of a Used row>` | "This invitation can't be edited — Only pending invitations can be edited. This one is Used." + Back to the list + View detail | R-18 | |
 | TC-43 | leaving with unsaved changes asks first | Change a field, then close or reload the tab | Browser asks "Leave site?" | — | |
 

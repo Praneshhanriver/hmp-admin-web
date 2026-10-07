@@ -88,7 +88,8 @@ src/styles/                    _palette, _tokens, _mixins, components/ (one part
   network message). **Never show raw error text.** Field errors (`fieldErrors`) go under their field.
 - Form validation in `utils/invitationValidation.ts` must match the backend `InvitationRequest` exactly
   (same rules, order and words). Change both together.
-- Dates: WM format — `YYYY-MM-DD` in tables/cards, `September 8, 2026` on detail, `… 08:33 PM` in history.
+- Dates: WM format `YYYY-MM-DD` everywhere (as in the Hi-Fi); history `2026-09-08 08:33 PM` (WM: AM/PM after the number).
+- Screens follow the Hi-Fi frames in `docs/design/frames/hifi/` (copy, layout, states). Edit updates details only (no new link).
   Numbers: `formatNumber` (three-digit commas).
 - **Error state is never an empty state.** Empty (no data) ≠ no results (filters) ≠ error.
 - Contact is **masked everywhere** (`010-****-5678`); the list API already sends `maskedMobile`. Only the detail

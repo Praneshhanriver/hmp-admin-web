@@ -21,7 +21,7 @@ so they are checked together.
 | 7 | Focus after Revoke | Hi-Fi: focus returns to the Revoke button that opened the dialog | After Revoke the row is Revoked and its Revoke button is gone, so focus cannot return to it (falls to the page) | Known limitation · Question |
 | 8 | Updated row in a filtered list | Not specified | A re-issued/revoked row stays in the current filtered list (e.g. "Pending") until the next Search, so the admin sees what changed | Our addition (intentional) |
 | 9 | Action failure | Hi-Fi has no failure frame for Re-issue/Revoke | Error message (the API's own text) inside the dialog, dialog stays open to retry. HW2: testable by stopping the API (TC-87) | Our addition |
-| 10 | Date format | Spec uses three formats: `26/09/08`, `2026 09 08`, `2026.07.12` | HW2 (reviewer feedback): WM English format — `YYYY-MM-DD` in tables and cards, `September 8, 2026` on the detail, `September 8, 2026 08:33 PM` in the history | Fixed |
+| 10 | Date format | Spec uses three formats: `26/09/08`, `2026 09 08`, `2026.07.12` | HW2 (reviewer feedback): WM English format — `YYYY-MM-DD` in tables and cards, after the design review was announced: `YYYY-MM-DD` on every screen, as in the Hi-Fi detail; history `2026-09-08 08:33 PM` | Fixed |
 | 11 | Mobile masking | Spec masking examples are inconsistent | `010-****-5678` everywhere (masked by the API), missing → `-` | Decided by Hi-Fi |
 | 12 | Body text size | p.112 uses 13px; elsewhere and Hi-Fi minimum 14px | `$font-size-body: 14px`, nothing smaller in the list (the old 12px dialog tag was fixed to 14px) | Decided by Hi-Fi |
 | 13 | Linked screens | Issue invitation (p.113b), Detail (p.113e), Edit (training extension) | HW2: all three screens built | Closed |
@@ -32,7 +32,7 @@ so they are checked together.
 | # | Area | Spec / Hi-Fi says | What was built | Status |
 |---|---|---|---|---|
 | 15 | Drawer breakpoint | Hi-Fi notes say "≤768: sidebar becomes a Menu drawer"; frames show 1024 with sidebar and 768 with Menu | Drawer below **1024** (the 769–1023 range is not drawn in the Hi-Fi) | Decided by us · Question |
-| 16 | Scroll hint | Hi-Fi 768 frame: "Scroll the table sideways for Manage →" | Hint shown 768–1023. Measured: at 768 the table scrolls in its card, at 991 it already fits, but the hint still shows | Question for designer |
+| 16 | Scroll hint | Hi-Fi 768 frame: "Scroll the table sideways for Manage →"; Hi-Fi 1024 frame: all columns fit, Manage buttons stacked | Rows never wrap (Hi-Fi). 1024–1439: tighter cell padding and stacked Manage buttons, so every column fits (Hi-Fi 3b). Below 1024 the table scrolls inside its card and the hint shows (Hi-Fi 3c). Measured on 7 Oct: fits at 1024–1920, scrolls at 991 and 768 | Fixed (matches Hi-Fi) |
 | 17 | Mobile range text | Hi-Fi 375 frames show "1–4 of 18" (they only draw 4 cards) | "1–8 of 18" because the page size is 8 | Decided by Hi-Fi (page size) |
 | 18 | Detail action | Hi-Fi **table**: Detail only for Used. Hi-Fi **card**: View detail also for Expired and Revoked | Built exactly as each Hi-Fi component: table and card differ | Question for designer (Hi-Fi is inconsistent) |
 | 19 | Card heading level | Hi-Fi card uses `<h3>` | `<h2>`: the correct level directly under the page `<h1>` | Our decision (a11y) |
@@ -58,11 +58,27 @@ so they are checked together.
 | 34 | Detail actions | p.113e: "Back to the list" is the only action (FINAL) | Same. Re-issue / Revoke / Edit stay on the list | Decided by spec |
 | 35 | Detail fields | p.113e: invited person, contact (masked), status, issued, expiry, re-issues, history | Same; email not shown (not in p.113e) | Decided by spec |
 | 36 | History actor | W-03: "issued — admin Kim Unyeong"; expiry is a system event | No login in the homework: every admin action is recorded as `admin@hmp.co.kr`; expiry and sign-up as "System" | Our decision |
-| 37 | Edit | Training extension; wireframe W-04: Pending only, saving re-issues (count +1) | Same; Save disabled until something changes; browser warns before closing with unsaved changes | Our addition |
+| 37 | Edit | Training extension. Wireframe prompt W-04 said "save and re-issue"; the **Hi-Fi 1d** says "Saving updates the recipient details… It does not send a new link — use Re-issue" | Built as the Hi-Fi (changed 7 Oct): "Save changes" updates name / email / mobile only — no new link, re-issue count and dates unchanged, history "Details updated"; Save disabled until something changes; browser warns before closing with unsaved changes | Decided by Hi-Fi |
 | 38 | Unsaved changes dialog | W-04: dialog when leaving | Only the browser's own prompt on close / reload; in-app links (Cancel, sidebar) leave without asking | Known limitation |
 | 39 | List sort order | Not specified | Newest invitation first (first issue date), so a re-issued row does not jump to the top | Question for designer |
 | 40 | Search in the URL | Not specified | `?q=&status=&page=` so Back from the detail and reload keep the search | Our addition |
 | 41 | "Used" status | Set when the doctor signs up (doctor app) | No sign-up flow in this homework: Used rows exist only in the demo data | Out of scope |
+
+## Design review alignment (7 Oct) — Hi-Fi frames vs build
+Every HW2 screen was compared with its Hi-Fi frame and changed to match: back link above the breadcrumb, breadcrumb
+`Doctor management › <page>`, titles ("Issue Doctor Invitation"), subtitles, "Required" labels, placeholders and hints,
+the "Validity period to be confirmed" box, full-width Issue button, "N fields need attention" and "could not be issued"
+banners, the Edit summary box and "Save changes", the detail "Read-only" notice, 3-column facts with the status chip,
+the history timeline ("Oldest first"), loading / error frames 2m / 2n, toasts 2f / 2l. Side-by-side images:
+[docs/design/compare](design/compare). Remaining deliberate differences:
+
+| # | Area | Hi-Fi | Build | Why |
+|---|---|---|---|---|
+| 42 | List dates | `26/09/08` | `2026-09-08` | HW1 review: WM English date format |
+| 43 | History time | `2026-08-26 10:12` (24-hour) | `2026-08-26 10:12 AM` | WM time format: AM/PM after the number |
+| 44 | History actor | "Admin Kim Un-yeong" | `admin@hmp.co.kr` / "System" | No login in the homework; the API records the admin account |
+| 45 | Sample data | September dates, other names | Dates relative to today | Demo data must stay valid (14-day expiry) |
+| 46 | 768 px create / detail / edit | Not drawn | Same layout as 1440, one column | Only the list has a 768 frame |
 
 ## Still open
 - Designer: rows 2, 6, 15, 16, 18, 39; required fields (row 32).

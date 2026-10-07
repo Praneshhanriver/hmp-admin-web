@@ -5,6 +5,8 @@ import EmptyState from "@/components/common/EmptyState";
 import ErrorState from "@/components/common/ErrorState";
 import { ROUTES } from "@/constants/invitation";
 
+const SKELETON_FACT_COUNT = 6; // the 6 facts of the detail card (Hi-Fi 2m)
+
 interface InvitationLoadFallbackProps {
   isLoading: boolean;
   error: ApiError | null;
@@ -13,7 +15,7 @@ interface InvitationLoadFallbackProps {
 }
 
 // What the detail and edit screens show before they have an invitation:
-// loading placeholder, "not found" (with a way back) or the error with Retry. null = nothing to show
+// loading placeholder (Hi-Fi 2m), "not found" (with a way back) or the error with Retry (Hi-Fi 2n). null = nothing to show
 export default function InvitationLoadFallback({ isLoading, error, isInvalidId, onRetry }: InvitationLoadFallbackProps) {
   if (isInvalidId || error?.isNotFound) {
     return (
@@ -33,7 +35,7 @@ export default function InvitationLoadFallback({ isLoading, error, isInvalidId, 
   if (error) {
     return (
       <div className="invitation-detail-card">
-        <ErrorState title="Unable to load the invitation" description={error.message} onRetry={onRetry} />
+        <ErrorState title="Unable to load this invitation" description={error.message} onRetry={onRetry} />
       </div>
     );
   }
@@ -41,12 +43,15 @@ export default function InvitationLoadFallback({ isLoading, error, isInvalidId, 
     return (
       <div className="invitation-detail-card is-loading" aria-busy="true">
         <span className="visually-hidden" role="status">
-          Loading the invitation…
+          Loading invitation detail
         </span>
         <span className="skeleton-bar invitation-detail-skeleton-title" aria-hidden />
-        <span className="skeleton-bar" aria-hidden />
-        <span className="skeleton-bar" aria-hidden />
-        <span className="skeleton-bar" aria-hidden />
+        <span className="invitation-detail-skeleton-facts" aria-hidden>
+          {Array.from({ length: SKELETON_FACT_COUNT }, (_, index) => (
+            <span key={index} className="skeleton-bar invitation-detail-skeleton-fact" />
+          ))}
+        </span>
+        <span className="skeleton-bar invitation-detail-skeleton-block" aria-hidden />
       </div>
     );
   }

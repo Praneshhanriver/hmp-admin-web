@@ -36,10 +36,12 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 - New **Issue invitation** page: three fields, checked as you type after the first try, and checked again by the
   server. If the server refuses (e.g. the email already has a waiting invitation), the reason appears under the field.
 - New **Invitation detail** page with the full history (who did what, when).
-- New **Edit** page for Pending invitations: saving sends a corrected link.
+- New **Edit** page for Pending invitations: saving updates the name, email or mobile only — no new link is sent
+  (Re-issue on the list does that).
 - **Revoke is the delete**: the link stops working and the row stays in the list as Revoked.
 - After any change the list updates by itself and a message confirms what happened.
-- Dates now follow the WM format (`2026-09-08`, `September 8, 2026`, `08:33 PM`).
+- Dates now follow the WM format (`2026-09-08`; history `2026-09-08 08:33 PM`).
+- All screens and states were matched to the Hi-Fi design frames (titles, back links, notices, banners, buttons, copy).
 
 ### 4. Fixed issues (Homework 1 review)
 | Issue | What changed |
@@ -143,7 +145,7 @@ $ npm run test:e2e         (e2e/invitations.spec.ts)
 $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 1 create: a new invitation appears in the list as Pending
   ✓ 2 details: the new invitation has one history line
-  ✓ 3 edit: the corrected details are saved and a corrected link is sent
+  ✓ 3 edit: the corrected details are saved, no new link is sent
   ✓ 4 delete (revoke): the link stops working and the row stays as Revoked
   ✓ 5 re-issue: a revoked invitation goes back to Pending with a new link
   ✓ 6 history lists every step, oldest first

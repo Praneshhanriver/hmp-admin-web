@@ -7,27 +7,34 @@
   gap: $space-ms;
 }
 
+// "← Back to invitations" above the breadcrumb (Hi-Fi 1b–1d)
+.page-header-back {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: $space-sm;
+  min-height: $control-h-sm; // click target
+  color: $color-text-secondary;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+
+  &:hover {
+    color: $color-primary;
+    text-decoration: underline;
+    text-underline-offset: $link-underline-offset;
+  }
+}
+
 .page-header-crumbs {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: $space-sm;
   color: $color-muted;
-
-  flex-wrap: wrap;
 
   [aria-current="page"] {
     color: $color-text-secondary;
   }
-}
-
-// "Invitations" in the breadcrumb of the create / detail / edit pages
-.page-header-crumb-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: $control-h-sm; // click target
-  color: $color-primary;
-  text-decoration: underline;
-  text-underline-offset: $link-underline-offset;
 }
 
 .page-header-row {
@@ -38,12 +45,44 @@
   gap: $space-md;
 }
 
+.page-header-heading {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.page-header-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $space-ms;
+}
+
 .page-header-title {
   margin: 0;
   font-size: $font-size-h2;
   line-height: $line-height-tight;
   font-weight: $font-weight-bold;
   letter-spacing: $letter-spacing-tight;
+}
+
+.page-header-subtitle {
+  margin: 0;
+  font-size: $font-size-body-lg;
+  color: $color-text-secondary;
+}
+
+// "Editing" next to the Edit title (Hi-Fi 1d)
+.page-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-xs;
+  height: $chip-h;
+  padding: 0 $space-sm;
+  border: $border-w solid $color-border-strong;
+  border-radius: $radius-sm;
+  background: $color-surface-alt;
+  font-weight: $font-weight-semibold;
 }
 
 @include below($bp-sm) {

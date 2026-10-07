@@ -4,7 +4,7 @@ Layout follows **WM | Error Message List** (columns Page · Scenario · EN · KO
 (one empty Login row), so these messages are our own, written to the same rules as the rest of the screen:
 plain words, say what to do next, never raw server text.
 
-**One source each.** Field messages live in the backend `InvitationRequest` and, word for word, in the frontend
+**One source each.** Field messages are worded as in the Hi-Fi frames 2g / 2j. They live in the backend `InvitationRequest` and, word for word, in the frontend
 `src/utils/invitationValidation.ts`. API messages live in the backend `ErrorCode` enum and reach the screen as the
 `detail` of the RFC 7807 response. Network messages live in `src/api-services/apiClient.ts`.
 
@@ -16,11 +16,11 @@ KO: to be supplied by the PM / translator (the admin web is English-only in this
 |---|---|---|---|
 | Issue / Edit | Doctor's name empty | Enter the doctor's name. | TBC |
 | Issue / Edit | Doctor's name shorter than 2 or longer than 50 characters | The doctor's name must be 2 to 50 characters. | TBC |
-| Issue / Edit | Email empty | Enter an email address. | TBC |
+| Issue / Edit | Email empty | Enter a valid email address, e.g. name@clinic.co.kr. | TBC |
 | Issue / Edit | Email longer than 100 characters | The email address must be 100 characters or fewer. | TBC |
-| Issue / Edit | Email not in `name@domain.tld` form | Enter an email address in the format name@example.com. | TBC |
-| Issue / Edit | Mobile empty | Enter a mobile number. | TBC |
-| Issue / Edit | Mobile not a Korean mobile number (010/011/016–019, with or without hyphens) | Enter a mobile number like 010-1234-5678. | TBC |
+| Issue / Edit | Email not in `name@domain.tld` form | Enter a valid email address, e.g. name@clinic.co.kr. | TBC |
+| Issue / Edit | Mobile empty | Enter a Korean mobile number, e.g. 010-1234-5678. | TBC |
+| Issue / Edit | Mobile not a Korean mobile number (010/011/016–019, with or without hyphens) | Enter a Korean mobile number, e.g. 010-1234-5678. | TBC |
 
 Order per field (same in browser and API): required → length → format. Only the first broken rule is shown.
 
@@ -46,5 +46,6 @@ Order per field (same in browser and API): required → length → format. Only 
 
 ## How each screen adds context
 - **List error:** title "Unable to load invitations" + the message + "Your search is kept." + Retry.
-- **Form error without a field** (500, offline, status changed): red box above the buttons, message + "What you typed is kept."
+- **Form, fields to fix** (Hi-Fi 2g / 2j): red box above the card — "3 fields need attention · Fix the fields marked below, then issue the invitation again." (Edit: "…then save again.")
+- **Form error without a field** (500, offline, status changed, Hi-Fi 2i): red box above the card — "The invitation could not be issued" + "Nothing was sent to the doctor. " + the message (Edit: "The changes could not be saved" + "Nothing was changed. " + the message). What was typed stays in the fields.
 - **Dialog error** (Re-issue / Revoke): message inside the dialog; the dialog stays open so the admin can try again.
