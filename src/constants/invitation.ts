@@ -45,7 +45,8 @@ export const SEARCH_MAX_LENGTH = 50;
 export const TOAST_DURATION_MS = 6000; // Hi-Fi: at least 6 s, paused on hover/focus
 export const ROW_HIGHLIGHT_MS = 2000;
 
-// API calls. The free Render server sleeps when idle and can take about a minute to wake up
-export const API_REQUEST_TIMEOUT_MS = 70000;
+// API calls. The free Render server sleeps when idle; waking it took 143 s when measured (8 Oct),
+// so the first request waits up to 3 minutes instead of showing the error state
+export const API_REQUEST_TIMEOUT_MS = 180000;
 export const QUERY_RETRY_COUNT = 1; // one quiet retry before the error state
 export const QUERY_STALE_TIME_MS = 30000; // a list loaded in the last 30 s is shown without reloading

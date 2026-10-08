@@ -6,4 +6,5 @@ export default defineConfig({
   ...baseConfig,
   testIgnore: [],
   testMatch: ["**/*.mutation.spec.ts"],
+  reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report/mutation" }]],
 });

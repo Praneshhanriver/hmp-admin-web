@@ -11,7 +11,7 @@ export default defineConfig({
   retries: 0,
   timeout: 60_000,
   expect: { timeout: 15_000 }, // the first visit compiles the page in dev mode
-  reporter: [["list"], ["html", { open: "never" }]],
+  reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report/read-only" }]],
   use: {
     // Local code by default. Set PLAYWRIGHT_BASE_URL to test the deployed demo instead
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",

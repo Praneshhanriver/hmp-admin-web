@@ -32,7 +32,7 @@ export const InvitationService = {
     return request(apiClient.post<InvitationDetail>(API_ENDPOINTS.INVITATIONS, values));
   },
 
-  // Pending only: saves the corrected details and sends a corrected link
+  // Pending only: saves the corrected details; no new link is sent (Re-issue does that)
   update(id: number, values: InvitationFormValues): Promise<InvitationDetail> {
     return request(apiClient.put<InvitationDetail>(API_ENDPOINTS.INVITATION(id), values));
   },
