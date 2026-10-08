@@ -17,7 +17,7 @@
 
 ## Stack and commands
 Next.js 15 (App Router, Turbopack) · React 19 · TypeScript (strict) · SCSS (Dart Sass modules) ·
-Phosphor icons · Pretendard font. PrimeReact/PrimeIcons are installed but **not used** on this screen.
+Phosphor icons · Pretendard font. (PrimeReact / PrimeIcons were removed: unused here; Divii projects use them.)
 
 ```bash
 npm run dev        # http://localhost:3000/doctors/invitations/list
@@ -26,6 +26,7 @@ npm run lint       # ESLint (next/core-web-vitals + typescript)
 npm run build      # production build; must show no warnings
 npm run test:e2e   # Playwright read-only tests (API + web must be running)
 npm run test:e2e:mutation   # create / edit / revoke tests — changes data, run on purpose
+# HTML reports: playwright-report/read-only and playwright-report/mutation (evidence copies in docs/test-reports/)
 ```
 Backend (in `../hmp-admin-api`): `./mvnw spring-boot:run` (port 8080, H2 in memory, 18 demo rows on every start),
 `./mvnw verify` (tests).
@@ -56,6 +57,8 @@ src/styles/                    _palette, _tokens, _mixins, components/ (one part
 ## Styling rules
 - `_palette.scss` = raw colours named **colour + code** (`$blue-600`). Only `_tokens.scss` uses them.
 - Components use **only semantic tokens** from `_tokens.scss` (`$color-primary`, `$space-md`, `$control-h-sm`).
+- Colours follow WM Light/Dark: `$colors-day` and `$colors-night` in `_tokens.scss` hold the same names one to one
+  (the build fails if a name is missing in either); constants (same in both modes) are separate. Add a colour to both.
 - **No raw values** in component partials: no hex, px, rem, opacity numbers. Raw values are allowed only in
   `_palette.scss`, `_tokens.scss`, `_mixins.scss`. Plain CSS keywords are fine: `0`, `100%`, `50%` for centring,
   flex factors, `1fr`, `auto`, `nth-child(n)` (comment what column it is).

@@ -308,13 +308,20 @@ test.describe("Edit invitation", () => {
 });
 
 test.describe("Screen sizes", () => {
-  const widths = [1920, 1366, 768, 375];
+  // WM widths plus 1440, the width the Hi-Fi and the design / QA reviews use
+  const widths = [1920, 1440, 1366, 768, 375];
+  const paths = [
+    LIST_URL,
+    "/doctors/invitations/create",
+    "/doctors/invitations/details/1",
+    "/doctors/invitations/edit/1", // Dr. Kim Han-mi, Pending in the demo data
+  ];
 
   for (const width of widths) {
-    test(`no sideways scrolling at ${width}px on list, create and detail`, async ({ page }) => {
+    test(`no sideways scrolling at ${width}px on list, create, detail and edit`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
 
-      for (const path of [LIST_URL, "/doctors/invitations/create", "/doctors/invitations/details/1"]) {
+      for (const path of paths) {
         await page.goto(path);
         await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
         await expect(page.locator("[aria-busy=true]")).toHaveCount(0); // data has arrived

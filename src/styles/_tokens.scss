@@ -1,53 +1,160 @@
 // Semantic design tokens from the Hi-Fi (invitation-tokens.css).
 // Every component style uses ONLY these names.
+@use "sass:map";
 @use "palette" as *;
 
 // ---------- colour ----------
-$color-primary: $blue-600;
-$color-primary-hover: $blue-700;
-$color-primary-soft: $blue-100;
-$color-on-primary: $white;
-$color-text: $slate-900;
-$color-text-secondary: $slate-700;
-$color-muted: $slate-600;
-$color-placeholder: $slate-500;
-$color-border: $slate-200;
-$color-border-strong: $slate-300;
-$color-surface: $white;
-$color-surface-alt: $slate-100;
-$color-canvas: $slate-canvas;
-$color-nav-active-bg: $blue-100;
-$color-nav-active-fg: $blue-800;
-$color-table-head-bg: $slate-100;
-$color-row-highlight: $blue-50;
-$color-danger: $red-700;
-$color-danger-soft: $red-50;
-$color-danger-border: $red-300;
-$color-success: $teal-500;
-$color-focus: $blue-600;
-$color-skeleton: $slate-200;
+// WM | Light/Dark Mode Color System: every colour has a [day] and a [night] value with the SAME name,
+// one to one. Colours that never change go in the constant group. The screens use the day values
+// today (no theme switch yet); the night values are ready for one.
+$colors-day: (
+  "primary": $blue-600,
+  "primary-hover": $blue-700,
+  "primary-soft": $blue-100,
+  "on-primary": $white,
+  "text": $slate-900,
+  "text-secondary": $slate-700,
+  "muted": $slate-600,
+  "placeholder": $slate-500,
+  "border": $slate-200,
+  "border-strong": $slate-300,
+  "surface": $white,
+  "surface-alt": $slate-100,
+  "canvas": $slate-canvas,
+  "nav-active-bg": $blue-100,
+  "nav-active-fg": $blue-800,
+  "table-head-bg": $slate-100,
+  "row-highlight": $blue-50,
+  "danger": $red-700,
+  "danger-soft": $red-50,
+  "danger-border": $red-300,
+  "success": $teal-500,
+  "focus": $blue-600,
+  "skeleton": $slate-200,
+  "toast-bg": $slate-900,
+  "toast-fg": $white,
+  "toast-muted": $slate-300,
+  "info-bg": $blue-50, // edit notice
+  "info-fg": $blue-800,
+  "info-border": $blue-300,
+  // status chips: fill + icon + word, never colour alone
+  "chip-pending-bg": $blue-100,
+  "chip-pending-fg": $blue-800,
+  "chip-pending-border": $blue-300,
+  "chip-used-bg": $teal-100,
+  "chip-used-fg": $teal-900,
+  "chip-used-border": $teal-300,
+  "chip-expired-bg": $slate-100,
+  "chip-expired-fg": $slate-700,
+  "chip-expired-border": $slate-400,
+  "chip-revoked-bg": $red-50,
+  "chip-revoked-fg": $red-700,
+  "chip-revoked-border": $red-300,
+);
+
+$colors-night: (
+  "primary": $blue-400,
+  "primary-hover": $blue-300,
+  "primary-soft": $blue-950,
+  "on-primary": $slate-950,
+  "text": $slate-100,
+  "text-secondary": $slate-300,
+  "muted": $slate-400,
+  "placeholder": $slate-500,
+  "border": $slate-700,
+  "border-strong": $slate-600,
+  "surface": $slate-900,
+  "surface-alt": $slate-800,
+  "canvas": $slate-950,
+  "nav-active-bg": $blue-950,
+  "nav-active-fg": $blue-200,
+  "table-head-bg": $slate-800,
+  "row-highlight": $blue-950,
+  "danger": $red-400,
+  "danger-soft": $red-950,
+  "danger-border": $red-700,
+  "success": $teal-300,
+  "focus": $blue-400,
+  "skeleton": $slate-700,
+  "toast-bg": $slate-100,
+  "toast-fg": $slate-900,
+  "toast-muted": $slate-600,
+  "info-bg": $blue-950,
+  "info-fg": $blue-200,
+  "info-border": $blue-700,
+  "chip-pending-bg": $blue-950,
+  "chip-pending-fg": $blue-200,
+  "chip-pending-border": $blue-700,
+  "chip-used-bg": $teal-950,
+  "chip-used-fg": $teal-300,
+  "chip-used-border": $teal-500,
+  "chip-expired-bg": $slate-800,
+  "chip-expired-fg": $slate-300,
+  "chip-expired-border": $slate-500,
+  "chip-revoked-bg": $red-950,
+  "chip-revoked-fg": $red-300,
+  "chip-revoked-border": $red-700,
+);
+
+// The build stops if a colour has a day value but no night value, or the other way round
+@each $name in map.keys($colors-day) {
+  @if not map.has-key($colors-night, $name) {
+    @error "Colour \"#{$name}\" has a [day] value but no [night] value.";
+  }
+}
+@each $name in map.keys($colors-night) {
+  @if not map.has-key($colors-day, $name) {
+    @error "Colour \"#{$name}\" has a [night] value but no [day] value.";
+  }
+}
+
+// constant: the same in both modes
 $color-on-danger: $white;
 $color-scrim: rgba($slate-900, 0.48);
-$color-toast-bg: $slate-900;
-$color-toast-fg: $white;
-$color-toast-muted: $slate-300;
-$color-info-bg: $blue-50; // edit notice
-$color-info-fg: $blue-800;
-$color-info-border: $blue-300;
 
-// status chips: fill + icon + word, never colour alone
-$chip-pending-bg: $blue-100;
-$chip-pending-fg: $blue-800;
-$chip-pending-border: $blue-300;
-$chip-used-bg: $teal-100;
-$chip-used-fg: $teal-900;
-$chip-used-border: $teal-300;
-$chip-expired-bg: $slate-100;
-$chip-expired-fg: $slate-700;
-$chip-expired-border: $slate-400;
-$chip-revoked-bg: $red-50;
-$chip-revoked-fg: $red-700;
-$chip-revoked-border: $red-300;
+// The names the components use (day values)
+$color-primary: map.get($colors-day, "primary");
+$color-primary-hover: map.get($colors-day, "primary-hover");
+$color-primary-soft: map.get($colors-day, "primary-soft");
+$color-on-primary: map.get($colors-day, "on-primary");
+$color-text: map.get($colors-day, "text");
+$color-text-secondary: map.get($colors-day, "text-secondary");
+$color-muted: map.get($colors-day, "muted");
+$color-placeholder: map.get($colors-day, "placeholder");
+$color-border: map.get($colors-day, "border");
+$color-border-strong: map.get($colors-day, "border-strong");
+$color-surface: map.get($colors-day, "surface");
+$color-surface-alt: map.get($colors-day, "surface-alt");
+$color-canvas: map.get($colors-day, "canvas");
+$color-nav-active-bg: map.get($colors-day, "nav-active-bg");
+$color-nav-active-fg: map.get($colors-day, "nav-active-fg");
+$color-table-head-bg: map.get($colors-day, "table-head-bg");
+$color-row-highlight: map.get($colors-day, "row-highlight");
+$color-danger: map.get($colors-day, "danger");
+$color-danger-soft: map.get($colors-day, "danger-soft");
+$color-danger-border: map.get($colors-day, "danger-border");
+$color-success: map.get($colors-day, "success");
+$color-focus: map.get($colors-day, "focus");
+$color-skeleton: map.get($colors-day, "skeleton");
+$color-toast-bg: map.get($colors-day, "toast-bg");
+$color-toast-fg: map.get($colors-day, "toast-fg");
+$color-toast-muted: map.get($colors-day, "toast-muted");
+$color-info-bg: map.get($colors-day, "info-bg");
+$color-info-fg: map.get($colors-day, "info-fg");
+$color-info-border: map.get($colors-day, "info-border");
+
+$chip-pending-bg: map.get($colors-day, "chip-pending-bg");
+$chip-pending-fg: map.get($colors-day, "chip-pending-fg");
+$chip-pending-border: map.get($colors-day, "chip-pending-border");
+$chip-used-bg: map.get($colors-day, "chip-used-bg");
+$chip-used-fg: map.get($colors-day, "chip-used-fg");
+$chip-used-border: map.get($colors-day, "chip-used-border");
+$chip-expired-bg: map.get($colors-day, "chip-expired-bg");
+$chip-expired-fg: map.get($colors-day, "chip-expired-fg");
+$chip-expired-border: map.get($colors-day, "chip-expired-border");
+$chip-revoked-bg: map.get($colors-day, "chip-revoked-bg");
+$chip-revoked-fg: map.get($colors-day, "chip-revoked-fg");
+$chip-revoked-border: map.get($colors-day, "chip-revoked-border");
 
 // ---------- typography ----------
 $font-sans: "Pretendard Variable", "Pretendard", system-ui, sans-serif;
