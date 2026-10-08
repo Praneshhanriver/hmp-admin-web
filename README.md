@@ -9,7 +9,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 | | |
 |---|---|
 | **Demo (web)** | <https://hmp-admin-web.vercel.app/doctors/invitations/list> (Vercel, branch `main`) |
-| **Demo (API)** | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> · health <https://hmp-admin-api.onrender.com/actuator/health> (Render, Docker). Free service: the first load after a quiet period can take about a minute; a restart brings back the 18 demo invitations |
+| **Demo (API)** | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> · health <https://hmp-admin-api.onrender.com/actuator/health> (Render, Docker). Free service: the first load after a quiet period can take up to 3 minutes (the app waits; if it still shows an error, press Retry); a restart brings back the 18 demo invitations |
 | **Frontend repo** | <https://github.com/Praneshhanriver/hmp-admin-web> — branch `main` (HW2 work on `feature/hw2-invitation-crud`, HW1 on `feature/hw1-invitation-list`) |
 | **Backend repo** | <https://github.com/Praneshhanriver/hmp-admin-api> — branch `main` |
 | **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e: [wireframe](docs/design/doctor-invitation-crud-wireframe.jpg) · [Hi-Fi](docs/design/doctor-invitation-crud-hifi.jpg) · **open without a login:** [Hi-Fi](https://hmp-admin-web.vercel.app/design/hifi.html) · [Wireframe](https://hmp-admin-web.vercel.app/design/wireframe.html) (the Claude Design export, served from [`public/design/`](public/design)) |
@@ -41,15 +41,16 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 - **Responsive** 1920 → 375 on every screen (cards, drawer, full-width form buttons on phones).
 
 ### Homework 2 checklist
-- [x] List, create, details, edit, delete on a real API — [hmp-admin-api](https://github.com/Praneshhanriver/hmp-admin-api) (Spring Boot, 34 tests)
+- [x] List, create, details, edit, delete on a real API — [hmp-admin-api](https://github.com/Praneshhanriver/hmp-admin-api) (Spring Boot, 36 tests)
 - [x] Service + hook pattern — `API_ENDPOINTS` → `api-services/InvitationService` → `hooks/API/invitations/use*` (TanStack Query); no API calls in components
 - [x] Search, filter and paging on the list — done by the API
 - [x] Validation matches the backend — same rules, order and messages; backend errors shown under the field
 - [x] Loading, empty and error states, with the API's error messages
 - [x] WM date, number and error-message formats
 - [x] All screen sizes — [docs/screenshots/hw2](docs/screenshots/hw2) (10 widths × 4 screens)
-- [x] Test cases in WM QA Template format — [docs/qa-test-cases.md](docs/qa-test-cases.md) (59 cases)
-- [x] Playwright test + separate mutation test — `e2e/invitations.spec.ts` (23) · `e2e/invitations.mutation.spec.ts` (7)
+- [x] Test cases in WM QA Template format — [docs/qa-test-cases.md](docs/qa-test-cases.md) (61 cases: 33 Positive · 27 Negative · 1 N/A)
+- [x] Playwright test + separate mutation test — `e2e/invitations.spec.ts` (24) · `e2e/invitations.mutation.spec.ts` (7)
+- [x] Playwright HTML reports (live demo, 8 Oct) — [read-only](https://hmp-admin-web.vercel.app/test-reports/read-only/index.html) · [mutation](https://hmp-admin-web.vercel.app/test-reports/mutation/index.html) · zips in [docs/test-reports](docs/test-reports)
 - [x] QA build report — [docs/build-report.md](docs/build-report.md)
 
 ### Homework 1 feedback — fixed
@@ -148,7 +149,7 @@ How the work went from that prompt:
 1. Claude Code read the training page, my HW1 page (with Vaishali's feedback) and the Slack thread, and showed a plan.
 2. I answered four decisions: packages (`@tanstack/react-query`, `axios`, `@playwright/test`), **Delete = Revoke**
    (as in the spec), a separate backend repo, H2 + Flyway.
-3. Backend first (entity rules, validation, errors, 34 tests, Docker), checked with curl; then the frontend data
+3. Backend first (entity rules, validation, errors, 36 tests, Docker), checked with curl; then the frontend data
    layer, screens, Playwright, docs. Type-check and lint after every step; build, all tests and screenshots at the end.
 
 ## Problem I hit and how I solved it

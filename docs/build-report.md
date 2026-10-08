@@ -6,11 +6,12 @@
 ## Introduction
 A complete Doctor Invitations feature for the HMP admin web (Admin ADM-003): list, issue, detail with history,
 edit, delete (= revoke) and re-issue, connected to a Spring Boot API built for this homework.
-Author: Pranesh Ghosh · Reviewer: Vaishali Naruka · Date: 2026-10-07.
+Author: Pranesh Ghosh · Reviewers: Vaishali Naruka (code), Bhagyashree Gouda (design), Archana Swain (QA) ·
+Date: 2026-10-07, updated 2026-10-08 after the code review (part 4).
 
 ## Summary
-Lint, type-check, production build, 34 backend tests, 23 Playwright tests and 7 Playwright mutation tests all pass
-(output in part 9). The feature runs end to end on the real API: create → list → edit → delete → re-issue.
+Lint, type-check, production build, 36 backend tests, 24 Playwright read-only tests and 7 Playwright mutation tests
+all pass, locally and on the live demo (output in part 9, HTML reports linked there). The feature runs end to end on the real API: create → list → edit → delete → re-issue.
 No hard delete (spec p.113c); there is no login (one fixed admin).
 
 ## Content
@@ -20,9 +21,9 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 |---|---|---|
 | Repo | <https://github.com/Praneshhanriver/hmp-admin-web> | <https://github.com/Praneshhanriver/hmp-admin-api> |
 | Branch | `main` (from `feature/hw2-invitation-crud`) | `main` |
-| Commit | [`81a9837`](https://github.com/Praneshhanriver/hmp-admin-web/commit/81a9837) (deployed and tested) | [`95dcf01`](https://github.com/Praneshhanriver/hmp-admin-api/commit/95dcf01) (deployed) |
+| Commit | [`ee52060`](https://github.com/Praneshhanriver/hmp-admin-web/commit/ee52060) (deployed and tested; later commits are docs and test reports only) | [`397c869`](https://github.com/Praneshhanriver/hmp-admin-api/commit/397c869) (deployed and tested) |
 | Link | <https://hmp-admin-web.vercel.app/doctors/invitations/list> (Vercel) | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> (Render, Docker) |
-| Date | 2026-10-07 | 2026-10-07 |
+| Date | 2026-10-08 | 2026-10-08 |
 | Runtime | Node 24.21 (20+ supported) · Next.js 15.5.27 | Java 21.0.12 · Spring Boot 4.0.8 · H2 in memory |
 
 ### 2. TL tasks covered
@@ -52,6 +53,22 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 | Use TanStack Query hooks in `src/hooks/API/<domain>/` | `src/hooks/API/invitations/`, one hook per file |
 | Fixed values in component partials | Moved to `_tokens.scss`; comments name tokens |
 
+**Fixed after the HW2 code review (8 Oct)**
+| Review point | What changed |
+|---|---|
+| Page facts no longer true (date wording, old pasted response, old commit) | Notion page and this report updated: dates `2026-09-08`, response pasted again from the live API, commits above |
+| Cold start (143 s) longer than the 70 s request timeout | Request timeout 180 s (`API_REQUEST_TIMEOUT_MS`); demo link says "up to 3 minutes, press Retry if needed" |
+| Dark pairs missing | `_tokens.scss`: `$colors-day` / `$colors-night` with the same names (WM Light/Dark), constants apart; the build fails if a name is missing on one side. Compiled CSS unchanged |
+| Section 12 for QA, Positive / Negative per case | Section 12 filled; every test case marked Positive or Negative (33 / 27 / 1 N/A), TC-44 and TC-45 added |
+| Unused `primereact` / `primeicons`; wrong comment on `update` | Packages removed; comment says no new link is sent |
+
+**Found on the live demo on 8 Oct and fixed:** the Render API's in-memory database closed while the app kept running
+(reads worked, every create / edit / revoke answered 500, log: `The database has been closed [90098]`). The API now
+stops itself when it sees that error so Render starts a fresh instance (`DatabaseClosedGuard`, with a test), runs with
+`-XX:+ExitOnOutOfMemoryError`, and H2 no longer closes itself on exit. Both Playwright suites pass on the live demo after the fix.
+The design links (Claude Design) opened only for project members; the Hi-Fi and wireframe are now served from the demo:
+[/design/hifi.html](https://hmp-admin-web.vercel.app/design/hifi.html) · [/design/wireframe.html](https://hmp-admin-web.vercel.app/design/wireframe.html).
+
 Found and fixed during this build: re-issuing an old invitation could create a second live link for the same
 email; spaces around a name were counted by the API but not by the browser; validation messages came back in a
 random order; a name containing a digit ("E2E") also matched contact numbers (contact search now only for phone-like text); sidebar links to unbuilt screens caused console 404s (prefetch turned off).
@@ -66,27 +83,31 @@ Useful rows: Dr. Kim Han-mi (Pending, `kim.hanmi@clinic.co.kr`), Dr. Lee Seo-jun
 Dr. Park Ji-ho (Expired, re-issued once), Dr. Kang Bo-ra (Used).
 
 ### 7. What to test
-Full list with steps and expected results: [qa-test-cases.md](qa-test-cases.md) (59 cases). Priorities:
+Full list with steps and expected results: [qa-test-cases.md](qa-test-cases.md) (61 cases: 33 Positive · 27 Negative ·
+1 N/A). Priorities:
 1. Issue → it appears on top as Pending → Edit → Revoke → Re-issue → detail history shows all four steps (TC-10…15).
 2. Every form rule with wrong values; the server's "already waiting" message under Email (TC-20…33).
 3. Search by name, by visible digits, never by hidden digits; status filter; paging; Back keeps the search (TC-50…61).
 4. Loading, empty, error (stop the API) and Retry (TC-80…87).
 5. Edit rules: prefilled, disabled until changed, refused for non-Pending (TC-40…43).
-6. Widths 1920 / 1366 / 768 / 375 on all four screens (TC-90…93).
+6. Widths 1920 / 1440 / 1366 / 768 / 375 on all four screens (TC-90…93).
 
 ### 8. Known issues and not covered
 - No login, so roles and permissions are not applicable; "Used" can't be produced from the admin (no doctor sign-up).
 - Unsaved-changes warning only on tab close / reload, not on in-app links.
 - Focus after Revoke falls to the page (the Revoke button is gone).
-- Render free tier: first request after idle takes about a minute; data resets to the demo set on restart.
+- Render free tier: the first request after a quiet period can take up to 3 minutes (measured 143 s); the app waits
+  180 s, and Retry is there if it still fails. Data resets to the demo set on every restart.
+- Mutation tests may be run on the demo: they use a new "Dr. E2E Test <number>" each run and touch no other row.
+  Please do not revoke the demo rows the test cases use (Dr. Kim Han-mi, Dr. Lee Seo-jun); a restart resets them anyway.
 - Other sidebar sections (Patients, Doctor list, Consultations, Settings) are not part of this feature and 404.
 - Designer questions still open: [design-check.md](design-check.md#still-open) (rows per page 8 vs 20, validity
   period, required fields, sort order).
 - Browsers: only Chromium was tested automatically; Safari and Firefox not checked.
 
 ### 9. Results of lint, type-check, build and tests
-Run on 2026-10-07 on Windows 11. Playwright ran against the **production build** (`npm run start`) and the API
-**Docker image** (`docker run hmp-admin-api:local`).
+Run on 2026-10-08 after the review fixes, on Windows 11. Locally, Playwright ran against the **production build**
+(`npm run start`) and the API (`./mvnw spring-boot:run`); the API Docker image was built and smoke-tested too.
 
 ```text
 $ npx tsc --noEmit
@@ -113,7 +134,8 @@ $ ./mvnw verify            (hmp-admin-api)
 [INFO] Tests run: 6  -- in InvitationTest
 [INFO] Tests run: 14 -- in MobileNumbersTest
 [INFO] Tests run: 1  -- in HmpAdminApiApplicationTests
-[INFO] Tests run: 34, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Tests run: 2  -- in DatabaseClosedGuardTest
+[INFO] Tests run: 36, Failures: 0, Errors: 0, Skipped: 0
 [INFO] BUILD SUCCESS
 
 $ npm run test:e2e         (e2e/invitations.spec.ts)
@@ -135,12 +157,13 @@ $ npm run test:e2e         (e2e/invitations.spec.ts)
   ✓ 16 Issue invitation form › shows a server error without losing the input
   ✓ 17 Edit invitation › prefills a pending invitation and enables Save only after a change
   ✓ 18 Edit invitation › refuses to edit an invitation that is no longer pending
-  ✓ 19 Screen sizes › no sideways scrolling at 1920px on list, create and detail
-  ✓ 20 Screen sizes › no sideways scrolling at 1366px on list, create and detail
-  ✓ 21 Screen sizes › no sideways scrolling at 768px on list, create and detail
-  ✓ 22 Screen sizes › no sideways scrolling at 375px on list, create and detail
-  ✓ 23 Screen sizes › shows cards instead of the table on phones
-  23 passed (1.1m)
+  ✓ 19 Screen sizes › no sideways scrolling at 1920px on list, create, detail and edit
+  ✓ 20 Screen sizes › no sideways scrolling at 1440px on list, create, detail and edit
+  ✓ 21 Screen sizes › no sideways scrolling at 1366px on list, create, detail and edit
+  ✓ 22 Screen sizes › no sideways scrolling at 768px on list, create, detail and edit
+  ✓ 23 Screen sizes › no sideways scrolling at 375px on list, create, detail and edit
+  ✓ 24 Screen sizes › shows cards instead of the table on phones
+  24 passed (1.2m)
 
 $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 1 create: a new invitation appears in the list as Pending
@@ -150,15 +173,20 @@ $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 5 re-issue: a revoked invitation goes back to Pending with a new link
   ✓ 6 history lists every step, oldest first
   ✓ 7 a second invitation for the same email is refused by the API
-  7 passed (24.6s)
+  7 passed (25.9s)
 ```
-Then against the **live demo** (`PLAYWRIGHT_BASE_URL=https://hmp-admin-web.vercel.app`, API on Render), 7 Oct 2026:
+Then against the **live demo** (`PLAYWRIGHT_BASE_URL=https://hmp-admin-web.vercel.app`, API on Render), 8 Oct 2026,
+web `ee52060` and API `397c869`:
 ```text
 $ npx playwright test
-  23 passed (2.2m)
+  24 passed (3.3m)
 $ npm run test:e2e:mutation
-  7 passed (51.7s)
+  7 passed (1.5m)
 ```
+**HTML reports (execution evidence):** [read-only](https://hmp-admin-web.vercel.app/test-reports/read-only/index.html) ·
+[mutation](https://hmp-admin-web.vercel.app/test-reports/mutation/index.html) (open in the browser, no login) · zips in
+[test-reports/](test-reports/). The read-only and mutation runs write separate reports
+(`playwright-report/read-only`, `playwright-report/mutation`).
 The live mutation run leaves one "Dr. E2E Test …" invitation (Pending, re-issued twice) in the demo data; it disappears when the
 Render service restarts.
 
@@ -168,7 +196,7 @@ the API's 404 when a detail id does not exist (expected).
 ### 10. Screen sizes and browsers checked
 - Widths: 1920 · 1600 · 1366 · 1280 · 1024 · 991 · 768 · 640 · 480 · 375 on list, create, detail and edit: no
   sideways scrolling at any width. Screenshots: [screenshots/hw2](screenshots/hw2) (`<screen>-w<width>.png`, plus
-  `create-errors-*` and `edit-not-editable-*`). Playwright re-checks 1920 / 1366 / 768 / 375 on every run.
+  `create-errors-*` and `edit-not-editable-*`). Playwright re-checks 1920 / 1440 / 1366 / 768 / 375 on list, create, detail and edit on every run.
 - Browser: Chromium (Playwright 1.63, Desktop Chrome profile), locally and on the live demo. Safari / Firefox / real phones not checked.
 
 ## References
