@@ -12,7 +12,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 | **Demo (API)** | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> · health <https://hmp-admin-api.onrender.com/actuator/health> (Render, Docker). Free service: the first load after a quiet period can take about a minute; a restart brings back the 18 demo invitations |
 | **Frontend repo** | <https://github.com/Praneshhanriver/hmp-admin-web> — branch `main` (HW2 work on `feature/hw2-invitation-crud`, HW1 on `feature/hw1-invitation-list`) |
 | **Backend repo** | <https://github.com/Praneshhanriver/hmp-admin-api> — branch `main` |
-| **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e: [wireframe](docs/design/doctor-invitation-crud-wireframe.jpg) · [Hi-Fi](docs/design/doctor-invitation-crud-hifi.jpg) (original HTML in [`docs/design/`](docs/design)) |
+| **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e: [wireframe](docs/design/doctor-invitation-crud-wireframe.jpg) · [Hi-Fi](docs/design/doctor-invitation-crud-hifi.jpg) · **open without a login:** [Hi-Fi](https://hmp-admin-web.vercel.app/design/hifi.html) · [Wireframe](https://hmp-admin-web.vercel.app/design/wireframe.html) (the Claude Design export, served from [`public/design/`](public/design)) |
 
 ## What I built
 | Screen | Route | Spec |
@@ -56,7 +56,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 | Feedback | Fix |
 |---|---|
 | README demo line "TO FILL IN", repo link on the feature branch | This README: demo + `main` links |
-| Design links need a Claude Design login | Wireframe and Hi-Fi exported to [`docs/design/`](docs/design) (images + HTML) and attached on the Notion page |
+| Design links need a Claude Design login | Wireframe and Hi-Fi exported as images to [`docs/design/`](docs/design) and on the Notion page; the full design opens without a login at [/design/hifi.html](https://hmp-admin-web.vercel.app/design/hifi.html) and [/design/wireframe.html](https://hmp-admin-web.vercel.app/design/wireframe.html) |
 | Dates `26/09/08` | WM format `YYYY-MM-DD`, `utils/format.ts` (`formatDate`, `formatDateTime`) |
 | Use the TanStack Query hook pattern in `src/hooks/API/<domain>/` | `src/hooks/API/invitations/`, one hook per file |
 | A few fixed values left in component partials | Skeleton widths moved to `_tokens.scss`; comments name tokens, not pixels |
