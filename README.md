@@ -51,7 +51,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 - [x] All screen sizes — [docs/screenshots/hw2](docs/screenshots/hw2) (10 widths × 4 screens)
 - [x] Test cases in WM QA Template format — [docs/qa-test-cases.md](docs/qa-test-cases.md) (61 cases: 33 Positive · 27 Negative · 1 N/A)
 - [x] Playwright test + separate mutation test — `e2e/invitations.spec.ts` (26) · `e2e/invitations.mutation.spec.ts` (7, leaves its one test row Revoked)
-- [x] Playwright HTML reports (live demo, 8 Oct) — [read-only](https://hmp-admin-web.vercel.app/test-reports/read-only/index.html) · [mutation](https://hmp-admin-web.vercel.app/test-reports/mutation/index.html) · zips in [docs/test-reports](docs/test-reports)
+- [x] Playwright HTML reports (live demo, 9 Oct) — [read-only](https://hmp-admin-web.vercel.app/test-reports/read-only/index.html) · [mutation](https://hmp-admin-web.vercel.app/test-reports/mutation/index.html) · zips in [docs/test-reports](docs/test-reports)
 - [x] QA build report — [docs/build-report.md](docs/build-report.md)
 
 ### Homework 1 feedback — fixed

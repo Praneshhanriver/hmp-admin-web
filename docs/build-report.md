@@ -21,9 +21,9 @@ No hard delete (spec p.113c); there is no login (one fixed admin).
 |---|---|---|
 | Repo | <https://github.com/Praneshhanriver/hmp-admin-web> | <https://github.com/Praneshhanriver/hmp-admin-api> |
 | Branch | `main` (from `feature/hw2-invitation-crud`) | `main` |
-| Commit | [`ee52060`](https://github.com/Praneshhanriver/hmp-admin-web/commit/ee52060) (deployed and tested; later commits are docs and test reports only) | [`397c869`](https://github.com/Praneshhanriver/hmp-admin-api/commit/397c869) (deployed and tested) |
+| Commit | [`34925fe`](https://github.com/Praneshhanriver/hmp-admin-web/commit/34925fe) (deployed and tested; later commits are docs and test reports only) | [`e8c615f`](https://github.com/Praneshhanriver/hmp-admin-api/commit/e8c615f) (deployed and tested; the code is unchanged since `397c869`, this adds the keep-alive workflow) |
 | Link | <https://hmp-admin-web.vercel.app/doctors/invitations/list> (Vercel) | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> (Render, Docker) |
-| Date | 2026-10-08 | 2026-10-08 |
+| Date | 2026-10-09 | 2026-10-09 |
 | Runtime | Node 24.21 (20+ supported) · Next.js 15.5.27 | Java 21.0.12 · Spring Boot 4.0.8 · H2 in memory |
 
 ### 2. TL tasks covered
@@ -207,20 +207,20 @@ $ npm run test:e2e:mutation   (e2e/invitations.mutation.spec.ts)
   ✓ 7 a second invitation for the same email is refused by the API
   7 passed (28.1s)   — afterwards the run's own row "E2E test row … (auto-revoked)" is Revoked
 ```
-Then against the **live demo** (`PLAYWRIGHT_BASE_URL=https://hmp-admin-web.vercel.app`, API on Render), 8 Oct 2026,
-web `ee52060` and API `397c869`:
+Then against the **live demo** (`PLAYWRIGHT_BASE_URL=https://hmp-admin-web.vercel.app`, API on Render), 9 Oct 2026,
+web `34925fe` and API `e8c615f`:
 ```text
 $ npx playwright test
-  24 passed (3.3m)
+  26 passed (2.7m)
 $ npm run test:e2e:mutation
-  7 passed (1.5m)
+  7 passed (56.8s)
 ```
 **HTML reports (execution evidence):** [read-only](https://hmp-admin-web.vercel.app/test-reports/read-only/index.html) ·
 [mutation](https://hmp-admin-web.vercel.app/test-reports/mutation/index.html) (open in the browser, no login) · zips in
 [test-reports/](test-reports/). The read-only and mutation runs write separate reports
 (`playwright-report/read-only`, `playwright-report/mutation`).
-The live mutation run leaves one "Dr. E2E Test …" invitation (Pending, re-issued twice) in the demo data; it disappears when the
-Render service restarts.
+The live mutation run leaves one `E2E test row <number> (auto-revoked)` invitation, **Revoked**, in the demo data; it
+disappears when the Render service restarts.
 
 Console check on the production build (list, create, detail, edit): no errors, except the browser's own log of
 the API's 404 when a detail id does not exist (expected).
