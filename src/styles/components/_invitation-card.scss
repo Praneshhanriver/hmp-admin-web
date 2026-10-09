@@ -70,7 +70,7 @@
 }
 
 .invitation-card-link {
-  min-height: $control-h-touch;
+  min-height: $control-h-md;
   display: inline-flex;
   align-items: center;
   gap: $space-xs;
@@ -101,7 +101,7 @@
   }
 
   > .skeleton-bar:last-child {
-    height: $control-h-touch; // action button
+    height: $control-h-md; // action button
     border-radius: $radius-md;
   }
 }

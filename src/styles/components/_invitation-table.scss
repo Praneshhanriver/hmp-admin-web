@@ -35,6 +35,19 @@
     white-space: nowrap;
   }
 
+  // Doctor name (row header), from $bp-md up where the table must fit: a long name wraps instead of widening it
+  // (Hi-Fi 3b, 3k). Below $bp-md names stay on one line and the table scrolls inside its card (Hi-Fi 3c)
+  @include from($bp-md) {
+    tbody th {
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+
+    .invitation-name {
+      max-width: $table-name-max-w;
+    }
+  }
+
   tbody tr:last-child > * {
     border-bottom: none;
   }
@@ -50,6 +63,7 @@
 }
 
 .invitation-name {
+  display: inline-block;
   color: $color-text;
   font-weight: $font-weight-semibold;
   text-decoration: none;

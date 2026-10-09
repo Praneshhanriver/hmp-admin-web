@@ -308,8 +308,8 @@ test.describe("Edit invitation", () => {
 });
 
 test.describe("Screen sizes", () => {
-  // WM widths plus 1440, the width the Hi-Fi and the design / QA reviews use
-  const widths = [1920, 1440, 1366, 768, 375];
+  // WM widths plus 1440 and 1024, the widths the Hi-Fi and the design / QA reviews use
+  const widths = [1920, 1440, 1366, 1024, 768, 375];
   const paths = [
     LIST_URL,
     "/doctors/invitations/create",
@@ -330,6 +330,30 @@ test.describe("Screen sizes", () => {
       }
     });
   }
+
+  test("at 1024px the table fits its card and every nav label stays on one line (Hi-Fi 3b)", async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 900 });
+    await page.goto(LIST_URL);
+    await expect(page.locator("[aria-busy=true]")).toHaveCount(0);
+
+    const tableOverflow = await page
+      .locator(".invitation-table-scroll")
+      .evaluate((scroll) => scroll.scrollWidth - scroll.clientWidth);
+    expect(tableOverflow).toBeLessThanOrEqual(0);
+
+    const links = page.getByRole("navigation", { name: "Administration" }).getByRole("link");
+    for (const link of await links.all()) {
+      // One rectangle per line the label's text runs over
+      const lineCount = await link.evaluate((element) => {
+        const label = [...element.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim());
+        if (!label) return 0;
+        const range = document.createRange();
+        range.selectNodeContents(label);
+        return range.getClientRects().length;
+      });
+      expect(lineCount, await link.innerText()).toBe(1);
+    }
+  });
 
   test("shows cards instead of the table on phones", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });

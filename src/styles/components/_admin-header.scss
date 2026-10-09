@@ -80,11 +80,11 @@
   // Touch-sized on tablets and phones
   .admin-header-menu {
     display: inline-flex;
-    height: $control-h-touch;
+    height: $control-h-md;
   }
 
   .admin-header-account {
-    height: $control-h-touch;
+    height: $control-h-md;
     gap: $space-xs;
     font-weight: $font-weight-semibold;
   }

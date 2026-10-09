@@ -111,7 +111,9 @@ src/styles/                    _palette, _tokens, _mixins, components/ (one part
 - Dialogs: native `<dialog>` with `showModal()`, `role="alertdialog"`, focus starts on **Cancel**, Esc = Cancel,
   focus returns to the opener when it still exists.
 - Status is never shown by colour alone: icon + word + border style.
-- Targets at least **32px** (`$control-h-sm` 36) on desktop, **44px** (`$control-h-touch`) on phones.
+- Targets at least **32px** (`$control-h-sm` 36) on desktop, **44px** (`$control-h-md`) on phones.
+- Three button heights only: `$control-h-sm` 36 · `$control-h-md` 44 · `$control-h-lg` 48. One disabled look:
+  `$opacity-disabled` (0.6) on every disabled or busy control.
 - Closed drawer uses `visibility: hidden` so its links leave the Tab order. Respect `prefers-reduced-motion`.
 
 ## Workflow
@@ -126,4 +128,7 @@ src/styles/                    _palette, _tokens, _mixins, components/ (one part
 - Don't show unmasked phone numbers or raw error text.
 - Don't make `layout.tsx` or `page.tsx` client components.
 - Don't add mock data or call axios outside `api-services/`.
-- Don't run `*.mutation.spec.ts` against a shared server without telling the team.
+- Don't run `*.mutation.spec.ts` against a shared server without telling the team. Each run leaves one
+  `E2E test row <id> (auto-revoked)` row, always Revoked (`afterAll`).
+- Design files: `public/design/*.html` are Claude Design bundles. Frames are exported with
+  `node scripts/design/export-frames.mjs <board.html> <out dir>`; `scripts/design/` also unpacks / repacks a bundle.

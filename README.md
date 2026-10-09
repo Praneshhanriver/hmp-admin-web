@@ -9,7 +9,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 | | |
 |---|---|
 | **Demo (web)** | <https://hmp-admin-web.vercel.app/doctors/invitations/list> (Vercel, branch `main`) |
-| **Demo (API)** | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> · health <https://hmp-admin-api.onrender.com/actuator/health> (Render, Docker). Free service: the first load after a quiet period can take up to 3 minutes (the app waits; if it still shows an error, press Retry); a restart brings back the 18 demo invitations |
+| **Demo (API)** | <https://hmp-admin-api.onrender.com/api/v1/admin/doctor-invitations> · health <https://hmp-admin-api.onrender.com/actuator/health> (Render, Docker). Free service, kept awake by a health call every 10 minutes ([keep-alive workflow](https://github.com/Praneshhanriver/hmp-admin-api/blob/main/.github/workflows/keep-alive.yml)); if it was asleep anyway, the first load can take up to 3 minutes (the app waits; if it still shows an error, press Retry). A restart brings back the 18 demo invitations |
 | **Frontend repo** | <https://github.com/Praneshhanriver/hmp-admin-web> — branch `main` (HW2 work on `feature/hw2-invitation-crud`, HW1 on `feature/hw1-invitation-list`) |
 | **Backend repo** | <https://github.com/Praneshhanriver/hmp-admin-api> — branch `main` |
 | **Design** | Claude Design wireframe + Hi-Fi from spec p.113b / p.113c / p.113e: [wireframe](docs/design/doctor-invitation-crud-wireframe.jpg) · [Hi-Fi](docs/design/doctor-invitation-crud-hifi.jpg) · **open without a login:** [Hi-Fi](https://hmp-admin-web.vercel.app/design/hifi.html) · [Wireframe](https://hmp-admin-web.vercel.app/design/wireframe.html) (the Claude Design export, served from [`public/design/`](public/design)) |
@@ -34,6 +34,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
   with the current link marked.
 - **Matches the Hi-Fi:** every screen and state was compared with the Claude Design frames at 1440 / 768 / 375 —
   side-by-side images in [docs/design/compare](docs/design/compare), every design frame in [docs/design/frames](docs/design/frames).
+  Design review fixes (9 Oct) and how the frames are re-exported: [docs/design-check.md](docs/design-check.md#design-review-fixes-bhagyashree-9-oct), `scripts/design/`.
 - **After every change** the list and detail reload by themselves (TanStack Query invalidation), with a toast that
   survives the page change.
 - **Formats:** WM dates `2026-09-08` everywhere (as in the Hi-Fi), history times `2026-09-08 08:33 PM`,
@@ -49,7 +50,7 @@ Built for the AI Frontend Training — Homework 1 (list screen, passed) and Home
 - [x] WM date, number and error-message formats
 - [x] All screen sizes — [docs/screenshots/hw2](docs/screenshots/hw2) (10 widths × 4 screens)
 - [x] Test cases in WM QA Template format — [docs/qa-test-cases.md](docs/qa-test-cases.md) (61 cases: 33 Positive · 27 Negative · 1 N/A)
-- [x] Playwright test + separate mutation test — `e2e/invitations.spec.ts` (24) · `e2e/invitations.mutation.spec.ts` (7)
+- [x] Playwright test + separate mutation test — `e2e/invitations.spec.ts` (26) · `e2e/invitations.mutation.spec.ts` (7, leaves its one test row Revoked)
 - [x] Playwright HTML reports (live demo, 8 Oct) — [read-only](https://hmp-admin-web.vercel.app/test-reports/read-only/index.html) · [mutation](https://hmp-admin-web.vercel.app/test-reports/mutation/index.html) · zips in [docs/test-reports](docs/test-reports)
 - [x] QA build report — [docs/build-report.md](docs/build-report.md)
 

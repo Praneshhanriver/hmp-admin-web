@@ -3,12 +3,13 @@ import type { Page } from "@playwright/test";
 
 // MUTATION TEST: creates, edits, revokes (= deletes) and re-issues a real invitation through the UI and API.
 // Not part of `npm run test:e2e`. Run on purpose: npm run test:e2e:mutation
-// Uses a unique doctor each run, so it can run again without clean-up (the demo API resets on restart).
+// Each run makes ONE row, labelled as a test row, and always leaves it Revoked (see afterAll), so other
+// testers on the shared demo never find an open test invitation. The demo API removes it on its next restart.
 
 const LIST_URL = "/doctors/invitations/list";
 const runId = Date.now();
 const doctor = {
-  name: `Dr. E2E Test ${runId}`,
+  name: `E2E test row ${runId} (auto-revoked)`, // 37 characters, within the 50 allowed
   email: `e2e.${runId}@clinic.co.kr`,
   mobile: "01024681357", // no hyphens: the API stores "010-2468-1357"
 };
@@ -29,6 +30,23 @@ async function findInList(page: Page) {
 function toast(page: Page) {
   return page.locator(".toast");
 }
+
+// Clean-up, also after a failed step: revoke the test row if it is still open (Pending)
+test.afterAll(async ({ browser }, testInfo) => {
+  const page = await browser.newPage({ baseURL: testInfo.project.use.baseURL });
+  await page.goto(LIST_URL);
+  await page.getByLabel("Search by doctor name or contact").fill(doctor.name);
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await expect(page.locator(".invitation-list-count")).toHaveText(/^[\d,]+ invitations?$/); // search finished
+
+  const revoke = row(page).getByRole("button", { name: `Revoke invitation for ${doctor.name}` });
+  if ((await revoke.count()) > 0) {
+    await revoke.click();
+    await page.getByRole("alertdialog").getByRole("button", { name: "Revoke invitation" }).click();
+    await expect(row(page)).toContainText("Revoked");
+  }
+  await page.close();
+});
 
 test("create: a new invitation appears in the list as Pending", async ({ page }) => {
   await page.goto(LIST_URL);
