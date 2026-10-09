@@ -30,8 +30,7 @@ $teal-500: #1fc7ba;
 $teal-900: #13514f;
 $teal-950: #0a2b29; // [night] chip fill
 
-$red-500: #ef4444; // DS --error
-// The Hi-Fi mixes these with color-mix(); fixed values are used here.
+// One red ($red-700 = DS --error, as in the Hi-Fi) and its tints; 400 / 950 are the night pair
 $red-700: #942626;
 $red-300: #ffa098;
 $red-50: #fff0ee;

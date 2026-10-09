@@ -21,6 +21,7 @@
 %sidebar-link {
   min-height: $control-h-md;
   display: flex;
+  white-space: nowrap; // one line per label, so the icon sits beside it (Hi-Fi 3b)
   align-items: center;
   border-radius: $radius-md;
   color: $color-text-secondary;

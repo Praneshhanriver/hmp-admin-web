@@ -192,15 +192,16 @@ $shadow-dialog: 0 24px 48px -12px rgba($slate-900, 0.18), 0 8px 16px -8px rgba($
 $shadow-toast: 0 12px 24px -8px rgba($slate-900, 0.12), 0 4px 8px -4px rgba($slate-900, 0.06);
 
 // ---------- controls ----------
+// Three button heights only (design review): sm = table rows, pagination, toast Dismiss;
+// md = default buttons, header, inputs and every phone action (44 = touch target); lg = form submit, dialogs
 $control-h-sm: 36px;
-$control-h-md: 40px;
+$control-h-md: 44px;
 $control-h-lg: 48px;
-$control-h-touch: 44px;
-$input-h: 44px;
+$input-h: $control-h-md; // inputs line up with the Search button
 $chip-h: 28px;
 $border-w: 1px;
 $focus-w: 2px;
-$opacity-disabled: 0.6;
+$opacity-disabled: 0.6; // the one disabled look: every disabled or busy button, pagination included
 $icon-sm: 16px;
 $icon-md: 20px;
 $icon-lg: 32px;
@@ -209,7 +210,7 @@ $state-icon-badge-size: 64px; // round badge behind the empty/error icon
 // ---------- layout ----------
 $layout-header-h: 64px;
 $layout-sidebar-w: 240px;
-$layout-sidebar-w-md: 200px;
+$layout-sidebar-w-md: 216px; // 1024-1439: wide enough for every nav label on one line
 $layout-content-max: 1200px;
 $page-pad: $space-xl;
 
@@ -247,6 +248,7 @@ $table-head-h: 44px;
 $table-cell-px: 16px;
 $table-cell-py: 14px;
 $table-min-w: 720px;
+$table-name-max-w: 200px; // a longer doctor name wraps, so Manage keeps its one line at 1440
 
 // ---------- loading skeletons ----------
 // Bar width per column: Doctor, Contact, Issued, Re-issues, Expiry, Status, Manage

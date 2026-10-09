@@ -81,10 +81,10 @@
   text-underline-offset: $link-underline-offset;
 }
 
-// Phone-sized button: $control-h-touch tall, shares the row with its neighbours
+// Phone-sized button: $control-h-md tall, shares the row with its neighbours
 .btn-touch {
   flex: 1;
-  min-height: $control-h-touch;
+  min-height: $control-h-md;
   padding: 0 $space-md;
   gap: $space-sm;
 }

@@ -12,7 +12,7 @@ so they are checked together.
 
 | # | Area | Spec / Hi-Fi says | What was built | Status |
 |---|---|---|---|---|
-| 1 | Sidebar width | Hi-Fi 240px (200px at 1024). Spec admin shell 176px | 240px ≥1440, 200px 1024–1439 (`$layout-sidebar-w`, `-md`) | Decided by Hi-Fi |
+| 1 | Sidebar width | Hi-Fi 240px (216px at 1024 since the 9 Oct design review; was 200px). Spec admin shell 176px | 240px ≥1440, 216px 1024–1439 (`$layout-sidebar-w`, `-md`), every label on one line | Decided by Hi-Fi |
 | 2 | Rows per page | Hi-Fi 8 per page (18 → 3 pages). Other spec admin lists use 20 | `INVITATION_PAGE_SIZE = 8` | Question for designer |
 | 3 | Status filter | In the Hi-Fi search bar; **not** in spec p.113c (search only) | Status dropdown next to search, applied on Search | Decided by Hi-Fi |
 | 4 | "No invitations yet" | Hi-Fi shows only no-results (filters) and error | Separate empty state when there is no data at all | Our addition |
@@ -32,16 +32,16 @@ so they are checked together.
 | # | Area | Spec / Hi-Fi says | What was built | Status |
 |---|---|---|---|---|
 | 15 | Drawer breakpoint | Hi-Fi notes say "≤768: sidebar becomes a Menu drawer"; frames show 1024 with sidebar and 768 with Menu | Drawer below **1024** (the 769–1023 range is not drawn in the Hi-Fi) | Decided by us · Question |
-| 16 | Scroll hint | Hi-Fi 768 frame: "Scroll the table sideways for Manage →"; Hi-Fi 1024 frame: all columns fit, Manage buttons stacked | Rows never wrap (Hi-Fi). 1024–1439: tighter cell padding and stacked Manage buttons, so every column fits (Hi-Fi 3b). Below 1024 the table scrolls inside its card and the hint shows (Hi-Fi 3c). Measured on 7 Oct: fits at 1024–1920, scrolls at 991 and 768 | Fixed (matches Hi-Fi) |
+| 16 | Scroll hint | Hi-Fi 768 frame: "Scroll the table sideways for Manage →"; Hi-Fi 1024 frame: all columns fit, Manage buttons stacked | Rows never wrap (Hi-Fi), except a long doctor name, which wraps at `$table-name-max-w` (Hi-Fi 3b / 3k). 1024–1439: tighter cell padding and stacked Manage buttons, so every column fits (Hi-Fi 3b). Below 1024 the table scrolls inside its card and the hint shows (Hi-Fi 3c). Measured on 7 Oct: fits at 1024–1920, scrolls at 991 and 768 | Fixed (matches Hi-Fi) |
 | 17 | Mobile range text | Hi-Fi 375 frames show "1–4 of 18" (they only draw 4 cards) | "1–8 of 18" because the page size is 8 | Decided by Hi-Fi (page size) |
 | 18 | Detail action | Hi-Fi **table**: Detail only for Used. Hi-Fi **card**: View detail also for Expired and Revoked | Built exactly as each Hi-Fi component: table and card differ | Question for designer (Hi-Fi is inconsistent) |
 | 19 | Card heading level | Hi-Fi card uses `<h3>` | `<h2>`: the correct level directly under the page `<h1>` | Our decision (a11y) |
 | 20 | Table markup | Hi-Fi uses `div` grid with ARIA table roles | Native `<table>` with caption, `scope="col"`, row headers; scrolls inside its card | Our decision (a11y) |
 | 21 | Mobile error copy | Hi-Fi 3e: "Something went wrong on our side. Your search is kept." | Same text as desktop ("… — try again in a moment.") on every width | Our decision (one component) |
 | 22 | Loading announcement | Hi-Fi: visually hidden "Loading invitations" inside the table | Visible "Loading invitations…" in the live summary row + `aria-busy` on table and card list | Decided by Hi-Fi 2a (visible text) |
-| 23 | Pagination disabled | Hi-Fi uses `aria-disabled` on Previous | Native `disabled` (not focusable, not clickable) | Our decision |
-| 24 | Danger colours | Hi-Fi mixes them with `color-mix()` | Fixed palette values (`$red-700`, `$red-50`, `$red-300`, `$blue-50`) close to the mixed result | Decided by us (no color-mix in SCSS tokens) |
-| 25 | Busy button | Hi-Fi busy opacity 0.7 | Disabled buttons use `$opacity-disabled` 0.6 everywhere; spinner icon + "Revoking…" label as in the Hi-Fi | Our decision (one token) |
+| 23 | Pagination disabled | Hi-Fi uses `aria-disabled` on Previous | Native `disabled` (not focusable, not clickable), shown with the same 60% opacity as every disabled button (design review 9 Oct) | Our decision |
+| 24 | Danger colours | Hi-Fi mixed them with `color-mix()` from a second red `#EF4444` | One red: `#942626` (`$red-700`, Hi-Fi `--error`) with tints `$red-50` / `$red-300`; `#EF4444` and the purple scale removed from both (design review 9 Oct) | Fixed |
+| 25 | Busy / disabled button | Hi-Fi busy opacity was 0.7, Previous was grey text | One look: `$opacity-disabled` / `--opacity-disabled` 0.6 on every disabled or busy control, in build and Hi-Fi; spinner icon + "Revoking…" label | Fixed (design review 9 Oct) |
 | 26 | Data shape | Hi-Fi: `doctorName: string`, plus `updatedAt` and `history[]` | HW2: `InvitationDetail` has `createdAt`, `updatedAt` and `history[]` (action, actor, time) | Closed |
 | 27 | Account menu | Hi-Fi: account button with `aria-haspopup="menu"` | Same button, but there is no menu yet | Known limitation |
 | 28 | Other sidebar links | Patient management, Doctor list, Consultation status, Settings | Links render and mark the current page, but those routes 404. HW2: their prefetch is off, so they no longer log console errors | Out of scope |
@@ -74,11 +74,39 @@ the history timeline ("Oldest first"), loading / error frames 2m / 2n, toasts 2f
 
 | # | Area | Hi-Fi | Build | Why |
 |---|---|---|---|---|
-| 42 | List dates | `26/09/08` | `2026-09-08` | HW1 review: WM English date format |
-| 43 | History time | `2026-08-26 10:12` (24-hour) | `2026-08-26 10:12 AM` | WM time format: AM/PM after the number |
+| 42 | List dates | Was `26/09/08`; Hi-Fi now `2026-09-08` everywhere (9 Oct) | `2026-09-08` | Fixed in the Hi-Fi |
+| 43 | History time | Was `2026-08-26 10:12`; Hi-Fi now `2026-08-26 10:12 AM` (9 Oct) | `2026-08-26 10:12 AM` | Fixed in the Hi-Fi |
 | 44 | History actor | "Admin Kim Un-yeong" | `admin@hmp.co.kr` / "System" | No login in the homework; the API records the admin account |
 | 45 | Sample data | September dates, other names | Dates relative to today | Demo data must stay valid (14-day expiry) |
-| 46 | 768 px create / detail / edit | Not drawn | Same layout as 1440, one column | Only the list has a 768 frame |
+| 46 | 768 px create / detail / edit | Not drawn | Same layout as 1440, one column | Only the list has a 768 frame (declared) |
+
+## Design review fixes (Bhagyashree, 9 Oct)
+Result: Pass, on condition that item 1 is fixed and the frames re-exported. All items below are done. The Hi-Fi and
+wireframe served from the demo ([hifi.html](https://hmp-admin-web.vercel.app/design/hifi.html),
+[wireframe.html](https://hmp-admin-web.vercel.app/design/wireframe.html)) carry the fixes, and every frame was
+re-exported from them: [docs/design/frames](design/frames) (33 Hi-Fi + 33 wireframe; 2p and 3k are new).
+How: `scripts/design/` unpacks the Claude Design bundle, applies the fixes (`apply-review-fixes.py`, each edit
+checked) and exports one PNG per frame id (`export-frames.mjs`).
+
+| # | Review item | Fix |
+|---|---|---|
+| 1 | Icons a fixed dark grey, 2.1:1 on filled buttons | The rule in the design system's `icons.css` was `color: var(--fg-2)`; now `color: inherit`. Icons take their label's colour: white on Issue / Save / Retry / Revoke invitation, red next to Revoke and error text, blue next to Edit. All frames re-exported |
+| 2 | Error icon dark in 2c / 2n, red in 3e | Same cause as 1: now red (`--color-danger`) in 2c, 2n and 3e, as in the build |
+| 3 | Dates `26/09/08` on list and cards | `2026-09-08` on every frame (list, cards, success frames); history times with AM/PM |
+| 4 | 1024 (3b): "Re-issues" / "Expiry (TBC)" touch; icons top-aligned while labels wrap | 3b uses the build's 1024 table: 8px cell padding and compact columns that fit without scrolling; sidebar 216px and labels never wrap (build too: `$layout-sidebar-w-md`, `white-space: nowrap`). Playwright now checks 1024: no sideways scroll, table fits its card, each nav label on one line |
+| 5 | 1920 (3a) exported 4104px wide, content left | The frame no longer stretches to the 4200px board: 3a exports at 1920 (1922 with border), content centred in the main column as built |
+| 6 | Toast top-right / top-left / bottom | One position per breakpoint, as built: desktop bottom-right (2d, 2e, 2f, 2l), phone bottom full width (3j) |
+| 7 | Unused purple scale and second red `#EF4444` | Removed from the design file. `--error` is the one red `#942626`; the danger tint and border are its tints. Build: unused `$red-500` removed from `_palette.scss` |
+| 9 | Four button heights 36 / 40 / 44 / 48 | Three, in build and Hi-Fi: `sm` 36 (table rows, pagination, toast Dismiss), `md` 44 (default buttons, header, inputs, every phone action), `lg` 48 (form submit, dialogs). `$control-h-touch` and the 40 are gone |
+| 10 | Two disabled treatments | One: 60% opacity (`$opacity-disabled`) on every disabled or busy control. Pagination Previous now uses it in the build; the Hi-Fi busy buttons, dialog Cancel and Previous use `--opacity-disabled` |
+| 11 | 1440: Edit on a second line in the frame, inline in the build | Frame updated: Manage actions on one line at 1440 (1a, 2d–2f, 3a); they stack only in the narrow 1024 column (3b). Build: a long doctor name wraps (`$table-name-max-w`) so Manage keeps its one line |
+| 12 | Design but not build | Nothing |
+| 13 | Issue, Detail and Edit at 768 | Declared (row 46): same one-column layout as 1440 |
+| 14 | "Invitation not found" not drawn | New frame **2p** (detail not found; edit shows the same) |
+| 15 | Long doctor name wrapping not drawn | New frame **3k** (375: card and detail with a 44-character name) |
+
+Note: the Claude Design project itself (claude.ai/design) still holds the pre-review file; the corrected bundle is
+`public/design/hifi.html` (and `wireframe.html`), which can be uploaded there to replace it.
 
 ## Still open
 - Designer: rows 2, 6, 15, 16, 18, 39; required fields (row 32).

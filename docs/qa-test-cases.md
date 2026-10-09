@@ -5,13 +5,18 @@
 **Build:** see [build-report.md](build-report.md) · **Format:** WM | QA Template — each case is a "Verify that …"
 statement, positive scenario first, then the invalid and boundary cases (condition in brackets).
 **Type:** every case is marked **Positive** (valid use, the feature works) or **Negative** (wrong input, missing data,
-server or network error, boundary). 61 cases: 33 Positive · 27 Negative · 1 N/A (roles, no login).
+server or network error, boundary). 63 cases: 34 Positive · 28 Negative · 1 N/A (roles, no login).
+**IDs:** numbered by section in blocks of ten (1 = TC-01…, 2 = TC-10…, 3 = TC-20…, … 8 = TC-90…, 9 = TC-95…),
+so a new case can be added to its section without renumbering. **The gaps between blocks are intentional — no case
+is missing.** Every ID that exists is listed below (63).
 
 **Before you start**
 1. API running (`hmp-admin-api`, `./mvnw spring-boot:run`) or the demo API on Render (after a quiet period the first call can take up to 3 minutes).
 2. Web running (`npm run dev`) and open <http://localhost:3000/doctors/invitations/list>.
 3. Restart the API to get the 18 demo invitations back (6 Pending · 5 Used · 4 Expired · 3 Revoked).
-4. Fill in **Result** with Pass / Fail + note. **Auto** = the Playwright test that covers the case
+4. Mutation tests (`npm run test:e2e:mutation`) create one row named `E2E test row <run id> (auto-revoked)` and always
+   leave it **Revoked**, even when a step fails; it disappears when the API restarts. Leave such rows alone.
+5. Fill in **Result** with Pass / Fail + note. **Auto** = the Playwright test that covers the case
    (`R-n` = `e2e/invitations.spec.ts` test n, `M-n` = `e2e/invitations.mutation.spec.ts` test n).
 
 ---
@@ -84,7 +89,8 @@ server or network error, boundary). 61 cases: 33 Positive · 27 Negative · 1 N/
 | TC-58 | Negative | a page past the end is handled (boundary) | Open `?page=99` | "This page has no invitations" + Go to page 1 | — | |
 | TC-59 | Positive | sort order | Look at the list | Newest invitation first (by first issue date) | — | |
 | TC-60 | Positive | list refreshes by itself after a change | Do TC-13 | Row updates without reloading the page | M-4 | |
-| TC-61 | Negative | a name containing digits is not a contact search | Search `E2E` (after creating `Dr. E2E Test`) | Only names containing "E2E"; no doctor whose contact contains a 2 | API test | |
+| TC-61 | Negative | a name containing digits is not a contact search | Search `E2E` (after a mutation run created `E2E test row <run id> (auto-revoked)`) | Only names containing "E2E"; no doctor whose contact contains a 2 | API test | |
+| TC-62 | Negative | a long doctor name wraps and pushes nothing out (boundary: 37–50 characters) | List at 1440 and 1024 with a long name on page 1 (e.g. after a mutation run); same name at 375 | Name wraps on two or three lines in the table, card and detail (Hi-Fi 3k); at 1440 Manage keeps Re-issue · Revoke · Edit on one line; no sideways scroll | R-25 (1024) | |
 
 ## 6. Roles
 
@@ -109,10 +115,11 @@ server or network error, boundary). 61 cases: 33 Positive · 27 Negative · 1 N/
 
 | ID | Type | Verify that … | Steps | Expected | Auto | Result |
 |---|---|---|---|---|---|---|
-| TC-90 | Positive | no sideways scrolling at 1920 / 1440 / 1366 / 768 / 375 | DevTools device mode at each width on list, create, detail, edit | No horizontal page scroll, nothing overlapping or cut off; the table scrolls inside its card at 768 | R-19…23 | |
-| TC-91 | Positive | phones show cards | 375 px list | Cards with 44 px buttons, "Page 1 of 3" paging | R-24 | |
+| TC-90 | Positive | no sideways scrolling at 1920 / 1440 / 1366 / 1024 / 768 / 375 | DevTools device mode at each width on list, create, detail, edit | No horizontal page scroll, nothing overlapping or cut off; the table scrolls inside its card at 768 | R-19…24 | |
+| TC-91 | Positive | phones show cards | 375 px list | Cards with 44 px buttons, "Page 1 of 3" paging | R-26 | |
 | TC-92 | Positive | forms on phones | 375 px create / edit | Full-width fields; full-width buttons, main action on top | — | |
 | TC-93 | Positive | all ten WM widths | 1920 · 1600 · 1366 · 1280 · 1024 · 991 · 768 · 640 · 480 · 375 | Matches `docs/screenshots/hw2/*-w<width>.png` | screenshots | |
+| TC-94 | Positive | 1024 fits without scrolling (Hi-Fi 3b) | 1024 px list | The table fits its card (no sideways scroll inside it), Manage buttons stacked; every sidebar label on one line | R-25 | |
 
 ## 9. Accessibility (spot checks)
 

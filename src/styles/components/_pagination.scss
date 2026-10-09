@@ -46,7 +46,7 @@
   padding: 0 $space-ms;
 
   &:disabled {
-    color: $color-placeholder;
+    opacity: $opacity-disabled; // same disabled look as every other button
     cursor: not-allowed;
   }
 }
@@ -76,7 +76,7 @@
     display: flex;
 
     .pagination-step {
-      height: $control-h-touch;
+      height: $control-h-md;
       padding: 0 $space-md;
       font-weight: $font-weight-semibold;
 
